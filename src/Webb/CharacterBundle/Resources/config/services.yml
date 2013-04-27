@@ -1,0 +1,7 @@
+parameters:
+#    webb_character.example.class: Webb\CharacterBundle\Example
+
+services:
+#    webb_character.example:
+#        class: %webb_character.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

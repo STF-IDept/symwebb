@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Webb\UserBundle\WebbUserBundle(),
+            new Webb\CharacterBundle\WebbCharacterBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

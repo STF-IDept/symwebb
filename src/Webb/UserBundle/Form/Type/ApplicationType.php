@@ -23,6 +23,7 @@ class ApplicationType extends AbstractType
                 'Regular' => 'Regular (4-7 logins per week)',
                 'Frequently' => 'Frequently (daily or almost daily)',
             ),
+            'label' => 'form.activityrate', 'translation_domain' => 'WebbUserBundle'
         ));
 
         $builder->add('academy_ship', 'choice', array(
@@ -31,6 +32,7 @@ class ApplicationType extends AbstractType
                 'Yes' => 'Yes - sign me up for an academy ship as a cadet',
                 'No' => 'No - put me directly on a regular ship as an ensign',
             ),
+            'label' => 'form.academyship', 'translation_domain' => 'WebbUserBundle'
         ));
 
         $builder->add('mentor_request', 'choice', array(
@@ -39,6 +41,7 @@ class ApplicationType extends AbstractType
                 'Yes' => 'Yes - I would like to have a mentor',
                 'No' => 'No - I do not need a mentor',
             ),
+            'label' => 'form.mentorrequest', 'translation_domain' => 'WebbUserBundle'
         ));
 
         $builder->add('position_first', 'choice', array(
@@ -49,6 +52,7 @@ class ApplicationType extends AbstractType
                 'Science' => 'Science Officer',
                 'Security' => 'Security Officer',
             ),
+            'label' => 'form.positionfirst', 'translation_domain' => 'WebbUserBundle'
         ));
 
         $builder->add('position_second', 'choice', array(
@@ -59,6 +63,7 @@ class ApplicationType extends AbstractType
                 'Science' => 'Science Officer',
                 'Security' => 'Security Officer',
             ),
+            'label' => 'form.positionsecond', 'translation_domain' => 'WebbUserBundle'
         ));
 
         $builder->add('position_third', 'choice', array(
@@ -69,12 +74,13 @@ class ApplicationType extends AbstractType
                 'Science' => 'Science Officer',
                 'Security' => 'Security Officer',
             ),
+            'label' => 'form.positionthird', 'translation_domain' => 'WebbUserBundle'
         ));
 
-        $builder->add('hear_about');
-        $builder->add('character_name');
-        $builder->add('character_species');
-        $builder->add('comments');
+        $builder->add('hear_about', null, array('label' => 'form.hearabout', 'translation_domain' => 'WebbUserBundle'));
+        $builder->add('character_name', null, array('label' => 'form.charactername', 'translation_domain' => 'WebbUserBundle'));
+        $builder->add('character_species', null, array('label' => 'form.characterspecies', 'translation_domain' => 'WebbUserBundle'));
+        $builder->add('comments', null, array('label' => 'form.comments', 'translation_domain' => 'WebbUserBundle'));
     }
 
     public function getDefaultOptions(array $options)

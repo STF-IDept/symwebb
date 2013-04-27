@@ -1,0 +1,15 @@
+# Form field labels
+form:
+    firstname: First name:
+    surname: Last name:
+    activityrate: Expected activity rate:
+    academyship: Join an Academy ship:
+    mentorrequest: Request a mentor:
+    positionfirst: Department, first choice:
+    positionsecond: Department, second choice:
+    positionthird: Department, third choice:
+    hearabout: How did you hear about STF:
+    charactername: Character name:
+    characterspecies: Character species:
+    comments: Additional comments:
+

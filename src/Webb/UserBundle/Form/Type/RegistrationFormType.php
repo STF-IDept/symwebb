@@ -14,8 +14,8 @@ class RegistrationFormType extends BaseType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('first_name');
-        $builder->add('surname');
+        $builder->add('first_name', null, array('label' => 'form.firstname', 'translation_domain' => 'WebbUserBundle'));
+        $builder->add('surname', null, array('label' => 'form.surname', 'translation_domain' => 'WebbUserBundle'));
         $builder->add('application', new ApplicationType());
     }
 
