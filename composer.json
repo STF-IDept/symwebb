@@ -18,7 +18,8 @@
         "sensio/generator-bundle": "2.2.*",
         "jms/security-extra-bundle": "1.4.*",
         "jms/di-extra-bundle": "1.3.*",
-        "friendsofsymfony/user-bundle": "*"
+        "friendsofsymfony/user-bundle": "*",
+        "knplabs/knp-markdown-bundle": "1.2.*@dev"
     },
     "scripts": {
         "post-install-cmd": [
