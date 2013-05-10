@@ -91,4 +91,15 @@ class Rank
     {
         return $this->shortName;
     }
+
+    /**
+     * Return long name
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->longName;
+    }
+
 }

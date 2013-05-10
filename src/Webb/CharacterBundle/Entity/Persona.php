@@ -27,6 +27,7 @@ class Persona
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -62,12 +63,13 @@ class Persona
      * @ORM\OneToOne(targetEntity="Rank",  cascade={"persist"})
      * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Rank")
+     * @Assert\NotBlank()
      */
     protected $rank;
 
     /**
      * @ORM\OneToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
-     * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      */
     protected $user;

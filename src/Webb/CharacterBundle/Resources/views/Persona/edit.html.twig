@@ -1,0 +1,6 @@
+<form action="{{ path('webb_character_edit', {'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="persona_edit">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'persona.submit'|trans({}, 'WebbCharacterBundle') }}" />
+    </div>
+</form>
