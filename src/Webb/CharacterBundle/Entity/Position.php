@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Position
  *
- * @ORM\Table(name="character_position")
+ * @ORM\Table(name="character_positions")
  * @ORM\Entity
  */
 class Position

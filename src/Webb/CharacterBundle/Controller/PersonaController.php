@@ -18,7 +18,7 @@ class PersonaController extends Controller
     public function showAction($id)
     {
         //$securityContext = new SecurityContext();
-        $persona = new Persona($id);
+        //$persona = new Persona($id);
 
         $persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
 

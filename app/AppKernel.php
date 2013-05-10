@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Webb\UserBundle\WebbUserBundle(),
             new Webb\CharacterBundle\WebbCharacterBundle(),
+            new Webb\ShipBundle\WebbShipBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

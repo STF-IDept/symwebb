@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Rank
  *
- * @ORM\Table(name="character_rank")
+ * @ORM\Table(name="character_ranks")
  * @ORM\Entity
  */
 class Rank

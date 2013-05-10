@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Application
  *
- * @ORM\Table(name="user_application")
+ * @ORM\Table(name="user_applications")
  * @ORM\Entity
  */
 class Application

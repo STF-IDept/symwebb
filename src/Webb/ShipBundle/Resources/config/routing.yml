@@ -1,0 +1,31 @@
+webb_ship_fleet_create:
+    pattern:  /fleet/create
+    defaults: { _controller: WebbShipBundle:Fleet:create }
+
+webb_ship_fleet_view:
+    pattern:  /stf{shortname}
+    defaults: { _controller: WebbShipBundle:Fleet:show }
+    requirements:
+        page:  \d+
+
+webb_ship_fleet_edit:
+      pattern:  /stf{shortname}/edit
+      defaults: { _controller: WebbShipBundle:Fleet:edit }
+      requirements:
+          page:  \d+
+
+webb_ship_ship_create:
+    pattern:  /ship/create
+    defaults: { _controller: WebbShipBundle:Ship:create }
+
+webb_ship_ship_view:
+    pattern:  /stf{fleet}/{shortname}
+    defaults: { _controller: WebbShipBundle:Ship:show }
+    requirements:
+        page:  \d+
+
+webb_ship_ship_edit:
+      pattern:  /stf{fleet}/{shortname}/edit
+      defaults: { _controller: WebbShipBundle:Ship:edit }
+      requirements:
+          page:  \d+

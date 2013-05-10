@@ -1,0 +1,6 @@
+<form action="{{ path('webb_ship_fleet_create') }}" {{ form_enctype(form) }} method="POST" class="ship_fleet_create">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'fleet.submit'|trans({}, 'WebbShipBundle') }}" />
+    </div>
+</form>

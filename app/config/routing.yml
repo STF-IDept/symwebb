@@ -1,3 +1,7 @@
+webb_ship:
+    resource: "@WebbShipBundle/Resources/config/routing.yml"
+    prefix:   /
+
 webb_character:
     resource: "@WebbCharacterBundle/Resources/config/routing.yml"
     prefix:   /

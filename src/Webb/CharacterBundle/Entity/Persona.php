@@ -9,7 +9,7 @@ use Webb\UserBundle\Entity\User as User;
 /**
  * Persona
  *
- * @ORM\Table(name="character_persona")
+ * @ORM\Table(name="character_personas")
  * @ORM\Entity
  */
 class Persona
