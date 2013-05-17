@@ -4,13 +4,14 @@ namespace Webb\CharacterBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Webb\CharacterBundle\Entity\Persona;
 /**
- * Ship
+ * Assignment
  *
- * @ORM\Table(name="character_ship")
+ * @ORM\Table(name="character_assignment")
  * @ORM\Entity
  */
-class Ship
+class Assignment
 {
     /**
      * @var integer
@@ -42,6 +43,13 @@ class Ship
      */
     protected $position;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
+     * @ORM\JoinColumn(name="ship_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\ShipBundle\Entity\Ship")
+     */
+    protected $ship;
+
 
     /**
      * Get id
@@ -57,7 +65,7 @@ class Ship
      * Set rostered
      *
      * @param boolean $rostered
-     * @return Ship
+     * @return Assignment
      */
     public function setRostered($rostered)
     {
@@ -98,5 +106,22 @@ class Ship
         $this->position = $position;
 
         return $this;
+    }
+
+    public function getShip()
+    {
+        return $this->ship;
+    }
+
+    public function setShip($ship)
+    {
+        $this->ship = $ship;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getLongName()})";
     }
 }

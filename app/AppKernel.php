@@ -24,6 +24,7 @@ class AppKernel extends Kernel
             new Webb\CharacterBundle\WebbCharacterBundle(),
             new Webb\ShipBundle\WebbShipBundle(),
             new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
+            new Webb\PostBundle\WebbPostBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
