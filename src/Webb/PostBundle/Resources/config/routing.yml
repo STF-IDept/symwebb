@@ -1,11 +1,14 @@
 webb_post_note_create:
     pattern:  /stf{fleet}/{ship}/note/create
-    defaults: { _controller: WebbPostBundle:Note:create }
+    defaults: { _controller: WebbPostBundle:Note:create, parent_id: null}
+
+webb_post_note_reply:
+    pattern:  /stf{fleet}/{ship}/note/{parent_id}/reply
+    defaults: { _controller: WebbPostBundle:Note:create}
 
 webb_post_note_view:
     pattern:  /stf{fleet}/{ship}/note/{id}
     defaults: { _controller: WebbPostBundle:Note:show }
-
 
 webb_post_note_edit:
       pattern:  /stf{fleet}/{ship}/note/{id}/edit

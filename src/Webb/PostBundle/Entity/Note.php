@@ -22,7 +22,7 @@ class Note
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Location",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Location",  cascade={"persist"})
      * @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\PostBundle\Entity\Location")
      * @Assert\NotBlank()
@@ -44,14 +44,14 @@ class Note
     private $date;
 
     /**
-     * @ORM\OneToOne(targetEntity="Note",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\PostBundle\Entity\Note")
      */
     private $parent;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
      * @ORM\JoinColumn(name="ship_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\ShipBundle\Entity\Ship")
      * @Assert\NotBlank()
@@ -59,7 +59,7 @@ class Note
     private $ship;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      * @Assert\NotBlank()
@@ -67,14 +67,14 @@ class Note
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\CharacterBundle\Entity\Persona",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\CharacterBundle\Entity\Persona",  cascade={"persist"})
      * @ORM\JoinColumn(name="persona_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Persona")
      */
     private $persona;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\CharacterBundle\Entity\Assignment",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\CharacterBundle\Entity\Assignment",  cascade={"persist"})
      * @ORM\JoinColumn(name="assignment_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Assignment")
      * @Assert\NotBlank()

@@ -1,0 +1,7 @@
+parameters:
+#    webb_page.example.class: Webb\PageBundle\Example
+
+services:
+#    webb_page.example:
+#        class: %webb_page.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

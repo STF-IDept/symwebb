@@ -29,19 +29,27 @@ class NoteController extends Controller
         return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note));
     }
 
-    public function createAction($fleet, $ship, Request $request)
+    public function createAction($fleet, $ship, $parent_id,  Request $request)
     {
         $note = new Note();
-        $form = $this->createForm(new NoteType(), $note);
+
         $note->setUser($this->getUser());
+        $note->setShip($this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship)));
+
+            if(!is_null($parent_id)) {
+            $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+
+            $note->setContent("> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n");
+            $note->setActivity($parent->getActivity());
+            $note->setParent($parent);
+        }
 
         //Do this post form submission, prior to validation
         $time = new DateTime;
         $time->setTimestamp(time());
         $note->setDate($time);
-        $note->setShip($this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship)));
         //$note->setPersona($note->getAssignment()->getPersona());
-
+        $form = $this->createForm(new NoteType(), $note);
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
 

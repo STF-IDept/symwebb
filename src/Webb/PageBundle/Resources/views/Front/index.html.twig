@@ -1,0 +1,33 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="news"><div>
+            News Articles
+        </div></div>
+        <div class="nested">
+            <div class="resources"><div>
+                Resources
+            </div></div>
+            <div class="quicktip"><div>
+                Quick Tip
+            </div></div>
+            <div class="government"><div>
+                Government
+            </div></div>
+            <div class="events"><div>
+                Upcoming Events
+            </div></div>
+        </div>
+        <div class="simoftheday fixed-font"><div style="background-image: url('http://symfony.dev.jackdipper.com/bundles/webbpage/img/{{ ship }}-flash.png');">
+            <h2>Sim of the Day -- USS Asimov</h2>
+            <p>CO: Jack Dipper -- XO: Steve Sigle -- GM: Tyra Schroll</p>
+            <p>Current Sim: Sim Name</p>
+            <p>Some fascinating description here about how good it is to be on the Asimov, and how evil a GM Tyra is. </p>
+            <p>Vacancies: CMO, CE, 2 Med JOs, 3 Sec JOs </p>
+        </div></div>
+        <div class="join"><div>
+            Today is a good day to join!
+        </div></div>
+    </div>
+{% endblock %}
