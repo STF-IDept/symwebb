@@ -88,4 +88,9 @@ class User extends BaseUser
     {
         $this->application = $application;
     }
+
+    public function __toString()
+    {
+        return "$this->first_name $this->surname";
+    }
 }

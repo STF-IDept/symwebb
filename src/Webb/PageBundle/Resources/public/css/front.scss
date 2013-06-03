@@ -1,10 +1,14 @@
 @import "/usr/lib/ruby/gems/1.8/gems/zen-grids-1.4/stylesheets/zen";
 @import "front_box";
+@import "ellipsis";
+@include multiline-ellipsis(8.3em, 1.2em, 10%);
 
 $zen-column-count: 15; // Set the total number of columns in the grid.
 $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
 $row-height: 300px;
 $box-font-size: 1.2em;
+$box-padding: 0.2em;
+
 
 h2 {
   margin: 0;
@@ -13,6 +17,12 @@ h2 {
 
 p, h3 {
   margin: 0.5em 0;
+}
+
+hr.clear {
+  border: none;
+  padding-top: 0.5em;
+  border-bottom: 1px solid #fff;
 }
 
 .container {
@@ -29,8 +39,8 @@ p, h3 {
 .news {
   @include zen-grid-item(6, 1); // Apply this mixin for each grid item in the container.
   height:  66%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#3f8dc0);
   }
 }
@@ -44,8 +54,8 @@ p, h3 {
 .resources {
   @include zen-grid-item(10, 1);
   height:  50%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#de462d);
   }
 }
@@ -53,8 +63,8 @@ p, h3 {
 .quicktip {
   @include zen-grid-item(5, 11);
   height:  50%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#e8a838);
   }
 }
@@ -63,8 +73,8 @@ p, h3 {
   @include zen-clear(); // Apply this mixin to start a new row.
   @include zen-grid-item(5, 1);
   height:  50%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#2a1bb3);
   }
 }
@@ -72,8 +82,8 @@ p, h3 {
 .events {
   @include zen-grid-item(10, 6);
   height:  50%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#3fa873);
   }
 }
@@ -82,14 +92,12 @@ p, h3 {
   @include zen-clear(); // Apply this mixin to start a new row.
   @include zen-grid-item(9, 1);
   height:  33%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#767676);
     background-position: top right;
     background-repeat: no-repeat;
     background-size: auto 100%;
-
-    padding-left: 0.2em;
     padding-right: 30%;
   }
 }
@@ -97,8 +105,8 @@ p, h3 {
 .join {
   @include zen-grid-item(6, 10);
   height:  33%;
-  padding-bottom: 10px;
-  div {
+  padding: $box-padding;
+  .inner {
     @include front_box(#65a6e8);
   }
 }

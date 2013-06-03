@@ -2,31 +2,41 @@
 
 {% block body %}
     <div class="container">
-        <div class="news"><div>
-            News Articles
+        <div class="news fixed-font"><div class="inner">
+            {% for key, article in articles %}
+            <h2>{{ article.title }}</h2>
+            <div class="ellipsis">
+                <div ><p>{{ article.content|markdown }}<i></i></p>
+                </div>
+            </div>
+
+                <span class="float-left">Posted by <a href="{{ article.user|entityurl('webb_user_homepage') }}">{{ article.user }}</a> on {{ article.date | date("j M y") }}</span>
+                <span class="float-right"><a href="{{ article|entityurl('webb_news_article_view') }}">Read More</a></span>
+                {% if key == 0 %}<hr class="clear"/>{% endif %}
+            {% endfor %}
         </div></div>
         <div class="nested">
-            <div class="resources"><div>
+            <div class="resources"><div class="inner">
                 Resources
             </div></div>
-            <div class="quicktip"><div>
+            <div class="quicktip"><div class="inner">
                 Quick Tip
             </div></div>
-            <div class="government"><div>
+            <div class="government"><div class="inner">
                 Government
             </div></div>
-            <div class="events"><div>
+            <div class="events"><div class="inner">
                 Upcoming Events
             </div></div>
         </div>
-        <div class="simoftheday fixed-font"><div style="background-image: url('http://symfony.dev.jackdipper.com/bundles/webbpage/img/{{ ship }}-flash.png');">
+        <div class="simoftheday fixed-font"><div style="background-image: url('http://symfony.dev.jackdipper.com/bundles/webbpage/img/{{ ship }}-flash.png');" class="inner">
             <h2>Sim of the Day -- USS Asimov</h2>
             <p>CO: Jack Dipper -- XO: Steve Sigle -- GM: Tyra Schroll</p>
             <p>Current Sim: Sim Name</p>
             <p>Some fascinating description here about how good it is to be on the Asimov, and how evil a GM Tyra is. </p>
             <p>Vacancies: CMO, CE, 2 Med JOs, 3 Sec JOs </p>
         </div></div>
-        <div class="join"><div>
+        <div class="join"><div class="inner">
             Today is a good day to join!
         </div></div>
     </div>

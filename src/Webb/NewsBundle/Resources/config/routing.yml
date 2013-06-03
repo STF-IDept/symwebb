@@ -1,3 +1,12 @@
-webb_news_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: WebbNewsBundle:Default:index }
+webb_news_article_create:
+    pattern:  /news/create
+    defaults: { _controller: WebbNewsBundle:Article:create}
+
+webb_news_article_view:
+    pattern:  /news/{id}
+    defaults: { _controller: WebbNewsBundle:Article:show }
+
+webb_news_article_edit:
+      pattern:  /news/{id}/edit
+      defaults: { _controller: WebbNewsBundle:Article:edit }
+

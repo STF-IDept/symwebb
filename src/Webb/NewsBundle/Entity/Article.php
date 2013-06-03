@@ -8,8 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Article
  *
  * @ORM\Table(name="news_articles")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Webb\NewsBundle\Entity\ArticleRepository")
  */
+
 class Article
 {
     /**
@@ -19,28 +20,36 @@ class Article
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
      */
-    private $content;
+    protected $content;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
      */
-    private $date;
+    protected $date;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="articles")
+     * @ORM\JoinTable(name="news_article_tags")
+     * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
+     * @Assert\NotBlank()
+     */
+    protected $tags;
 
     /**
      * @ORM\ManyToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
@@ -48,7 +57,7 @@ class Article
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      * @Assert\NotBlank()
      */
-    private $user;
+    protected $user;
 
 
     /**
@@ -116,6 +125,14 @@ class Article
     }
 
     /**
+     * @return string
+     */
+    public function getStrdate()
+    {
+        return $this->date->format("j M Y, H:m:s");
+    }
+
+    /**
      * @param \DateTime $date
      */
     public function setDate($date)
@@ -135,5 +152,27 @@ class Article
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function findByTags($tags)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb ->select(array('a'))
+            ->from('WebbNewsBundle:Article', 'a')
+            ->join('a.tags', 't', 'WITH', $qb->expr()->in('t.id', $tags));
+        $result = $qb->getQuery()->execute();
+        return $result;
     }
 }

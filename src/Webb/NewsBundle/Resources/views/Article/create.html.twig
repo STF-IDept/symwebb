@@ -1,0 +1,6 @@
+<form action="{{ path('webb_news_article_create') }}" {{ form_enctype(form) }} method="POST" class="news_article_create">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'article.submit'|trans({}, 'WebbNewsBundle') }}" />
+    </div>
+</form>
