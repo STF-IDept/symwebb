@@ -13,7 +13,7 @@ class ArticleRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('a');
         $qb -> join('a.tags', 't')
-            -> where($qb->expr()->in('t.name', $tags));
+            -> where($qb->expr()->in('t.mach_name', $tags));
         return $qb;
     }
 }

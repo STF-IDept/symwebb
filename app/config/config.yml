@@ -96,4 +96,7 @@ assetic:
     use_controller: false
     filters:
         sass: ~
-        compass: ~
+        compass:
+            load_paths:
+                - /usr/lib/ruby/gems/1.8/gems/zen-grids-1.4/stylesheets/
+                - /usr/lib/ruby/gems/1.8/gems/compass_twitter_bootstrap-2.3.1/stylesheets/

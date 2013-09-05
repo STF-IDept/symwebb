@@ -1,6 +1,7 @@
+@import "compass_twitter_bootstrap_awesome";
 body {
-  background-color: #000000;
-  font-family: Calibri, Arial, Helvetica, sans-serif;
+  background-color: #222222;
+  color: #ffffff;
 }
 
 .float-left {
@@ -13,4 +14,40 @@ body {
 
 .clear {
   clear: both;
+}
+
+/*nav {
+  font-size: 0.8em;
+  height: 2em;
+
+  span {
+    display: block;
+    text-align: center;
+  }
+
+  span.left {
+    float: left;
+  }
+
+  span.right {
+    float: right;
+  }
+
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style-type: none;
+      margin: 0;
+      padding: 0 10px;
+      display: inline;
+    }
+  }
+}*/
+
+
+.socials {
+  padding: 10px;
 }

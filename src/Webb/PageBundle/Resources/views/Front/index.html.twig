@@ -1,8 +1,17 @@
 {% extends '::base.html.twig' %}
 
+{% block stylesheets %}
+    {% stylesheets filter="compass"
+    "bundles/webbpage/css/front.scss"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="news fixed-font"><div class="inner">
+            <!--<h2>Latest News</h2>-->
             {% for key, article in articles %}
             <h2>{{ article.title }}</h2>
             <div class="ellipsis">
@@ -14,6 +23,8 @@
                 <span class="float-right"><a href="{{ article|entityurl('webb_news_article_view') }}">Read More</a></span>
                 {% if key == 0 %}<hr class="clear"/>{% endif %}
             {% endfor %}
+            <br class="clear"/><br />
+            <span><a href="{{ path('webb_news_article_list', {'mach_name' : 'front_page'}) }}">Previous News Articles</a></span>
         </div></div>
         <div class="nested">
             <div class="resources"><div class="inner">

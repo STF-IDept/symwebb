@@ -1,6 +1,11 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+
 <div class="webb_post_note_show">
     <p>{{ 'article.title'|trans({}, 'WebbNewsBundle') }}: {{ article.title }}</p>
     <p>{{ 'article.content'|trans({}, 'WebbNewsBundle') }}: {{ article.content|markdown }}</p>
     <p>{{ 'article.user'|trans({}, 'WebbNewsBundle') }}: {{ article.user }}</p>
     <p>{{ 'article.date'|trans({}, 'WebbNewsBundle') }}: {{ article.strdate}}</p>
 </div>
+
+{% endblock %}

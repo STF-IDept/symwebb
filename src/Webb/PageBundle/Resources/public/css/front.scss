@@ -1,7 +1,7 @@
-@import "/usr/lib/ruby/gems/1.8/gems/zen-grids-1.4/stylesheets/zen";
+@import "zen";
 @import "front_box";
 @import "ellipsis";
-@include multiline-ellipsis(8.3em, 1.2em, 10%);
+@include multiline-ellipsis(7.1em, 1.2em, 10%);
 
 $zen-column-count: 15; // Set the total number of columns in the grid.
 $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.

@@ -4,10 +4,12 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% include "::stylesheets.html.twig" %}
+
+        {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-
+        {% include "WebbPageBundle:Nav:bar.html.twig" %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

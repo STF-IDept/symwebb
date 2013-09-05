@@ -26,7 +26,7 @@ class FrontController extends Controller
         $qb -> join('t.name', 'f')
             -> where($qb->expr()->in('f.id', $tagids));*/
 
-        $qb = $this->getDoctrine()->getRepository('WebbNewsBundle:Article')->getArticlesByTags('Front Page');
+        $qb = $this->getDoctrine()->getRepository('WebbNewsBundle:Article')->getArticlesByTags('front_page');
 
         $qb ->orderBy('a.date', 'DESC')
             ->setMaxResults(2);

@@ -85,4 +85,16 @@ class ArticleController extends Controller
             'id' => $id,
         ));
     }
+
+    public function listAction()
+    {
+        $qb = $this->getDoctrine()->getRepository('WebbNewsBundle:Article')->getArticlesByTags('front_page');
+
+        $qb ->orderBy('a.date', 'DESC')
+            ->setMaxResults(2);
+
+        $articles = $qb->getQuery()->getResult();
+
+        return $this->render('WebbNewsBundle:Article:list.html.twig', array('articles' => $articles));
+    }
 }

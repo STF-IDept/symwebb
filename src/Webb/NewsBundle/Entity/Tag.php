@@ -28,6 +28,13 @@ class Tag
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="mach_name", type="string", length=255)
+     */
+    private $mach_name;
+
+    /**
      * Inverse Side
      *
      * @ORM\ManyToMany(targetEntity="Article", mappedBy="tags")
@@ -81,6 +88,24 @@ class Tag
     public function getArticles()
     {
         return $this->articles;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMachName()
+    {
+        return $this->mach_name;
+    }
+
+    /**
+     * @param string $mach_name
+     */
+    public function setMachName($mach_name)
+    {
+        $this->mach_name = $mach_name;
+
+        return $this;
     }
 
 }
