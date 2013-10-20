@@ -37,18 +37,11 @@ class Assignment
     protected $persona;
 
     /**
-     * @ORM\OneToOne(targetEntity="Position",  cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Position",  cascade={"persist"}, inversedBy="assignment")
      * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\CharacterBundle\Entity\Position")
+     * @Assert\Type(type="Webb\ShipBundle\Entity\Position")
      */
     protected $position;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
-     * @ORM\JoinColumn(name="ship_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\ShipBundle\Entity\Ship")
-     */
-    protected $ship;
 
 
     /**

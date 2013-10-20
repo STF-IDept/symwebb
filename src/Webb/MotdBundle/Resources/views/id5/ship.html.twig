@@ -1,0 +1,37 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {% stylesheets filter="compass"
+    "bundles/webbmotd/css/id5/ship.scss"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+
+<div id="motd-stflogo"><a href="http://www.star-fleet.com/" class="nobackground"><img src="/images/logos/stf-logo-new.png" alt="Star-Fleet Home"/></a></div>
+
+<div id="motd-shiplogo"><a href="http://www.star-fleet.com/stf1/" class="nobackground"><img src="/images/logos/stf1-logo.png" alt="Fleet 3 Home"/></a></div>
+
+<div id="motd-header" class="motd-box"><img src="/images/asimov/asimov-banner.jpg" alt="USS Asimov" /></div>
+
+<div id="motd-header-links">
+        <ul class="motd-links">
+                <li><a href="http://www.star-fleet.com/webb/node/314/notes">Read Notes</a></li>
+                <li><a href="http://www.star-fleet.com/webb/node/add/note?gids[]=314">Post Note</a></li>
+                <li><a href="http://www.star-fleet.com/webb/node/314/colog">Captain's Log</a></li>
+                
+                <li><a href="http://www.star-fleet.com/library/">STF Library</a></li>
+                <li><a href="http://www.star-fleet.com/library/bookshelf/handbook/index.html">Handbook</a></li>
+        </ul>
+</div>
+
+    {% block boxes %}
+
+
+
+    {% endblock boxes %}
+
+{% endblock %}
+

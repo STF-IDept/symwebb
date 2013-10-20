@@ -26,14 +26,14 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter your first name.", groups={"Registration", "Profile"})
-     * @Assert\MaxLength(limit="255", message="The first name is too long.", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", maxMessage="The first name is too long.", groups={"Registration", "Profile"})
      */
     protected $first_name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter your surname.", groups={"Registration", "Profile"})
-     * @Assert\MaxLength(limit="255", message="The surname is too long.", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", maxMessage="The surname is too long.", groups={"Registration", "Profile"})
      */
     protected $surname;
 

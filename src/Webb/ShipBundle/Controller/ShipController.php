@@ -29,8 +29,25 @@ class ShipController extends Controller
             return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
         }
 
+        $boxes = $this->getDoctrine()->getRepository('WebbMotdBundle:Box')->findBy(array('ship' => $ship->getId()), array('boxorder' => 'asc'));
+
+        /* Join the positions, assignments and personae */
+        /*$roster = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select()
+            ->from('WebbShipBundle:Position', 'p')
+            ->addSelect('p')
+            ->where('p.ship = :ship_id')->setParameter('ship_id', $ship->getId())
+            ->innerJoin('p.assignment', 'a')
+            ->innerJoin('a.persona', 'c')
+            ->getQuery()
+            ->getSQL();
+
+        var_dump($roster);*/
+
+        //$roster = $this->getDoctrine()->getRepository('WebbShipBundle:Position')->findOneBy(array('ship' => $ship->getId()));
+
         //return $this->render('WebbCharacterBundle:Persona:index.html.twig', array('name' => $user));
-        return $this->render('WebbShipBundle:Ship:show.html.twig', array('ship' => $ship));
+        return $this->render('WebbShipBundle:Ship:show.html.twig', array('ship' => $ship, 'boxes' => $boxes));
     }
 
     public function createAction(Request $request)

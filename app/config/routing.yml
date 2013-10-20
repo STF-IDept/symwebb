@@ -1,3 +1,7 @@
+webb_motd:
+    resource: "@WebbMotdBundle/Resources/config/routing.yml"
+    prefix:   /
+
 webb_news:
     resource: "@WebbNewsBundle/Resources/config/routing.yml"
     prefix:   /

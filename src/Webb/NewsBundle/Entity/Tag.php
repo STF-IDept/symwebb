@@ -108,4 +108,34 @@ class Tag
         return $this;
     }
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->articles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add articles
+     *
+     * @param \Webb\NewsBundle\Entity\Article $articles
+     * @return Tag
+     */
+    public function addArticle(\Webb\NewsBundle\Entity\Article $articles)
+    {
+        $this->articles[] = $articles;
+
+        return $this;
+    }
+
+    /**
+     * Remove articles
+     *
+     * @param \Webb\NewsBundle\Entity\Article $articles
+     */
+    public function removeArticle(\Webb\NewsBundle\Entity\Article $articles)
+    {
+        $this->articles->removeElement($articles);
+    }
 }

@@ -1,0 +1,495 @@
+@import 'rounded';
+@import "zen";
+
+/* Format #content div, plus add a border */
+
+#main {
+  padding: 0;
+  margin-top: 0;
+  width: 100%;
+  border: 0;
+}
+
+/* Hide "Roster" text from view */
+
+ul.primary {
+  margin: 0 0 1em 0;
+  border-bottom: none;
+}
+
+img {
+  margin: 0;
+}
+
+/* Set title color above blocks */
+
+.title {
+  color: #FFFF99 !important;
+}
+
+/* HEADER */
+
+#motd-stflogo {
+  float: left;
+}
+
+#motd-shiplogo {
+  float: right;
+}
+
+#motd-stflogo, #motd-shiplogo, #motd-stflogo img, #motd-shiplogo img {
+  width: 150px;
+}
+
+#motd-header {
+  width: auto;
+  margin: 0 155px 0 155px;
+  text-align: center;
+  color: #FFFF99;
+  padding: 0;
+  div {
+    width: 99%;
+    margin: auto;
+    line-height: 0;
+    padding: 0;
+  }
+  ul {
+    margin: 0;
+  }
+}
+
+#motd-header-links, #main .node div.links {
+  width: auto;
+  text-align: center;
+  clear: both;
+  background: #222222;
+  border: 5px solid #6090ff;
+  @include rounded(top, left, 5px);
+  @include rounded(top, right, 5px);
+  @include rounded(bottom, left, 5px);
+  @include rounded(bottom, right, 5px);
+}
+
+/* MOTD BOXES */
+
+.motd-freetext {
+  dt {
+    background: #9FC99F;
+    color: #111111;
+    width: 40em;
+    margin: auto;
+    padding: 0.3em;
+    border: 2px solid #9FC99F;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    text-align: center;
+    font-size: 1.2em;
+  }
+  dd {
+    margin: 0;
+    color: #CCDDFF;
+    border: 2px solid #9FC99F;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    @include rounded(bottom, left, 5px);
+    @include rounded(bottom, right, 5px);
+    background: #222222;
+    padding: 0.5em;
+    min-height: 5em;
+  }
+}
+
+.motd-position, .motd-freetext {
+  margin: 2em 0 0 0;
+}
+
+.motd-position {
+  dt {
+    margin: 0;
+    color: #000000;
+    border: 2px solid #6090ff;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    background: #6090ff;
+    padding: 0.3em;
+    text-align: left;
+    font-size: 1.2em;
+  }
+  dd {
+    margin: 0;
+    color: #CCDDFF;
+    border: 2px solid #6090ff;
+    @include rounded(top, right, 5px);
+    @include rounded(bottom, left, 5px);
+    @include rounded(bottom, right, 5px);
+    background: #222222;
+    padding: 0.5em;
+    height: 100%;
+    min-width: 200px;
+    background-position: top right;
+    background-repeat: no-repeat;
+  }
+}
+
+.motd-left {
+  width: 49%;
+  float: left;
+}
+
+.motd-right {
+  width: 49%;
+  float: right;
+}
+
+.motd-third-left {
+  width: 32.6%;
+  float: left;
+}
+
+.motd-third-middle, .motd-third-right {
+  width: 32.6%;
+  padding-left: 1.1%;
+  float: left;
+}
+
+.motd-clear {
+  clear: both;
+}
+
+/* Command Colours */
+
+.motd-color-Command {
+  dt {
+    border-color: #AA0000;
+    background: #AA0000;
+    color: #CCDDFF;
+  }
+  dd {
+    border-color: #AA0000;
+    display: block;
+  }
+}
+
+.color-eng, .color-sec {
+  dt {
+    border-color: #DD9900;
+    background: #DD9900;
+  }
+  dd {
+    border-color: #DD9900;
+  }
+}
+
+.color-med {
+  dt {
+    border-color: #117777;
+    background: #117777;
+  }
+  dd {
+    border-color: #117777;
+  }
+}
+
+.color-sci {
+  dt {
+    border-color: #3366AA;
+    background: #3366AA;
+  }
+  dd {
+    border-color: #3366AA;
+  }
+}
+
+.color-jag {
+  dt {
+    border-color: #DDDDDD;
+    background: #DDDDDD;
+  }
+  dd {
+    border-color: #DDDDDD;
+  }
+}
+
+.color-gm {
+  dt {
+    border-color: #AAAAAA;
+    background: #AAAAAA;
+  }
+  dd {
+    border-color: #AAAAAA;
+  }
+}
+
+
+.motd-cols2 {
+  $zen-column-count: 2; // Set the total number of columns in the grid.
+  $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
+  @include zen-grid-container;
+  dl:nth-child(1) {
+    @include zen-grid-item(1, 1);
+    @include zen-clear(); // Apply this mixin to start a new row.
+  }
+  dl:nth-child(2) {
+    @include zen-grid-item(1, 2);
+  }
+}
+
+/* Ranks */
+
+.fcapt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6c.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -13px -6px !important;
+  padding-left: 97px !important;
+  min-width: 160px;
+}
+
+.Capt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -30px -6px !important;
+  padding-left: 80px !important;
+  min-width: 166px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.Cmdr {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o5.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -47px -6px !important;
+  padding-left: 63px !important;
+  width: 183px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.ltcdr {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o4.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -47px -6px !important;
+  padding-left: 63px !important;
+  width: 183px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.lt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o3.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -64px -6px !important;
+  padding-left: 46px !important;
+  width: 200px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.ltjg {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o2.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -64px -6px !important;
+  padding-left: 46px !important;
+  width: 200px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.ens {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o1.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -81px -6px !important;
+  padding-left: 29px !important;
+  width: 217px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.gm {
+  padding-left: 5px !important;
+  width: 241px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+/* LINKS ON MOTD */
+
+.block-content {
+  a, li a.active {
+    color: #CCDDFF !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: -1px !important;
+    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
+    border: 1px solid transparent;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: transparent !important;
+  }
+}
+
+.motd-box {
+  dt a:hover, dd a {
+    color: #CCDDFF !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: -1px !important;
+    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
+    border: 1px solid transparent;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: transparent !important;
+  }
+}
+
+.motd-welcome {
+  dt a:hover, dd a {
+    color: #CCDDFF !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: -1px !important;
+    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
+    border: 1px solid transparent;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: transparent !important;
+  }
+}
+
+.view-content-og-ghp-characters a {
+  color: #CCDDFF !important;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: -1px !important;
+  /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
+  border: 1px solid transparent;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background: transparent !important;
+}
+
+.block-content {
+  a:hover, li a.active:hover {
+    color: #CCDDFF  !important;
+    background: #6090ff !important;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #6090ff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-left: -1px !important;
+  }
+}
+
+.motd-box {
+  dt a, dd a:hover {
+    color: #CCDDFF  !important;
+    background: #6090ff !important;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #6090ff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-left: -1px !important;
+  }
+}
+
+.motd-welcome {
+  dt a, dd a:hover {
+    color: #CCDDFF  !important;
+    background: #6090ff !important;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #6090ff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-left: -1px !important;
+  }
+}
+
+.view-content-og-ghp-characters a:hover {
+  color: #CCDDFF  !important;
+  background: #6090ff !important;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid #6090ff;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-left: -1px !important;
+}
+
+/* LINK BUTTONS */
+
+#main .node .links a, .motd-links a {
+  display: inline-block;
+  color: #CCDDFF;
+  font-weight: bold;
+  padding: 1.5em 1em 1.5em 1em;
+  margin: -18px -8px -18px -4px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+#main .node .links a:hover, .motd-links a:hover {
+  background: #6090ff !important;
+}
+
+#main .node .links li, .motd-links li {
+  display: inline;
+  border: none;
+  padding: 0;
+}
+
+#main .node .links {
+  color: #000000;
+  display: block !important;
+}
+
+.motd-links {
+  color: #000000;
+  display: block !important;
+  li:nth-child(n+2):before {
+    content: "|";
+    color: #6090ff;
+  }
+}
+
+#main .node .links {
+  li:nth-child(n+2):before {
+    content: "|";
+    color: #6090ff;
+  }
+  color: #222222 !important;
+  padding-bottom: 1.5em;
+  ul {
+    padding: 0;
+  }
+}
+
+/* ROSTER */
+
+.view-og-ghp-characters {
+  width: 100%;
+  padding-top: 1em;
+  table {
+    th {
+      padding: 0.5em;
+      border: none;
+      color: #000000;
+    }
+    background: #6090ff!important;
+    border: 2px solid #6090ff;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    width: 100%;
+    padding-bottom: 1em;
+    color: #CCDDFF;
+    tr.odd {
+      background: #000000;
+    }
+  }
+}
+
+#motd-header img {
+  max-width: 100%;
+}
