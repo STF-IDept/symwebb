@@ -124,32 +124,11 @@ img {
     @include rounded(bottom, right, 5px);
     background: #222222;
     padding: 0.5em;
-    height: 100%;
+    min-height: 4em;
     min-width: 200px;
     background-position: top right;
     background-repeat: no-repeat;
   }
-}
-
-.motd-left {
-  width: 49%;
-  float: left;
-}
-
-.motd-right {
-  width: 49%;
-  float: right;
-}
-
-.motd-third-left {
-  width: 32.6%;
-  float: left;
-}
-
-.motd-third-middle, .motd-third-right {
-  width: 32.6%;
-  padding-left: 1.1%;
-  float: left;
 }
 
 .motd-clear {
@@ -170,7 +149,7 @@ img {
   }
 }
 
-.color-eng, .color-sec {
+.motd-color-Engineering, .motd-color-Security {
   dt {
     border-color: #DD9900;
     background: #DD9900;
@@ -180,7 +159,7 @@ img {
   }
 }
 
-.color-med {
+.motd-color-Medical {
   dt {
     border-color: #117777;
     background: #117777;
@@ -190,7 +169,7 @@ img {
   }
 }
 
-.color-sci {
+.motd-color-Science {
   dt {
     border-color: #3366AA;
     background: #3366AA;
@@ -200,7 +179,7 @@ img {
   }
 }
 
-.color-jag {
+.motd-color-Civilian {
   dt {
     border-color: #DDDDDD;
     background: #DDDDDD;
@@ -210,7 +189,7 @@ img {
   }
 }
 
-.color-gm {
+.motd-color-Gamemaster {
   dt {
     border-color: #AAAAAA;
     background: #AAAAAA;
@@ -228,15 +207,33 @@ img {
   dl:nth-child(1) {
     @include zen-grid-item(1, 1);
     @include zen-clear(); // Apply this mixin to start a new row.
+    clear: both;
   }
   dl:nth-child(2) {
     @include zen-grid-item(1, 2);
   }
 }
 
+
+.motd-cols3 {
+  $zen-column-count: 3; // Set the total number of columns in the grid.
+  $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
+  @include zen-grid-container;
+  dl:nth-child(3n+1) {
+    @include zen-grid-item(1, 1);
+    @include zen-clear(); // Apply this mixin to start a new row.
+  }
+  dl:nth-child(3n+2) {
+    @include zen-grid-item(1, 2);
+  }
+  dl:nth-child(3n+3) {
+    @include zen-grid-item(1, 3);
+  }
+}
+
 /* Ranks */
 
-.fcapt {
+.motd-rank-FCapt {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6c.png') !important;
   background-repeat: no-repeat !important;
   background-position: -13px -6px !important;
@@ -244,7 +241,7 @@ img {
   min-width: 160px;
 }
 
-.Capt {
+.motd-rank-Capt {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6.png') !important;
   background-repeat: no-repeat !important;
   background-position: -30px -6px !important;
@@ -254,7 +251,7 @@ img {
   display: inline-block;
 }
 
-.Cmdr {
+.motd-rank-Cmdr {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o5.png') !important;
   background-repeat: no-repeat !important;
   background-position: -47px -6px !important;
@@ -264,7 +261,7 @@ img {
   display: inline-block;
 }
 
-.ltcdr {
+.motd-rank-LtCmdr {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o4.png') !important;
   background-repeat: no-repeat !important;
   background-position: -47px -6px !important;
@@ -274,7 +271,7 @@ img {
   display: inline-block;
 }
 
-.lt {
+.motd-rank-Lt {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o3.png') !important;
   background-repeat: no-repeat !important;
   background-position: -64px -6px !important;
@@ -284,7 +281,7 @@ img {
   display: inline-block;
 }
 
-.ltjg {
+.motd-rank-LtJG {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o2.png') !important;
   background-repeat: no-repeat !important;
   background-position: -64px -6px !important;
@@ -294,7 +291,7 @@ img {
   display: inline-block;
 }
 
-.ens {
+.motd-rank-Ens {
   background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o1.png') !important;
   background-repeat: no-repeat !important;
   background-position: -81px -6px !important;
@@ -304,7 +301,7 @@ img {
   display: inline-block;
 }
 
-.gm {
+.motd-rank-GM, motd-rank-vacant {
   padding-left: 5px !important;
   width: 241px;
   padding-right: 1em !important;

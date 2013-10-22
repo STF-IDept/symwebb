@@ -93,6 +93,16 @@ class Rank
     }
 
     /**
+     * Get styleName
+     *
+     * @return string
+     */
+    public function getStyleName()
+    {
+        return str_replace(" ", "", $this->shortName);
+    }
+
+    /**
      * Return long name
      *
      * @return string

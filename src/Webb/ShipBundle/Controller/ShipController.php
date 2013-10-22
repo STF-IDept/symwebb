@@ -31,6 +31,8 @@ class ShipController extends Controller
 
         $boxes = $this->getDoctrine()->getRepository('WebbMotdBundle:Box')->findBy(array('ship' => $ship->getId()), array('boxorder' => 'asc'));
 
+        //$query = $this->getDoctrine()->getManager()->createQuery("SELECT b FROM (SELECT b FROM Webb\MotdBundle\Entity\Box b WHERE b.ship = {$ship->getId()} ORDER BY b.boxorder ASC) b");
+        //$boxes = $query->getResult();
         /* Join the positions, assignments and personae */
         /*$roster = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select()
@@ -43,6 +45,17 @@ class ShipController extends Controller
             ->getSQL();
 
         var_dump($roster);*/
+
+        $test = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('b, p, q, a')
+            ->from('WebbMotdBundle:Box', 'b')
+            ->where('b.ship = :ship_id')->setParameter('ship_id', $ship->getId())
+            ->innerJoin('b.position', 'p')
+            ->innerJoin('p.position', 'q')
+            ->innerJoin('p.assignment', 'a')
+            ->innerJoin('')
+
+        $test->getQuery()->execute();
 
         //$roster = $this->getDoctrine()->getRepository('WebbShipBundle:Position')->findOneBy(array('ship' => $ship->getId()));
 

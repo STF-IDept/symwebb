@@ -115,6 +115,6 @@ class Assignment
 
     public function __toString()
     {
-        return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getLongName()})";
+        return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getPosition()->getLongName()})";
     }
 }

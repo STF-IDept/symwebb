@@ -13,8 +13,14 @@
             <dl class="motd-freetext"><dt class="blank">{{ box.title }}</dt><dd>{{ box.content }}</dd></dl>
         {%  elseif box.type == "position" %}
             <dl class="motd-position motd-color-{{ box.position.position.branch }}">
-                <dt class="{{ box.position.assignment.persona.rank.shortname }}">{{ box.position.assignment.persona.name }}</dt>
-                <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.position.assignment.persona.user }}</dd>
+                {% if box.position.assignment != "" %}
+                    <dt class="motd-rank-{{ box.position.assignment.persona.rank.stylename }}">{{ box.position.position.shortname }}: {{ box.position.assignment.persona.name }}</dt>
+                    <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.position.assignment.persona.user }}</dd>
+                {% else %}
+                    <dt class="motd-rank-vacant">{{ box.position.position.shortname }}: Position Vacant</dt>
+                    <dd>{{ box.content }}</dd>
+                {% endif %}
+
             </dl>
 
         {% endif %}
