@@ -38,9 +38,7 @@ class User extends BaseUser
     protected $surname;
 
     /**
-     * @ORM\OneToOne(targetEntity="Application",  cascade={"persist"})
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\UserBundle\Entity\Application")
+     * @ORM\OneToOne(targetEntity="Application", cascade={"persist"}, mappedBy="user")
      */
     protected $application;
 
@@ -79,18 +77,30 @@ class User extends BaseUser
         $this->surname = $surname;
     }
 
-    public function getApplication()
-    {
-        return $this->application;
-    }
-
-    public function setApplication(Application $application = null)
-    {
-        $this->application = $application;
-    }
-
     public function __toString()
     {
         return "$this->first_name $this->surname";
+    }
+
+    /**
+     * Set application
+     *
+     * @param \Webb\UserBundle\Entity\Application $application
+     * @return User
+     */
+    public function setApplication(Application $application = null)
+    {
+        $this->application = $application;
+        return $this;
+    }
+
+    /**
+     * Get application
+     *
+     * @return \Webb\UserBundle\Entity\Application 
+     */
+    public function getApplication()
+    {
+        return $this->application;
     }
 }

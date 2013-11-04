@@ -1,0 +1,55 @@
+<div id="listcontainer">
+    <div id="postlist">
+
+        {% set hr = false %}
+
+        {% for item in notes %}
+
+            <a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': item.id}) }}"
+                    class="{% if item.id == note.id %}current {{ item.id }}{% elseif not item.note.readers|length %}new {{ item.note.readers|length }}{% endif %}">
+            {% if item['indent'] %}
+                {% for i in 1..item['indent'] %}
+                    <div class="indent">
+                {% endfor %}
+            {% endif %}
+
+            {% if hr and item.id != note.id %}
+                <hr/>
+            {% else %}
+                {% set hr = true %}
+            {% endif %}
+
+            {% if item.id == note.id %}
+                {% set hr = false %}
+            {% endif %}
+
+            <dl>
+                <dt>
+                    {{ item['note'].location }} - {{ item['note'].activity }}
+                </dt>
+                <dd>
+                    {{ item['note'].date|date('j M Y g:i:sa') }}<br/>
+                    {{ item['note'].assignment.persona.rank.shortname }} {{ item['note'].assignment.persona.name }}
+
+                    {% if item['note'].assignment.position.custom == "" %}
+                        ({{ item['note'].assignment.position.position.shortname }})
+                    {% else %}
+                        ({{ item['note'].assignment.position.custom }})
+                    {% endif %}
+
+
+                </dd>
+
+            </dl>
+
+            {% if item['indent'] %}
+                {% for i in 1..item['indent'] %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            </a>
+        {%  endfor %}
+
+
+    </div>
+</div>

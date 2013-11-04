@@ -52,8 +52,7 @@ class ShipController extends Controller
             ->where('b.ship = :ship_id')->setParameter('ship_id', $ship->getId())
             ->innerJoin('b.position', 'p')
             ->innerJoin('p.position', 'q')
-            ->innerJoin('p.assignment', 'a')
-            ->innerJoin('')
+            ->innerJoin('p.assignment', 'a');
 
         $test->getQuery()->execute();
 

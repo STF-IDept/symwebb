@@ -115,6 +115,11 @@ hr.clear {
   }
 }
 
+#page {
+  max-width:none;
+  background-color: transparent;
+}
+
 @media screen and (max-width: 1600px) {
   .container {
     @extend .container-base;

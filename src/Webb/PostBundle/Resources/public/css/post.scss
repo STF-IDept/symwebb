@@ -1,0 +1,117 @@
+@import 'rounded';
+
+#postlist {
+
+  hr {
+    margin: -2px 1.5em 0 0.5em;
+    border: 0;
+    border-bottom: 1px solid #888;
+    border-collapse: collapse;
+  }
+  dd {
+    padding-bottom: 0.5em;
+    margin-left: 0;
+  }
+
+  dt {
+    padding-top: 0.5em;
+  }
+
+  dl {
+    margin: 0 0.5em;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    @include rounded_all(5px);
+    display: block;
+
+    &.current {
+      background-color: #226;
+    }
+
+    &.new {
+      border-left: solid #FFBB00;
+      @include rounded(top, left, 0px);
+      @include rounded(bottom, left, 0px);
+
+      hr {
+
+      }
+    }
+
+    &:hover {
+      background-color: #888;
+    }
+  }
+}
+
+.indent {
+  margin: 0;
+  margin-left: 0.25em;
+}
+
+.buttons {
+
+  padding: 0;
+  margin: 1em 0 0 0;
+
+  a {
+    display: inline-block;
+    color: #111;
+    font-weight: bold;
+    padding: 0.5em;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    background: #fff;
+  }
+
+  a:hover {
+    background: #ccc!important;
+  }
+
+  li {
+    display: inline;
+    border: none;
+    padding-right: 0.1em;
+  }
+}
+
+.buttonsleft {
+  float: left;
+}
+
+.buttonsright {
+  float: right;
+}
+
+
+
+@media only screen and (min-width: 1100px) {
+  #listcontainer {
+    position: fixed;
+    display: block;
+    left: 1em;
+    min-width: 205px;
+    max-width: 320px;
+    top: 4em;
+    bottom: 1em;
+    background: #111;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    width: -moz-calc(50% - 637px);
+    width: calc(50% - 637px);
+  }
+  #container {
+    padding: 0 200px;
+  }
+}
+
+@media only screen and (max-width: 1099px) {
+
+}

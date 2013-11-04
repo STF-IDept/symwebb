@@ -1,6 +1,47 @@
-<div class="webb_post_note_show">
-    <p>{{ 'note.location'|trans({}, 'WebbPostBundle') }}: {{ note.location }}</p>
-    <p>{{ 'note.activity'|trans({}, 'WebbPostBundle') }}: {{ note.activity }}</p>
-    <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }}: {{ note.assignment }}</p>
-    <p>{{ 'note.content'|trans({}, 'WebbPostBundle') }}: {{ note.content|markdown }}</p>
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+<div id="postinfo">
+    <h2>{{ note.location }} - {{ note.activity }}</h2>
+    <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} {{ note.assignment }}</p>
+
 </div>
+
+<article id="post">
+    {{ note.content|markdown }}
+</article>
+
+<ul class="buttons buttonsleft">
+    {% if previous is not null %}
+        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previous.id}) }}">Previous Note</a></li>
+    {% endif %}
+    {% if note.parent is not null %}
+        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.parent.id}) }}">Parent</a></li>
+    {% endif %}
+    <li><a href="{{ url('webb_post_note_reply', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'parent_id': note.id}) }}">Reply</a></li>
+    <li><a href="{{ url('webb_post_note_create', {'fleet': ship.fleet.shortname, 'ship': ship.shortname}) }}">Post New Note</a></li>
+</ul>
+
+<ul class="buttons buttonsright">
+    {% if nextcron is not null %}
+    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextcron.id}) }}">Next Note</a></li>
+    {% endif %}
+    {% if nextloc is not null %}
+    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextloc.id}) }}">Next in Location</a></li>
+    {% endif %}
+    <li><a href="">Next New Note</a></li>
+</ul>
+
+<br class="clear" />
+    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note})) }}
+
+{% endblock body %}

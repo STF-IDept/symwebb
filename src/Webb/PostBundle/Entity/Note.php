@@ -44,7 +44,8 @@ class Note
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"}, inversedBy="child")
+     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"}, inversedBy="child")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\PostBundle\Entity\Note")
      */
@@ -82,12 +83,22 @@ class Note
     private $assignment;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Webb\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="history");
+     */
+    private $readers;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
      */
     private $content;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Note", mappedBy="parent")
+     */
+    protected $child;
 
     /**
      * Get id
@@ -288,5 +299,80 @@ class Note
         $this->content = $content;
 
         return $this;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->child = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add child
+     *
+     * @param \Webb\PostBundle\Entity\Note $child
+     * @return Note
+     */
+    public function addChild(\Webb\PostBundle\Entity\Note $child)
+    {
+        $this->child[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \Webb\PostBundle\Entity\Note $child
+     */
+    public function removeChild(\Webb\PostBundle\Entity\Note $child)
+    {
+        $this->child->removeElement($child);
+    }
+
+    /**
+     * Get child
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChild()
+    {
+        return $this->child;
+    }
+
+    public function getReaders()
+    {
+        return $this->readers;
+    }
+
+    public function setReaders($readers)
+    {
+        $this->readers = $readers;
+
+        return $this;
+    }
+
+    /**
+     * Add readers
+     *
+     * @param \Webb\UserBundle\Entity\User $readers
+     * @return Note
+     */
+    public function addReader(\Webb\UserBundle\Entity\User $readers)
+    {
+        $this->readers[] = $readers;
+
+        return $this;
+    }
+
+    /**
+     * Remove readers
+     *
+     * @param \Webb\UserBundle\Entity\User $readers
+     */
+    public function removeReader(\Webb\UserBundle\Entity\User $readers)
+    {
+        $this->readers->removeElement($readers);
     }
 }

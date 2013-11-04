@@ -3,7 +3,7 @@
 namespace Webb\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Application
  *
@@ -90,6 +90,13 @@ class Application
      * @ORM\Column(name="comments", type="text")
      */
     private $comments;
+
+    /**
+     * @ORM\OneToOne(targetEntity="User", cascade={"persist"}, inversedBy="application")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\UserBundle\Entity\User")
+     */
+    protected $user;
 
 
     /**
@@ -330,5 +337,29 @@ class Application
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Webb\UserBundle\Entity\User $user
+     * @return Application
+     */
+    public function setUser($user = null)
+    {
+        $this->user = $user;
+        $this->user = is_array($user) ? new ArrayCollection($user) : $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Webb\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

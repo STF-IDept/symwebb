@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new Webb\PageBundle\WebbPageBundle(),
             new Webb\NewsBundle\WebbNewsBundle(),
             new Webb\MotdBundle\WebbMotdBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

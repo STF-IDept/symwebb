@@ -1,8 +1,11 @@
 @import "compass_twitter_bootstrap_awesome";
+@import 'rounded';
+
 body {
-  background-color: #111;
+  background-color: #080808;
   color: #ffffff;
   padding:4em 2em 2em 2em;
+
 }
 
 .float-left {
@@ -16,6 +19,23 @@ body {
 .clear {
   clear: both;
 }
+
+#page {
+  max-width: 1200px;
+  //min-width: 850px;
+  margin: auto;
+  background-color: #111;
+  @include rounded_all(5px);
+  padding: 1em;
+}
+
+article {
+  color: #333333;
+  background: #fff;
+  @include rounded_all(5px);
+  padding: 1em;
+}
+
 
 /*nav {
   font-size: 0.8em;

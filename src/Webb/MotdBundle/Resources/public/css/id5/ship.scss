@@ -301,29 +301,14 @@ img {
   display: inline-block;
 }
 
-.motd-rank-GM, motd-rank-vacant {
+.motd-rank-GM, .motd-rank-vacant {
   padding-left: 5px !important;
   width: 241px;
   padding-right: 1em !important;
   display: inline-block;
 }
 
-/* LINKS ON MOTD */
-
-.block-content {
-  a, li a.active {
-    color: #CCDDFF !important;
-    font-weight: bold;
-    text-decoration: none;
-    margin-left: -1px !important;
-    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
-    border: 1px solid transparent;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    background: transparent !important;
-  }
-}
-
+/* Need to sort this out */
 .motd-box {
   dt a:hover, dd a {
     color: #CCDDFF !important;
@@ -338,108 +323,26 @@ img {
   }
 }
 
-.motd-welcome {
-  dt a:hover, dd a {
-    color: #CCDDFF !important;
-    font-weight: bold;
-    text-decoration: none;
-    margin-left: -1px !important;
-    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
-    border: 1px solid transparent;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    background: transparent !important;
-  }
-}
 
-.view-content-og-ghp-characters a {
-  color: #CCDDFF !important;
-  font-weight: bold;
-  text-decoration: none;
-  margin-left: -1px !important;
-  /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
-  border: 1px solid transparent;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  background: transparent !important;
-}
-
-.block-content {
-  a:hover, li a.active:hover {
-    color: #CCDDFF  !important;
-    background: #6090ff !important;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #6090ff;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-left: -1px !important;
-  }
-}
-
-.motd-box {
-  dt a, dd a:hover {
-    color: #CCDDFF  !important;
-    background: #6090ff !important;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #6090ff;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-left: -1px !important;
-  }
-}
-
-.motd-welcome {
-  dt a, dd a:hover {
-    color: #CCDDFF  !important;
-    background: #6090ff !important;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #6090ff;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-left: -1px !important;
-  }
-}
-
-.view-content-og-ghp-characters a:hover {
-  color: #CCDDFF  !important;
-  background: #6090ff !important;
-  text-decoration: none;
-  font-weight: bold;
-  border: 1px solid #6090ff;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  margin-left: -1px !important;
-}
-
-/* LINK BUTTONS */
-
-#main .node .links a, .motd-links a {
+.motd-links a {
   display: inline-block;
   color: #CCDDFF;
   font-weight: bold;
-  padding: 1.5em 1em 1.5em 1em;
-  margin: -18px -8px -18px -4px;
+  padding: 1em 1em 1em 1em;
+  margin: -7px -6px -18px -2px;
   text-align: center;
   text-decoration: none;
   font-size: 1.2em;
 }
 
-#main .node .links a:hover, .motd-links a:hover {
+.motd-links a:hover {
   background: #6090ff !important;
 }
 
-#main .node .links li, .motd-links li {
+.motd-links li {
   display: inline;
   border: none;
   padding: 0;
-}
-
-#main .node .links {
-  color: #000000;
-  display: block !important;
 }
 
 .motd-links {
@@ -449,42 +352,7 @@ img {
     content: "|";
     color: #6090ff;
   }
-}
-
-#main .node .links {
-  li:nth-child(n+2):before {
-    content: "|";
-    color: #6090ff;
-  }
-  color: #222222 !important;
-  padding-bottom: 1.5em;
-  ul {
-    padding: 0;
-  }
-}
-
-/* ROSTER */
-
-.view-og-ghp-characters {
-  width: 100%;
-  padding-top: 1em;
-  table {
-    th {
-      padding: 0.5em;
-      border: none;
-      color: #000000;
-    }
-    background: #6090ff!important;
-    border: 2px solid #6090ff;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
-    width: 100%;
-    padding-bottom: 1em;
-    color: #CCDDFF;
-    tr.odd {
-      background: #000000;
-    }
-  }
+  padding: 2px;
 }
 
 #motd-header img {
