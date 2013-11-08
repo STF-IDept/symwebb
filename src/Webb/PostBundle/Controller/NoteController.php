@@ -28,17 +28,16 @@ class NoteController extends Controller
         $note = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('n, l, p, a, q, r, s')
             ->from('WebbPostBundle:Note', 'n')
-            ->where('n.id = :id AND (u.id IS NULL OR u.id = :user_id)')
+            ->where('n.id = :id')
             ->setParameter('id', $id)
-            ->setParameter('user_id', $userid)
             ->innerJoin('n.location', 'l')
             ->innerJoin('n.persona', 'p')
             ->innerJoin('n.assignment', 'a')
             ->innerJoin('a.position', 'q')
             ->innerJoin('q.position', 'r')
             ->innerJoin('p.rank', 's')
-            ->leftJoin('n.readers', 'u')
             ->getQuery()->getOneOrNullResult();
+
 
         if (!$note) {
             throw $this->createNotFoundException(
@@ -65,12 +64,24 @@ class NoteController extends Controller
             return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
         }*/
 
-        if($userid && !count($note->getReaders())) {
-            $note->addReader($user);
-            // Save to the database
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($note);
-            $em->flush();
+        if($userid) {
+            $new = true;
+
+            foreach($note->getHistory() as $item) {
+                if($item->getUser()->getId()) {
+                    $new = false;
+                    break;
+                }
+            }
+
+            if($new) {
+                $history = new \Webb\PostBundle\Entity\History();
+                $history->setUser($user)
+                    ->setNote($note);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($history);
+                $em->flush();
+            }
         }
 
         $previous = $this->getDoctrine()->getManager()->createQueryBuilder()
@@ -192,12 +203,11 @@ class NoteController extends Controller
             $userid = 0;
         }
 
-        $notequery = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n, l, p, a, q, r, s, t, u')
+        $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n, l, p, a, q, r, s, t')
             ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND (u.id IS NULL OR u.id = :user_id)')
+            ->where('n.ship = :ship_id')
             ->setParameter('ship_id', $ship->getId())
-            ->setParameter('user_id', $userid)
             ->innerJoin('n.location', 'l')
             ->innerJoin('n.persona', 'p')
             ->innerJoin('n.assignment', 'a')
@@ -205,21 +215,44 @@ class NoteController extends Controller
             ->innerJoin('q.position', 'r')
             ->innerJoin('p.rank', 's')
             ->leftJoin('n.child', 't')
-            ->leftJoin('n.readers', 'u');
-
-        $notes = $notequery->getQuery()->execute();
+            ->getQuery()->execute();
 
         $arr = array();
-
+        $ids = array();
 
         foreach($notes as $item) {
             if(!$this->searchArray($item->getId(), $arr)) {
                 $arr = array_merge($arr, $this->getChildPost($item));
             }
+            $ids[] = $item->getId();
         }
 
+        /**********
+         * @TODO: YOU MUST REMOVE ME!!!!!!
+         */
 
-        return $this->render('WebbPostBundle:Note:recentposts.html.twig', array('notes' => $arr, 'ship' => $ship, 'note' => $note));
+        $userid = $userid ? $userid : 1;
+
+        // End mass panic
+
+        if($userid) {
+            $history_bld = $this->getDoctrine()->getManager()->createQueryBuilder()
+                ->select('h')
+                ->from('WebbPostBundle:History', 'h');
+            $history_arr = $history_bld->where($history_bld->expr()->in('h.note', ':my_array'))
+                ->setParameter('my_array', $ids)
+                ->andWhere('h.user = :user_id')
+                ->setParameter('user_id', $userid)
+                ->getQuery()->execute();
+        }
+
+        $history = array();
+
+        foreach($history_arr as $item) {
+            $history[$item->getNote()->getId()] = $item->getNote()->getId();
+        }
+
+        return $this->render('WebbPostBundle:Note:recentposts.html.twig', array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history));
     }
 
     private function getChildPost($note, $indent = 0) {

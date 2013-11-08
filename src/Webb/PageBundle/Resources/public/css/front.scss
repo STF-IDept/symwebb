@@ -47,6 +47,7 @@ hr.clear {
   .inner {
     @include front_box(#3f8dc0);
   }
+
 }
 
 .nested {
@@ -187,4 +188,8 @@ hr.clear {
   .fixed-font{
     font-size: $box-font-size*1024/1920;
   }
+}
+
+.ellipsis a, a {
+  color: #ff9;
 }

@@ -83,10 +83,9 @@ class Note
     private $assignment;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Webb\UserBundle\Entity\User")
-     * @ORM\JoinTable(name="history");
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\History", mappedBy="note")
      */
-    private $readers;
+    private $history;
 
     /**
      * @var string
@@ -341,38 +340,36 @@ class Note
         return $this->child;
     }
 
-    public function getReaders()
-    {
-        return $this->readers;
-    }
-
-    public function setReaders($readers)
-    {
-        $this->readers = $readers;
-
-        return $this;
-    }
-
     /**
-     * Add readers
+     * Add history
      *
-     * @param \Webb\UserBundle\Entity\User $readers
+     * @param \Webb\PostBundle\Entity\History $history
      * @return Note
      */
-    public function addReader(\Webb\UserBundle\Entity\User $readers)
+    public function addHistory(\Webb\PostBundle\Entity\History $history)
     {
-        $this->readers[] = $readers;
+        $this->history[] = $history;
 
         return $this;
     }
 
     /**
-     * Remove readers
+     * Remove history
      *
-     * @param \Webb\UserBundle\Entity\User $readers
+     * @param \Webb\PostBundle\Entity\History $history
      */
-    public function removeReader(\Webb\UserBundle\Entity\User $readers)
+    public function removeHistory(\Webb\PostBundle\Entity\History $history)
     {
-        $this->readers->removeElement($readers);
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHistory()
+    {
+        return $this->history;
     }
 }

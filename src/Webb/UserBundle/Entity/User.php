@@ -42,6 +42,11 @@ class User extends BaseUser
      */
     protected $application;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\History", mappedBy="user")
+     */
+    private $history;
+
     public function __construct()
     {
         parent::__construct();
@@ -88,8 +93,12 @@ class User extends BaseUser
      * @param \Webb\UserBundle\Entity\Application $application
      * @return User
      */
-    public function setApplication(Application $application = null)
+    public function setApplication($application = null)
     {
+        if(is_array($application)) {
+            $this->application = $application[0];
+            return $this;
+        }
         $this->application = $application;
         return $this;
     }
@@ -102,5 +111,38 @@ class User extends BaseUser
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * Add history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     * @return User
+     */
+    public function addHistory(\Webb\PostBundle\Entity\History $history)
+    {
+        $this->history[] = $history;
+
+        return $this;
+    }
+
+    /**
+     * Remove history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     */
+    public function removeHistory(\Webb\PostBundle\Entity\History $history)
+    {
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHistory()
+    {
+        return $this->history;
     }
 }

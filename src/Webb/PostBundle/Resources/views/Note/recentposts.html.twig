@@ -6,7 +6,7 @@
         {% for item in notes %}
 
             <a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': item.id}) }}"
-                    class="{% if item.id == note.id %}current {{ item.id }}{% elseif not item.note.readers|length %}new {{ item.note.readers|length }}{% endif %}">
+                    class="{% if item.id == note.id %}current {{ item.id }}{% elseif history[item.id] is not defined %}new {% endif %}">
             {% if item['indent'] %}
                 {% for i in 1..item['indent'] %}
                     <div class="indent">
