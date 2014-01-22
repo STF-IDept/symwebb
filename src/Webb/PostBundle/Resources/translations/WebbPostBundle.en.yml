@@ -1,2 +1,5 @@
 note:
   assignment: "Posted by"
+  location: "Location"
+  activity: "Activity"
+  content: "Post Content"

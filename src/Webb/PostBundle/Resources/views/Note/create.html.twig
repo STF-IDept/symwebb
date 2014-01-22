@@ -1,6 +1,36 @@
-<form action="{{ path('webb_post_note_create', {'fleet' : fleet, 'ship' : ship}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
+
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+{% if selected %}
+<div id="postinfo">
+    <h2>Reply to: {{ selected.location }} - {{ selected.activity }}</h2>
+</div>
+{% endif %}
+
+<article id="post">
+
+<form action="{{ path(method, {'fleet' : fleet, 'ship' : ship.shortname, 'parent_id' : parent.id, 'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
     {{ form_widget(form) }}
     <div>
         <input type="submit" value="{{ 'note.submit'|trans({}, 'WebbPostBundle') }}" />
     </div>
 </form>
+
+</article>
+
+<br class="clear" />
+    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': selected})) }}
+
+
+{% endblock %}
+

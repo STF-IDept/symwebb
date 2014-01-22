@@ -22,12 +22,12 @@
   }
 
   a {
-    color: #fff;
+    color: #eee;
     text-decoration: none;
     @include rounded_all(5px);
     display: block;
 
-    &.current {
+    &.current {	
       background-color: #226;
     }
 
@@ -42,7 +42,7 @@
     }
 
     &:hover {
-      background-color: #888;
+      background-color: #444;
     }
   }
 }
@@ -59,7 +59,7 @@
 
   a {
     display: inline-block;
-    color: #111;
+    color: #eee;
     font-weight: bold;
     padding: 0.5em;
     border-radius: 5px;
@@ -67,11 +67,11 @@
     -webkit-border-radius: 5px;
     text-align: center;
     text-decoration: none;
-    background: #fff;
+    background: #181818;
   }
 
   a:hover {
-    background: #ccc!important;
+    background: #444 !important;
   }
 
   li {
@@ -89,7 +89,18 @@
   float: right;
 }
 
+select {
+  min-width: 30em;
+}
 
+#note_activity {
+  min-width: 29em;
+}
+
+textarea {
+  width: 98%;
+  min-height: 200px;
+}
 
 @media only screen and (min-width: 1100px) {
   #listcontainer {

@@ -1,6 +1,0 @@
-<form action="{{ path('webb_post_note_edit', {'id' : id, 'fleet' : fleet, 'ship' : ship}) }}" {{ form_enctype(form) }} method="POST" class="post_note_edit">
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'note.submit'|trans({}, 'WebbPostBundle') }}" />
-    </div>
-</form>

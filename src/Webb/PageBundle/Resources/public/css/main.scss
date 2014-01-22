@@ -27,11 +27,12 @@ body {
   background-color: #111;
   @include rounded_all(5px);
   padding: 1em;
+  color: #eeeeee;
 }
 
 article {
-  color: #333333;
-  background: #fff;
+  color: #eeeeee;
+  background: #181818;
   @include rounded_all(5px);
   padding: 1em;
 }

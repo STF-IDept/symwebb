@@ -123,22 +123,31 @@ class NoteController extends Controller
         $note->setUser($this->getUser());
         $note->setShip($this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship)));
 
-            if(!is_null($parent_id)) {
-            $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+        if(!is_null($parent_id)) {
+	    $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
 
             $note->setContent("> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n");
             $note->setActivity($parent->getActivity());
             $note->setParent($parent);
+
+	    $method = "webb_post_note_reply";
+        }
+        else {
+            $method = "webb_post_note_create";
+            $parent = false;
         }
 
-        //Do this post form submission, prior to validation
-        $time = new DateTime;
-        $time->setTimestamp(time());
-        $note->setDate($time);
-        //$note->setPersona($note->getAssignment()->getPersona());
-        $form = $this->createForm(new NoteType(), $note);
-        if ($request->getMethod() == 'POST') {
+	$form = $this->createForm(new NoteType(), $note);
+        
+	if ($request->getMethod() == 'POST') {
             $form->bind($request);
+
+	    $note->setPersona($note->getAssignment()->getPersona());
+
+            $time = new DateTime;
+            $time->setTimestamp(time());
+
+            $note->setDate($time);	    
 
             if ($form->isValid()) {
                 // perform some action, such as saving the task to the database
@@ -146,17 +155,20 @@ class NoteController extends Controller
                 $em->persist($note);
                 $em->flush();
 
+		//var_dump($parent_id);
                 return $this->redirect($this->generateUrl('webb_post_note_view', array('fleet' => $fleet, 'ship' => $ship, 'id' => $note->getID())));
             }
         }
 
         return $this->render('WebbPostBundle:Note:create.html.twig', array(
             'fleet' => $fleet,
-            'ship' => $ship,
+            'ship' => $note->getShip(),
             'form' => $form->createView(),
+            'selected' => $parent,
+            'method' => $method,
+            'parent' => $parent,
+            'id' => false,
         ));
-
-
 
     }
 
@@ -167,7 +179,7 @@ class NoteController extends Controller
 
         if (!$note) {
             throw $this->createNotFoundException(
-                'No character found for id '.$id
+                'No post found for id '.$id
             );
         }
 
@@ -184,11 +196,14 @@ class NoteController extends Controller
             }
         }
 
-        return $this->render('WebbPostBundle:Note:edit.html.twig', array(
+        return $this->render('WebbPostBundle:Note:create.html.twig', array(
             'form' => $form->createView(),
             'fleet' => $fleet,
-            'ship' => $ship,
-            'id' => $id,
+            'ship' => $note->getShip(),
+	    'selected' => $note,
+            'method' => "webb_post_note_edit",
+            'parent' => $note->getParent(),
+            'id' => $note->getId(),
         ));
     }
 
