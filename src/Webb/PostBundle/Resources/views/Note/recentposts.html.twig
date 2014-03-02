@@ -12,9 +12,9 @@
         {% for item in notes %}
 
             <a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': item.id}) }}"
-                    class="{% if item.id == noteid %}current {{ item.id }}{% elseif history[item.id] is not defined %}new{% endif %}">
-            {% if item['indent'] %}
-                {% for i in 1..item['indent'] %}
+		 class="{% if item.id == noteid %}current{% endif %}">
+            {% if item.indent %}
+                {% for i in 1..item.indent %}
                     <div class="indent">
                 {% endfor %}
             {% endif %}
@@ -30,26 +30,22 @@
             {% endif %}
 
             <dl>
-                <dt>
-                    {{ item['note'].location }} - {{ item['note'].activity }}
+		        <dt>
+                    {% if (item.id != noteid) and (history[item.id] is not defined) %}<span class="tag new">New</span>{% endif %}
+                    {% if item.note.log|length %}{% if item.note.log.log %}<span class="tag log">{{ item.note.assignment.position.shortname }} Log</span>{% endif %}{% endif %}
+
+                    {{ item.note.location }} - {{ item.note.activity }}
                 </dt>
                 <dd>
-                    {{ item['note'].date|date('j M Y g:i:sa') }}<br/>
-                    {{ item['note'].assignment.persona.rank.shortname }} {{ item['note'].assignment.persona.name }}
-
-                    {% if item['note'].assignment.position.custom == "" %}
-                        ({{ item['note'].assignment.position.position.shortname }})
-                    {% else %}
-                        ({{ item['note'].assignment.position.custom }})
-                    {% endif %}
-
+                    {{ item.note.date|date('j M Y g:i:sa') }}<br/>
+                    {{ item.note.assignment }} <em>played by {{ item.note.user }}</em>
 
                 </dd>
 
             </dl>
 
-            {% if item['indent'] %}
-                {% for i in 1..item['indent'] %}
+            {% if item.indent %}
+                {% for i in 1..item.indent %}
                     </div>
                 {% endfor %}
             {% endif %}

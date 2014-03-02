@@ -8,6 +8,7 @@ namespace Webb\PostBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Webb\PostBundle\Entity\Note;
+use Webb\PostBundle\Entity\Log;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
 
@@ -34,7 +35,7 @@ class NoteController extends Controller
             ->innerJoin('n.persona', 'p')
             ->innerJoin('n.assignment', 'a')
             ->innerJoin('a.position', 'q')
-            ->innerJoin('q.position', 'r')
+            ->innerJoin('q.parent', 'r')
             ->innerJoin('p.rank', 's')
             ->getQuery()->getOneOrNullResult();
 
@@ -120,29 +121,31 @@ class NoteController extends Controller
     {
         $note = new Note();
 
+        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship));
+
         $note->setUser($this->getUser());
-        $note->setShip($this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship)));
+        $note->setShip($ship);
 
         if(!is_null($parent_id)) {
-	    $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+	        $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
 
             $note->setContent("> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n");
             $note->setActivity($parent->getActivity());
             $note->setParent($parent);
 
-	    $method = "webb_post_note_reply";
+    	    $method = "webb_post_note_reply";
         }
         else {
             $method = "webb_post_note_create";
             $parent = false;
         }
 
-	$form = $this->createForm(new NoteType(), $note);
+	    $form = $this->createForm(new NoteType(), $note, array('ship' => $ship->getId(), 'user' => $this->getUser()->getId()));
         
-	if ($request->getMethod() == 'POST') {
+	    if ($request->getMethod() == 'POST') {
             $form->bind($request);
 
-	    $note->setPersona($note->getAssignment()->getPersona());
+	        $note->setPersona($note->getAssignment()->getPersona());
 
             $time = new DateTime;
             $time->setTimestamp(time());
@@ -155,8 +158,7 @@ class NoteController extends Controller
                 $em->persist($note);
                 $em->flush();
 
-		//var_dump($parent_id);
-                return $this->redirect($this->generateUrl('webb_post_note_view', array('fleet' => $fleet, 'ship' => $ship, 'id' => $note->getID())));
+                return $this->redirect($this->generateUrl('webb_post_note_view', array('fleet' => $fleet, 'ship' => $ship->getShortName(), 'id' => $note->getID())));
             }
         }
 
@@ -219,26 +221,33 @@ class NoteController extends Controller
         }
 
         $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n, l, p, a, q, r, s, t')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id')
+            ->select('note, location, persona, assignment, position, parent, rank, log, child, ship, fleet, log2')
+            ->from('WebbPostBundle:Note', 'note')
+            ->where('note.ship = :ship_id')
             ->setParameter('ship_id', $ship->getId())
-            ->innerJoin('n.location', 'l')
-            ->innerJoin('n.persona', 'p')
-            ->innerJoin('n.assignment', 'a')
-            ->innerJoin('a.position', 'q')
-            ->innerJoin('q.position', 'r')
-            ->innerJoin('p.rank', 's')
-            ->leftJoin('n.child', 't')
+            ->innerJoin('note.location', 'location')
+            ->innerJoin('note.persona', 'persona')
+            ->innerJoin('note.assignment', 'assignment')
+	        ->innerJoin('assignment.position', 'position')
+	        ->innerJoin('position.parent', 'parent')
+            ->innerJoin('persona.rank', 'rank')
+            ->innerJoin('note.ship', 'ship')
+            ->innerJoin('ship.fleet', 'fleet')
+            ->leftJoin('note.log', 'log')
+            ->leftJoin('note.child', 'child')
+            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
             ->getQuery()->execute();
 
+        $temp = array();
         $arr = array();
         $ids = array();
 
         foreach($notes as $item) {
-            if(!$this->searchArray($item->getId(), $arr)) {
-                $arr = array_merge($arr, $this->getChildPost($item));
-            }
+            $temp[$item->getId()] = $item;
+        }
+
+        foreach($temp as &$item) {
+            $arr = array_merge($arr, $this->getChildPost($temp, $item));
             $ids[] = $item->getId();
         }
 
@@ -270,25 +279,18 @@ class NoteController extends Controller
         return $this->render('WebbPostBundle:Note:recentposts.html.twig', array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history));
     }
 
-    private function getChildPost($note, $indent = 0) {
+    private function getChildPost(&$notes, $note, $indent = 0) {
 
         $arr = array();
         $arr[] = array('note' => $note, 'id' => $note->getId(), 'indent' => $indent);
 
-        for($i=0; $i < $note->getChild()->count(); $i++) {
-            $arr = array_merge($arr, $this->getChildPost($note->getChild()->get($i), $indent + 1));
+        foreach($note->getChild() as $child) {
+            $arr = array_merge($arr, $this->getChildPost($notes, $notes[$child->getId()], $indent + 1));
         }
+
+        unset($notes[$note->getId()]);
 
         return $arr;
 
-    }
-
-    private function searchArray($id, $array){
-        foreach($array as $val) {
-            if($val['id'] === $id) {
-                return true;
-            }
-        }
-        return false;
     }
 }

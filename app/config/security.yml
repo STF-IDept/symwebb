@@ -30,3 +30,4 @@ security:
         - { path: ^/admin/, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: create$, role: ROLE_USER}
         - { path: edit$, role: ROLE_USER}
+        - { path ^/user, role: ROLE_USER}

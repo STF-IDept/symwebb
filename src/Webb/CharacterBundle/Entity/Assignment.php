@@ -43,6 +43,19 @@ class Assignment
      */
     protected $position;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startdate", type="datetime")
+     */
+    private $startdate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="enddate", type="datetime")
+     */
+    private $enddate;
 
     /**
      * Get id
@@ -115,6 +128,42 @@ class Assignment
 
     public function __toString()
     {
-        return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getPosition()->getLongName()})";
+        return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getLongName()})";
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartdate()
+    {
+        return $this->startdate;
+    }
+
+    /**
+     * @param \DateTime $startdate
+     */
+    public function setStartdate($startdate)
+    {
+        $this->startdate = $startdate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEnddate()
+    {
+        return $this->enddate;
+    }
+
+    /**
+     * @param \DateTime $enddate
+     */
+    public function setEnddate($enddate)
+    {
+        $this->enddate = $enddate;
+
+        return $this;
     }
 }

@@ -45,7 +45,6 @@ class Note
 
     /**
      * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"}, inversedBy="child")
-     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"}, inversedBy="child")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\PostBundle\Entity\Note")
      */
@@ -95,9 +94,14 @@ class Note
     private $content;
 
     /**
-     * @ORM\OneToMany(targetEntity="Note", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\Note", mappedBy="parent")
      */
     protected $child;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Webb\PostBundle\Entity\Log", cascade={"persist"}, mappedBy="note")
+     */
+    protected $log;
 
     /**
      * Get id
@@ -371,5 +375,24 @@ class Note
     public function getHistory()
     {
         return $this->history;
+    }
+
+    /**
+     * @return Log
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param string $log
+     */
+    public function setLog($log)
+    {
+        $log->setNote($this);
+        $this->log = $log;
+
+        return $this;
     }
 }

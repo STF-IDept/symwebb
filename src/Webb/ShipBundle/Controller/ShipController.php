@@ -15,8 +15,6 @@ class ShipController extends Controller
 {
     public function showAction($fleet, $shortname)
     {
-        //$securityContext = new SecurityContext();
-        //$ship = new Ship();
 
         $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
 
@@ -29,36 +27,22 @@ class ShipController extends Controller
             return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
         }
 
-        $boxes = $this->getDoctrine()->getRepository('WebbMotdBundle:Box')->findBy(array('ship' => $ship->getId()), array('boxorder' => 'asc'));
-
-        //$query = $this->getDoctrine()->getManager()->createQuery("SELECT b FROM (SELECT b FROM Webb\MotdBundle\Entity\Box b WHERE b.ship = {$ship->getId()} ORDER BY b.boxorder ASC) b");
-        //$boxes = $query->getResult();
         /* Join the positions, assignments and personae */
-        /*$roster = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select()
-            ->from('WebbShipBundle:Position', 'p')
-            ->addSelect('p')
-            ->where('p.ship = :ship_id')->setParameter('ship_id', $ship->getId())
-            ->innerJoin('p.assignment', 'a')
-            ->innerJoin('a.persona', 'c')
-            ->getQuery()
-            ->getSQL();
 
-        var_dump($roster);*/
-
-        $test = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('b, p, q, a')
+        $query = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('b, p, q, a, r, s, u')
             ->from('WebbMotdBundle:Box', 'b')
             ->where('b.ship = :ship_id')->setParameter('ship_id', $ship->getId())
-            ->innerJoin('b.position', 'p')
-            ->innerJoin('p.position', 'q')
-            ->innerJoin('p.assignment', 'a');
+            ->leftJoin('b.position', 'p')
+            ->leftJoin('p.parent', 'q')
+            ->leftJoin('p.assignment', 'a')
+	    ->leftJoin('a.persona', 'r')
+	    ->leftJoin('r.rank', 's')
+	    ->leftJoin('r.user', 'u')
+	    ->orderBy('b.boxorder', 'asc');
 
-        $test->getQuery()->execute();
+        $boxes = $query->getQuery()->execute();
 
-        //$roster = $this->getDoctrine()->getRepository('WebbShipBundle:Position')->findOneBy(array('ship' => $ship->getId()));
-
-        //return $this->render('WebbCharacterBundle:Persona:index.html.twig', array('name' => $user));
         return $this->render('WebbShipBundle:Ship:show.html.twig', array('ship' => $ship, 'boxes' => $boxes));
     }
 
@@ -118,5 +102,24 @@ class ShipController extends Controller
             'fleet' => $fleet,
             'shortname' => $shortname,
         ));
+    }
+
+    function showRosterAction($ship) {
+
+	$positions = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('p, a, r, q, s, u')
+            ->from('WebbShipBundle:Position', 'p')
+            ->where('p.ship = :ship_id')
+            ->setParameter('ship_id', $ship->getId())
+	    ->innerJoin('p.assignment', 'a')
+            ->innerJoin('a.persona', 'r')
+            ->innerJoin('p.parent', 'q')
+            ->innerJoin('r.rank', 's')
+	    ->innerJoin('r.user', 'u')
+	    ->orderBy('s.order', 'ASC')
+	    ->getQuery()->execute();
+	
+	return $this->render('WebbShipBundle:Ship:roster.html.twig', array('positions' => $positions));
+
     }
 }

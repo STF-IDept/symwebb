@@ -25,16 +25,23 @@ class Position
     /**
      * @var string
      *
-     * @ORM\Column(name="custom", type="string", length=255)
+     * @ORM\Column(name="custom_long", type="string", length=255)
      */
-    private $custom;
+    private $customLong;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="custom_short", type="string", length=255)
+     */
+    private $customShort;
 
     /**
      * @ORM\ManyToOne(targetEntity="Webb\CharacterBundle\Entity\Position",  cascade={"persist"})
      * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Position")
      */
-    protected $position;
+    protected $parent;
 
     /**
      * @ORM\ManyToOne(targetEntity="Ship",  cascade={"persist"})
@@ -65,36 +72,77 @@ class Position
     }
 
     /**
-     * Set custom
+     * Set customLong
      *
-     * @param string $custom
+     * @param string $customLong
      * @return Position
      */
-    public function setCustom($custom)
+    public function setCustomLong($customLong)
     {
-        $this->custom = $custom;
+        $this->customLong = $customLong;
 
         return $this;
     }
 
     /**
-     * Get custom
+     * Get customLong
      *
      * @return string 
      */
-    public function getCustom()
+    public function getCustomLong()
     {
-        return $this->custom;
+        return $this->customLong;
     }
 
-    public function getPosition()
+    /**
+     * Set customShort
+     *
+     * @param string $customShort
+     * @return Position
+     */
+    public function setCustomShort($customShort)
     {
-        return $this->position;
+        $this->customShort = $customShort;
+
+        return $this;
     }
 
-    public function setPosition($position)
+    /**
+     * Get customShort
+     *
+     * @return string
+     */
+    public function getCustomShort()
     {
-        $this->position = $position;
+        return $this->customShort;
+    }
+
+    public function getLongName() {
+        if(empty($this->customLong)) {
+            return $this->parent->getLongName();
+        }
+        else {
+            return $this->customLong;
+        }
+    }
+
+    public function getShortName() {
+        if(empty($this->customShort)) {
+            return $this->parent->getShortName();
+        }
+        else {
+            return $this->customShort;
+        }
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
 
         return $this;
     }

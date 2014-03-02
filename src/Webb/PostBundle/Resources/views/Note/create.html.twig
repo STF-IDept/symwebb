@@ -1,3 +1,8 @@
+{% if parent is empty %}
+    {% set parentid = 0 %}
+{% else %}
+    {% set parentid = parent.id %}
+{% endif %}
 
 {% extends '::base.html.twig' %}
 
@@ -11,15 +16,22 @@
 
 {% block body %}
 
+    <h2>{{ ship.name }}</h2>
+
 {% if selected %}
 <div id="postinfo">
-    <h2>Reply to: {{ selected.location }} - {{ selected.activity }}</h2>
+    <h3>Reply to: {{ selected.location }} - {{ selected.activity }}</h3>
 </div>
 {% endif %}
 
 <article id="post">
 
-<form action="{{ path(method, {'fleet' : fleet, 'ship' : ship.shortname, 'parent_id' : parent.id, 'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
+<form action="{{ path(method, {'fleet' : fleet, 'ship' : ship.shortname, 'parent_id' : parentid, 'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
+    <div id="sideouter"><div id="sideinner">
+        <h3>Post Options</h3>
+        <span class="checkbox">{{ form_row(form.log) }}</span>
+
+    </div></div>
     {{ form_widget(form) }}
     <div>
         <input type="submit" value="{{ 'note.submit'|trans({}, 'WebbPostBundle') }}" />

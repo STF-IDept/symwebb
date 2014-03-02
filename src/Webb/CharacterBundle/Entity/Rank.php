@@ -35,6 +35,12 @@ class Rank
      */
     private $shortName;
 
+    /**
+     * @var integer
+     * 
+     * @ORM\Column(name="order", type="integer")
+     */
+    private $order;
 
     /**
      * Get id
@@ -110,6 +116,29 @@ class Rank
     public function __toString()
     {
         return $this->longName;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $order;
+     * @return integer
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
     }
 
 }
