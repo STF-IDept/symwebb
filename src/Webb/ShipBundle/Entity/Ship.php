@@ -74,6 +74,13 @@ class Ship
      */
     private $fleet;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Webb\MotdBundle\Entity\Style",  cascade={"persist"})
+     * @ORM\JoinColumn(name="style_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\MotdBundle\Entity\Style")
+     * @Assert\NotBlank()
+     */
+    private $style;
 
     /**
      * Get id
@@ -231,6 +238,18 @@ class Ship
     public function setFleet($fleet)
     {
         $this->fleet = $fleet;
+
+        return $this;
+    }
+
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+    public function setStyle($style)
+    {
+        $this->style = $style;
 
         return $this;
     }

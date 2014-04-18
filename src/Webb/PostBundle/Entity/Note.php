@@ -44,7 +44,7 @@ class Note
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Note",  cascade={"persist"}, inversedBy="child")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\PostBundle\Entity\Note")
      */
@@ -82,12 +82,26 @@ class Note
     private $assignment;
 
     /**
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\History", mappedBy="note")
+     */
+    private $history;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
      */
     private $content;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\Note", mappedBy="parent")
+     */
+    protected $child;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Webb\PostBundle\Entity\Log", cascade={"persist"}, mappedBy="note")
+     */
+    protected $log;
 
     /**
      * Get id
@@ -286,6 +300,98 @@ class Note
     public function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->child = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add child
+     *
+     * @param \Webb\PostBundle\Entity\Note $child
+     * @return Note
+     */
+    public function addChild(\Webb\PostBundle\Entity\Note $child)
+    {
+        $this->child[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \Webb\PostBundle\Entity\Note $child
+     */
+    public function removeChild(\Webb\PostBundle\Entity\Note $child)
+    {
+        $this->child->removeElement($child);
+    }
+
+    /**
+     * Get child
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChild()
+    {
+        return $this->child;
+    }
+
+    /**
+     * Add history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     * @return Note
+     */
+    public function addHistory(\Webb\PostBundle\Entity\History $history)
+    {
+        $this->history[] = $history;
+
+        return $this;
+    }
+
+    /**
+     * Remove history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     */
+    public function removeHistory(\Webb\PostBundle\Entity\History $history)
+    {
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * @return Log
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param string $log
+     */
+    public function setLog($log)
+    {
+        $log->setNote($this);
+        $this->log = $log;
 
         return $this;
     }

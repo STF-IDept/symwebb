@@ -1,5 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
 <div class="webb_ship_fleet_show">
     <p>{{ 'fleet.name'|trans({}, 'WebbShipBundle') }}: {{ fleet.name }}</p>
     <p>{{ 'fleet.shortname'|trans({}, 'WebbShipBundle') }}: {{ fleet.shortname }}</p>
     <p>{{ 'fleet.description'|trans({}, 'WebbShipBundle') }}: {{ fleet.description }}</p>
 </div>
+{% endblock %}

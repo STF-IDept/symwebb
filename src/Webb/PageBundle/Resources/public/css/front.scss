@@ -5,14 +5,18 @@
 
 $zen-column-count: 15; // Set the total number of columns in the grid.
 $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
-$row-height: 300px;
+
 $box-font-size: 1.2em;
 $box-padding: 0.2em;
-
 
 h2 {
   margin: 0;
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.banner {
+  width: 100%;
+  text-align: center;
 }
 
 p, h3 {
@@ -43,6 +47,7 @@ hr.clear {
   .inner {
     @include front_box(#3f8dc0);
   }
+
 }
 
 .nested {
@@ -52,7 +57,7 @@ hr.clear {
 }
 
 .resources {
-  @include zen-grid-item(10, 1);
+  @include zen-grid-item(10, 6);
   height:  50%;
   padding: $box-padding;
   .inner {
@@ -70,17 +75,17 @@ hr.clear {
 }
 
 .government {
-  @include zen-clear(); // Apply this mixin to start a new row.
   @include zen-grid-item(5, 1);
   height:  50%;
   padding: $box-padding;
   .inner {
-    @include front_box(#2a1bb3);
+    @include front_box(#222222);
   }
 }
 
 .events {
-  @include zen-grid-item(10, 6);
+  @include zen-clear(); // Apply this mixin to start a new row.
+  @include zen-grid-item(10, 1);
   height:  50%;
   padding: $box-padding;
   .inner {
@@ -109,6 +114,11 @@ hr.clear {
   .inner {
     @include front_box(#65a6e8);
   }
+}
+
+#page {
+  max-width:none;
+  background-color: transparent;
 }
 
 @media screen and (max-width: 1600px) {
@@ -178,4 +188,8 @@ hr.clear {
   .fixed-font{
     font-size: $box-font-size*1024/1920;
   }
+}
+
+.ellipsis a, a {
+  color: #ff9;
 }

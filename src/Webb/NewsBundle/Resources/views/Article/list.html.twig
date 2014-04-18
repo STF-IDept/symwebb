@@ -1,0 +1,10 @@
+{% for article in articles %}
+    <h2>{{ article.title }}</h2>
+
+        <div ><p>{{ article.content|markdown }}<i></i></p>
+        </div>
+
+
+    <p>Posted by <a href="{{ article.user|entityurl('webb_user_homepage') }}">{{ article.user }}</a> on {{ article.date | date("j M y") }}</p>
+    <hr class="clear"/>
+{% endfor %}

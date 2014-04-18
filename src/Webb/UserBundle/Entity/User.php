@@ -26,23 +26,26 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter your first name.", groups={"Registration", "Profile"})
-     * @Assert\MaxLength(limit="255", message="The first name is too long.", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", maxMessage="The first name is too long.", groups={"Registration", "Profile"})
      */
     protected $first_name;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter your surname.", groups={"Registration", "Profile"})
-     * @Assert\MaxLength(limit="255", message="The surname is too long.", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", maxMessage="The surname is too long.", groups={"Registration", "Profile"})
      */
     protected $surname;
 
     /**
-     * @ORM\OneToOne(targetEntity="Application",  cascade={"persist"})
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\UserBundle\Entity\Application")
+     * @ORM\OneToOne(targetEntity="Application", cascade={"persist"}, mappedBy="user")
      */
     protected $application;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\History", mappedBy="user")
+     */
+    private $history;
 
     public function __construct()
     {
@@ -79,18 +82,67 @@ class User extends BaseUser
         $this->surname = $surname;
     }
 
+    public function __toString()
+    {
+        return "$this->first_name $this->surname";
+    }
+
+    /**
+     * Set application
+     *
+     * @param \Webb\UserBundle\Entity\Application $application
+     * @return User
+     */
+    public function setApplication($application = null)
+    {
+        if(is_array($application)) {
+            $this->application = $application[0];
+            return $this;
+        }
+        $this->application = $application;
+        return $this;
+    }
+
+    /**
+     * Get application
+     *
+     * @return \Webb\UserBundle\Entity\Application 
+     */
     public function getApplication()
     {
         return $this->application;
     }
 
-    public function setApplication(Application $application = null)
+    /**
+     * Add history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     * @return User
+     */
+    public function addHistory(\Webb\PostBundle\Entity\History $history)
     {
-        $this->application = $application;
+        $this->history[] = $history;
+
+        return $this;
     }
 
-    public function __toString()
+    /**
+     * Remove history
+     *
+     * @param \Webb\PostBundle\Entity\History $history
+     */
+    public function removeHistory(\Webb\PostBundle\Entity\History $history)
     {
-        return "$this->first_name $this->surname";
+        $this->history->removeElement($history);
+    }
+
+    /**
+     * Get history
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHistory()
+    {
+        return $this->history;
     }
 }

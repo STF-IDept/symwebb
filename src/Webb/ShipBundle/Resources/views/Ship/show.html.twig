@@ -1,9 +1,37 @@
-<div class="webb_ship_ship_show">
-    <p>{{ 'ship.name'|trans({}, 'WebbShipBundle') }}: {{ ship.name }}</p>
-    <p>{{ 'ship.shortname'|trans({}, 'WebbShipBundle') }}: {{ ship.shortname }}</p>
-    <p>{{ 'ship.type'|trans({}, 'WebbShipBundle') }}: {{ ship.type }}</p>
-    <p>{{ 'ship.speed'|trans({}, 'WebbShipBundle') }}: {{ ship.speed }}</p>
-    <p>{{ 'ship.fleet'|trans({}, 'WebbShipBundle') }}: {{ ship.fleet }}</p>
-    <p>{{ 'ship.acceptsNew'|trans({}, 'WebbShipBundle') }}: {{ ship.acceptsNew }}</p>
-    <p>{{ 'ship.description'|trans({}, 'WebbShipBundle') }}: {{ ship.description }}</p>
-</div>
+{% extends 'WebbMotdBundle:id5:ship.html.twig' %}
+
+{% block boxes %}
+
+    {% for box in boxes %}
+
+        {% if box.type == "colstart" %}
+            <div class="motd-cols{{ box.columns }}">
+        {% elseif box.type == "colend" %}
+            </div>
+        {% elseif box.type == "freetext" %}
+            <dl class="motd-freetext"><dt class="blank">{{ box.title }}</dt><dd>{{ box.content }}</dd></dl>
+        {%  elseif box.type == "position" %}
+            <dl class="motd-position motd-color-{{ box.position.parent.branch }}">
+                {% if box.position.assignment != "" %}
+                    <dt class="motd-rank-{{ box.position.assignment.persona.rank.stylename }}">{{ box.position.shortname }}: {{ box.position.assignment.persona.name }}</dt>
+                    <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.position.assignment.persona.user }}</dd>
+                {% else %}
+                    <dt class="motd-rank-vacant">{{ box.position.shortname }}: Position Vacant</dt>
+                    <dd>{{ box.content }}</dd>
+                {% endif %}
+
+            </dl>
+
+        {% endif %}
+
+    {%  endfor %}
+
+
+{% endblock boxes %}
+
+
+{% block roster %}
+
+{{ render(controller('WebbShipBundle:Ship:showRoster', {'ship': ship})) }}
+
+{% endblock roster %}

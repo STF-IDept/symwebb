@@ -37,19 +37,25 @@ class Assignment
     protected $persona;
 
     /**
-     * @ORM\OneToOne(targetEntity="Position",  cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Position",  cascade={"persist"}, inversedBy="assignment")
      * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\CharacterBundle\Entity\Position")
+     * @Assert\Type(type="Webb\ShipBundle\Entity\Position")
      */
     protected $position;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
-     * @ORM\JoinColumn(name="ship_id", referencedColumnName="id")
-     * @Assert\Type(type="Webb\ShipBundle\Entity\Ship")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startdate", type="datetime")
      */
-    protected $ship;
+    private $startdate;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="enddate", type="datetime")
+     */
+    private $enddate;
 
     /**
      * Get id
@@ -123,5 +129,41 @@ class Assignment
     public function __toString()
     {
         return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getLongName()})";
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartdate()
+    {
+        return $this->startdate;
+    }
+
+    /**
+     * @param \DateTime $startdate
+     */
+    public function setStartdate($startdate)
+    {
+        $this->startdate = $startdate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEnddate()
+    {
+        return $this->enddate;
+    }
+
+    /**
+     * @param \DateTime $enddate
+     */
+    public function setEnddate($enddate)
+    {
+        $this->enddate = $enddate;
+
+        return $this;
     }
 }

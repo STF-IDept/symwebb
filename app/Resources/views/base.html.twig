@@ -7,10 +7,25 @@
 
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+      {% javascripts  "../app/Resources/public/js/j*" %}
+        <script src="{{ asset_url }}" type="text/javascript"></script>
+      {% endjavascripts %}
+      {% javascripts  "../app/Resources/public/js/b*" %}
+        <script src="{{ asset_url }}" type="text/javascript"></script>
+      {% endjavascripts %}
+      {% javascripts "bundles/webbpost/js/post.js" %}
+        <script src="{{ asset_url }}" type="text/javascript"></script>
+      {% endjavascripts %}
+
+
     </head>
     <body>
+        <div id="container">
+        <div id="page">
         {% include "WebbPageBundle:Nav:bar.html.twig" %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
+        </div>
+        </div>
     </body>
 </html>

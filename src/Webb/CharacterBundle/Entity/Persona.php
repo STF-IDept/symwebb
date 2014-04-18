@@ -68,7 +68,7 @@ class Persona
     protected $rank;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      */

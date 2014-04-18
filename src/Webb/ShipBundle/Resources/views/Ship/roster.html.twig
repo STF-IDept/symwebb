@@ -1,0 +1,43 @@
+<ul class="buttons">
+<li><a href="#">Read Notes</a></li>
+<li><a href="#">Post New Note</a></li>
+<li><a href="#">Captain's Log</a></li>
+</ul>
+
+<dl class="motd-roster">
+<dt>Roster</dt>
+<dd>
+<table class="roster">
+    <tr>
+	<th>Rank</th>
+	<th>Character</th>
+	<th>Position</th>
+	<th>Species</th>
+	<th>Age</th>
+	<th>Height</th>
+	<th>Weight</th>
+	<th>User</th>
+    </tr>
+
+{% for position in positions %}
+    <tr>
+        <td>{{ position.assignment.persona.rank.longname }}</td>
+	<td>{{ position.assignment.persona.name }}</td>
+	<td>{{ position.shortname }}</td>
+	<td>{{ position.assignment.persona.species }}</td>
+	<td>{{ position.assignment.persona.age }}</td>
+	<td>{{ position.assignment.persona.height }}</td>
+	<td>{{ position.assignment.persona.weight }}</td>
+	<td>
+	    {% if is_granted("ROLE_USER") %}
+	        <a href="{{ path('webb_user', { 'id': position.assignment.persona.user.id }) }}">{{ position.assignment.persona.user }}</a>
+	    {% else %}
+	        {{ position.assignment.persona.user }}
+	    {% endif %}
+	</td>
+
+    </tr>
+{% endfor %}
+</table>
+</dd>
+</dl>

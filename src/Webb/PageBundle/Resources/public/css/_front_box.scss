@@ -1,9 +1,9 @@
 @import "rounded";
 @mixin front_box($color) {
-  @include rounded(top, left, 10px);
-  @include rounded(top, right, 10px);
-  @include rounded(bottom, left, 10px);
-  @include rounded(bottom, right, 10px);
+  @include rounded(top, left, 5px);
+  @include rounded(top, right, 5px);
+  @include rounded(bottom, left, 5px);
+  @include rounded(bottom, right, 5px);
   background-color: $color;
   color: #fff;
   height: 100%;

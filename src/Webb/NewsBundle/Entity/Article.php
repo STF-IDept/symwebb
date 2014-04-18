@@ -175,4 +175,34 @@ class Article
         $result = $qb->getQuery()->execute();
         return $result;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add tags
+     *
+     * @param \Webb\NewsBundle\Entity\Tag $tags
+     * @return Article
+     */
+    public function addTag(\Webb\NewsBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Remove tags
+     *
+     * @param \Webb\NewsBundle\Entity\Tag $tags
+     */
+    public function removeTag(\Webb\NewsBundle\Entity\Tag $tags)
+    {
+        $this->tags->removeElement($tags);
+    }
 }

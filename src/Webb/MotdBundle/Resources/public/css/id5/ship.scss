@@ -1,0 +1,407 @@
+@import 'rounded';
+@import "zen";
+
+/* Format #content div, plus add a border */
+
+#main {
+  padding: 0;
+  margin-top: 0;
+  width: 100%;
+  border: 0;
+}
+
+/* Hide "Roster" text from view */
+
+ul.primary {
+  margin: 0 0 1em 0;
+  border-bottom: none;
+}
+
+img {
+  margin: 0;
+}
+
+/* Set title color above blocks */
+
+.title {
+  color: #FFFF99 !important;
+}
+
+/* HEADER */
+
+#motd-stflogo {
+  float: left;
+}
+
+#motd-shiplogo {
+  float: right;
+}
+
+#motd-stflogo, #motd-shiplogo, #motd-stflogo img, #motd-shiplogo img {
+  width: 150px;
+}
+
+#motd-header {
+  width: auto;
+  margin: 0 155px 0 155px;
+  text-align: center;
+  color: #FFFF99;
+  padding: 0;
+  div {
+    width: 99%;
+    margin: auto;
+    line-height: 0;
+    padding: 0;
+  }
+  ul {
+    margin: 0;
+  }
+}
+
+#motd-header-links, #main .node div.links {
+  width: auto;
+  text-align: center;
+  clear: both;
+  background: #222222;
+  border: 5px solid #6090ff;
+  @include rounded(top, left, 5px);
+  @include rounded(top, right, 5px);
+  @include rounded(bottom, left, 5px);
+  @include rounded(bottom, right, 5px);
+}
+
+/* MOTD BOXES */
+
+.motd-freetext, .motd-roster {
+  dt {
+    background: #9FC99F;
+    color: #111111;
+    width: 40em;
+    margin: auto;
+    padding: 0.3em;
+    border: 2px solid #9FC99F;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    text-align: center;
+    font-size: 1.2em;
+  }
+  dd {
+    margin: 0;
+    color: #CCDDFF;
+    border: 2px solid #9FC99F;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    @include rounded(bottom, left, 5px);
+    @include rounded(bottom, right, 5px);
+    background: #222222;
+    padding: 0.5em;
+    min-height: 5em;
+  }
+}
+
+.motd-roster {
+
+  clear: both; 
+  padding-top: 1em;
+
+  dd {
+    padding: 0 !important;
+  }
+
+  th {
+    background: #9FC99F;
+    color: #111111;
+    text-align: left;
+  }
+}
+
+.motd-position, .motd-freetext {
+  margin: 2em 0 0 0;
+}
+
+.motd-position {
+  dt {
+    margin: 0;
+    color: #000000;
+    border: 2px solid #6090ff;
+    @include rounded(top, left, 5px);
+    @include rounded(top, right, 5px);
+    background: #6090ff;
+    padding: 0.3em;
+    text-align: left;
+    font-size: 1.2em;
+  }
+  dd {
+    margin: 0;
+    color: #CCDDFF;
+    border: 2px solid #6090ff;
+    @include rounded(top, right, 5px);
+    @include rounded(bottom, left, 5px);
+    @include rounded(bottom, right, 5px);
+    background: #222222;
+    padding: 0.5em;
+    min-height: 4em;
+    min-width: 200px;
+    background-position: top right;
+    background-repeat: no-repeat;
+  }
+}
+
+.motd-clear {
+  clear: both;
+}
+
+/* Command Colours */
+
+.motd-color-Command {
+  dt {
+    border-color: #AA0000;
+    background: #AA0000;
+    color: #CCDDFF;
+  }
+  dd {
+    border-color: #AA0000;
+    display: block;
+  }
+}
+
+.motd-color-Engineering, .motd-color-Security {
+  dt {
+    border-color: #DD9900;
+    background: #DD9900;
+  }
+  dd {
+    border-color: #DD9900;
+  }
+}
+
+.motd-color-Medical {
+  dt {
+    border-color: #117777;
+    background: #117777;
+  }
+  dd {
+    border-color: #117777;
+  }
+}
+
+.motd-color-Science {
+  dt {
+    border-color: #3366AA;
+    background: #3366AA;
+  }
+  dd {
+    border-color: #3366AA;
+  }
+}
+
+.motd-color-Civilian {
+  dt {
+    border-color: #DDDDDD;
+    background: #DDDDDD;
+  }
+  dd {
+    border-color: #DDDDDD;
+  }
+}
+
+.motd-color-Gamemaster {
+  dt {
+    border-color: #AAAAAA;
+    background: #AAAAAA;
+  }
+  dd {
+    border-color: #AAAAAA;
+  }
+}
+
+
+.motd-cols2 {
+  $zen-column-count: 2; // Set the total number of columns in the grid.
+  $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
+  @include zen-grid-container;
+  dl:nth-child(1) {
+    @include zen-grid-item(1, 1);
+    @include zen-clear(); // Apply this mixin to start a new row.
+    clear: both;
+  }
+  dl:nth-child(2) {
+    @include zen-grid-item(1, 2);
+  }
+}
+
+
+.motd-cols3 {
+  $zen-column-count: 3; // Set the total number of columns in the grid.
+  $zen-gutter-width: 10px; //Set the gutter size. A half-gutter is used on each side of each column.
+  @include zen-grid-container;
+  dl:nth-child(3n+1) {
+    @include zen-grid-item(1, 1);
+    @include zen-clear(); // Apply this mixin to start a new row.
+  }
+  dl:nth-child(3n+2) {
+    @include zen-grid-item(1, 2);
+  }
+  dl:nth-child(3n+3) {
+    @include zen-grid-item(1, 3);
+  }
+}
+
+/* Ranks */
+
+.motd-rank-FCapt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6c.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -13px -6px !important;
+  padding-left: 97px !important;
+  min-width: 160px;
+}
+
+.motd-rank-Capt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o6.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -30px -6px !important;
+  padding-left: 80px !important;
+  min-width: 166px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-Cmdr {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o5.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -47px -6px !important;
+  padding-left: 63px !important;
+  width: 183px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-LtCmdr {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o4.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -47px -6px !important;
+  padding-left: 63px !important;
+  width: 183px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-Lt {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o3.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -64px -6px !important;
+  padding-left: 46px !important;
+  width: 200px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-LtJG {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o2.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -64px -6px !important;
+  padding-left: 46px !important;
+  width: 200px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-Ens {
+  background-image: url('/images/ranks/nova3_alt1_set/navy_officer_gold/o1.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -81px -6px !important;
+  padding-left: 29px !important;
+  width: 217px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+.motd-rank-GM, .motd-rank-vacant {
+  padding-left: 5px !important;
+  width: 241px;
+  padding-right: 1em !important;
+  display: inline-block;
+}
+
+/* Need to sort this out */
+.motd-box {
+  dt a:hover, dd a {
+    color: #CCDDFF !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: -1px !important;
+    /* Pop this in to prevent 'flickering' caused by expansion of element on hover */
+    border: 1px solid transparent;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: transparent !important;
+  }
+}
+
+
+.motd-links a {
+  display: inline-block;
+  color: #CCDDFF;
+  font-weight: bold;
+  padding: 1em 1em 1em 1em;
+  margin: -7px -6px -18px -2px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+.motd-links a:hover {
+  background: #6090ff !important;
+}
+
+.motd-links li {
+  display: inline;
+  border: none;
+  padding: 0;
+}
+
+.motd-links {
+  color: #000000;
+  display: block !important;
+  li:nth-child(n+2):before {
+    content: "|";
+    color: #6090ff;
+  }
+  padding: 2px;
+}
+
+#motd-header img {
+  max-width: 100%;
+}
+
+
+.buttons {
+
+  padding: 0;
+  margin: 1em 0 0 0;
+  float: left;
+
+  a {
+    display: inline-block;
+    color: #111;
+    font-weight: bold;
+    padding: 0.5em;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    background: #3366AA;
+  }
+
+  a:hover {
+    background: #6090ff !important;
+  }
+
+  li {
+    display: inline;
+    border: none;
+    padding-right: 0.1em;
+  }
+}

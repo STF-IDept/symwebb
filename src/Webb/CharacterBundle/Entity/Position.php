@@ -35,6 +35,12 @@ class Position
      */
     private $shortName;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="branch", type="string", length=255)
+     */
+    private $branch;
 
     /**
      * Get id
@@ -90,5 +96,28 @@ class Position
     public function getShortName()
     {
         return $this->shortName;
+    }
+
+    /**
+     * Set branch
+     *
+     * @param string $branch
+     * @return Position
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+
+        return $this;
+    }
+
+    /**
+     * Get branch
+     *
+     * @return string 
+     */
+    public function getBranch()
+    {
+        return $this->branch;
     }
 }
