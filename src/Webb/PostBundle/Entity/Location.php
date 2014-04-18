@@ -3,7 +3,7 @@
 namespace Webb\PostBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Location
  *
@@ -29,9 +29,10 @@ class Location
     private $location;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="ship", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"})
+     * @ORM\JoinColumn(name="ship_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\ShipBundle\Entity\Ship")
+     * @Assert\NotBlank()
      */
     private $ship;
 
