@@ -83,15 +83,4 @@ class Log
         return $this;
     }
 
-    /*
-    public function addNote(Note $note)
-    {
-        $this->note->add($note);
-    }
-
-    public function removeNote(Note $note)
-    {
-        $this->note->removeElement($note);
-    }*/
-
 }

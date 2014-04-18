@@ -21,8 +21,8 @@
 </article>
 
 <ul class="buttons buttonsleft">
-    {% if previous is not null %}
-        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previous.id}) }}">Previous Note</a></li>
+    {% if previouscron is not null %}
+        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previouscron.id}) }}">Previous Note</a></li>
     {% endif %}
     {% if note.parent is not null %}
         <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.parent.id}) }}">Parent</a></li>
@@ -35,8 +35,8 @@
     {% if nextcron is not null %}
     <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextcron.id}) }}">Next Note</a></li>
     {% endif %}
-    {% if nextloc is not null %}
-    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextloc.id}) }}">Next in Location</a></li>
+    {% if nextthread is not null %}
+    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextthread.id}) }}">Next in Thread</a></li>
     {% endif %}
     <li><a href="">Next New Note</a></li>
 </ul>

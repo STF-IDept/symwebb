@@ -104,6 +104,20 @@ class Note
     protected $log;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="thread", type="integer", nullable=true)
+     */
+    protected $thread;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="published", type="integer")
+     */
+    protected $published;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -394,5 +408,39 @@ class Note
         $this->log = $log;
 
         return $this;
+    }
+
+    /**
+     * @param integer $thread
+     */
+    public function setThread($thread)
+    {
+        $this->thread = $thread;
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getThread()
+    {
+        return $this->thread;
+    }
+
+    /**
+     * @param integer $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPublished()
+    {
+        return $this->published;
     }
 }
