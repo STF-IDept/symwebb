@@ -1,3 +1,7 @@
+tools:
+    resource: "@ToolsBundle/Resources/config/routing.yml"
+    prefix:   /
+
 webb_motd:
     resource: "@WebbMotdBundle/Resources/config/routing.yml"
     prefix:   /
