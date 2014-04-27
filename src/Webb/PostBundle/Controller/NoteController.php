@@ -7,6 +7,7 @@ namespace Webb\PostBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Webb\PostBundle\Entity\Note;
 use Webb\PostBundle\Entity\Log;
 use Webb\PostBundle\Form\Type\NoteType;
@@ -146,13 +147,13 @@ class NoteController extends Controller
         if(!is_null($parent_id)) {
 
             // Get the actual parent node
-	        $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+            $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
 
             // And specify parent and thread
             $note->setParent($parent);
             $note->setThread($parent->getThread());
 
-    	    $method = "webb_post_note_reply";
+            $method = "webb_post_note_reply";
         }
         else {
             $method = "webb_post_note_create";
@@ -211,21 +212,21 @@ class NoteController extends Controller
 
 
         // Generate the form
-	    $form = $this->createForm(new NoteType(), $note, array('ship' => $ship->getId(), 'user' => $user));
+        $form = $this->createForm(new NoteType(), $note, array('ship' => $ship->getId(), 'user' => $user));
 
         // Handle form submissions
-	    if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
 
             $form->bind($request);
 
             // @todo: Do we need to assign the persona to the note, when it's associated with the assignment linked to the note?  Assignments are going to be unique to both ship and individual.
-	        $note->setPersona($note->getAssignment()->getPersona());
+            $note->setPersona($note->getAssignment()->getPersona());
 
 
             // Set time for post
             $time = new DateTime;
             $time->setTimestamp(time());
-            $note->setDate($time);	    
+            $note->setDate($time);
 
             if ($form->isValid()) {
                 // Save the note to the database
@@ -279,7 +280,7 @@ class NoteController extends Controller
             'form' => $form->createView(),
             'fleet' => $fleet,
             'ship' => $note->getShip(),
-	    'selected' => $note,
+            'selected' => $note,
             'method' => "webb_post_note_edit",
             'parent' => $note->getParent(),
             'id' => $note->getId(),
@@ -305,8 +306,8 @@ class NoteController extends Controller
             ->innerJoin('note.location', 'location')
             ->innerJoin('note.persona', 'persona')
             ->innerJoin('note.assignment', 'assignment')
-	        ->innerJoin('assignment.position', 'position')
-	        ->innerJoin('position.parent', 'parent')
+            ->innerJoin('assignment.position', 'position')
+            ->innerJoin('position.parent', 'parent')
             ->innerJoin('persona.rank', 'rank')
             ->innerJoin('note.ship', 'ship')
             ->innerJoin('ship.fleet', 'fleet')
@@ -370,4 +371,21 @@ class NoteController extends Controller
         return $arr;
 
     }
+
+    /**
+     * Generate the article feed
+     *
+     * @return Response XML Feed
+     */
+
+    public function feedAction()
+    {
+        $articles = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->findAll();
+
+        $feed = $this->get('eko_feed.feed.manager')->get('article');
+        $feed->addFromArray($articles);
+
+        return new Response($feed->render('rss')); // or 'atom'
+    }
+
 }
