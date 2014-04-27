@@ -108,4 +108,4 @@ eko_feed:
             description: 'A list of posts on a given on board'
             link:        'http://www.star-fleet.com/'
             encoding:    'utf-8'
-            author:      'Idept' # Only required for Atom feeds
+            author:      'I-dept' # Only required for Atom feeds
