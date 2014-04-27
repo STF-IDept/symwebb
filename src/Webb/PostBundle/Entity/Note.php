@@ -4,13 +4,17 @@ namespace Webb\PostBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Eko\FeedBundle\Item\Writer\ItemInterface;
+
+
 /**
  * Note
  *
  * @ORM\Table(name="notes")
  * @ORM\Entity
  */
-class Note
+
+class Note implements ItemInterface
 {
     /**
      * @var integer
@@ -443,4 +447,25 @@ class Note
     {
         return $this->published;
     }
+
+    public function getFeedItemTitle()
+    {
+
+    }
+
+    public function getFeedItemDescription()
+    {
+
+    }
+
+    public function getFeedItemPubDate()
+    {
+
+    }
+
+    public function getFeedItemLink()
+    {
+
+    }
 }
+

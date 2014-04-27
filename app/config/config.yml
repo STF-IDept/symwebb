@@ -100,3 +100,13 @@ assetic:
             load_paths:
                 - /usr/lib/ruby/gems/1.8/gems/zen-grids-1.4/stylesheets/
                 - /usr/lib/ruby/gems/1.8/gems/compass_twitter_bootstrap-2.3.1/stylesheets/
+
+
+eko_feed:
+    feeds:
+        article:
+            title:       'My articles/posts'
+            description: 'Latests articles'
+            link:        'http://vincent.composieux.fr'
+            encoding:    'utf-8'
+            author:      'Vincent Composieux' # Only required for Atom feeds
