@@ -105,8 +105,8 @@ assetic:
 eko_feed:
     feeds:
         article:
-            title:       'My articles/posts'
-            description: 'Latests articles'
-            link:        'http://vincent.composieux.fr'
+            title:       'Feed Notes'
+            description: 'A list of posts on a given on board'
+            link:        'http://www.star-fleet.com/'
             encoding:    'utf-8'
-            author:      'Vincent Composieux' # Only required for Atom feeds
+            author:      'Idept' # Only required for Atom feeds

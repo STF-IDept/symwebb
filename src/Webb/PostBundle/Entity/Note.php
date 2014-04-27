@@ -5,7 +5,7 @@ namespace Webb\PostBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Eko\FeedBundle\Item\Writer\ItemInterface;
-
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Note
@@ -443,6 +443,7 @@ class Note implements ItemInterface
     /**
      * @return integer
      */
+
     public function getPublished()
     {
         return $this->published;
@@ -450,22 +451,24 @@ class Note implements ItemInterface
 
     public function getFeedItemTitle()
     {
-
+        return "{$this->location} - {$this->activity}";
     }
 
     public function getFeedItemDescription()
     {
-
+        return "{$this->assignment} played by {$this->user}<br/><br/> {$this->content}";
     }
 
     public function getFeedItemPubDate()
     {
-
+        return $this->date;
     }
 
     public function getFeedItemLink()
     {
-
+        //Use symfony class change needed
+        $url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        return $url;
     }
 }
 
