@@ -4,13 +4,17 @@ namespace Webb\PostBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Eko\FeedBundle\Item\Writer\ItemInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+
 /**
  * Note
  *
  * @ORM\Table(name="notes")
  * @ORM\Entity
  */
-class Note
+
+class Note implements ItemInterface
 {
     /**
      * @var integer
@@ -120,7 +124,7 @@ class Note
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -136,14 +140,14 @@ class Note
     public function setLocation($location)
     {
         $this->location = $location;
-    
+
         return $this;
     }
 
     /**
      * Get location
      *
-     * @return string 
+     * @return string
      */
     public function getLocation()
     {
@@ -159,14 +163,14 @@ class Note
     public function setActivity($activity)
     {
         $this->activity = $activity;
-    
+
         return $this;
     }
 
     /**
      * Get activity
      *
-     * @return string 
+     * @return string
      */
     public function getActivity()
     {
@@ -182,14 +186,14 @@ class Note
     public function setDate($date)
     {
         $this->date = $date;
-    
+
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -205,14 +209,14 @@ class Note
     public function setParent($parent)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return string 
+     * @return string
      */
     public function getParent()
     {
@@ -228,14 +232,14 @@ class Note
     public function setShip($ship)
     {
         $this->ship = $ship;
-    
+
         return $this;
     }
 
     /**
      * Get ship
      *
-     * @return string 
+     * @return string
      */
     public function getShip()
     {
@@ -251,14 +255,14 @@ class Note
     public function setUser($user)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return string 
+     * @return string
      */
     public function getUser()
     {
@@ -274,14 +278,14 @@ class Note
     public function setPersona($persona)
     {
         $this->persona = $persona;
-    
+
         return $this;
     }
 
     /**
      * Get persona
      *
-     * @return string 
+     * @return string
      */
     public function getPersona()
     {
@@ -351,7 +355,7 @@ class Note
     /**
      * Get child
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChild()
     {
@@ -384,7 +388,7 @@ class Note
     /**
      * Get history
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getHistory()
     {
@@ -439,8 +443,32 @@ class Note
     /**
      * @return integer
      */
+
     public function getPublished()
     {
         return $this->published;
     }
+
+    public function getFeedItemTitle()
+    {
+        return "{$this->location} - {$this->activity}";
+    }
+
+    public function getFeedItemDescription()
+    {
+        return "{$this->assignment} played by {$this->user}<br/><br/> {$this->content}";
+    }
+
+    public function getFeedItemPubDate()
+    {
+        return $this->date;
+    }
+
+    public function getFeedItemLink()
+    {
+        //Use symfony class change needed
+        $url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        return $url;
+    }
 }
+

@@ -14,3 +14,6 @@ webb_post_note_edit:
       pattern:  /fleet{fleet}/{ship}/note/{id}/edit
       defaults: { _controller: WebbPostBundle:Note:edit }
 
+webb_post_note_rss:
+      pattern:  /fleet{fleet}/{ship}/note/{id}/rss
+      defaults: { _controller: WebbPostBundle:Note:feed }

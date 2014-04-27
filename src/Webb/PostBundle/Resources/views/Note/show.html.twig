@@ -10,38 +10,39 @@
 
 {% block body %}
 
-<div id="postinfo">
-    <h2>{{ ship.name }} - {{ note.location }} - {{ note.activity }}</h2>
-    <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} {{ note.assignment }} <em>played by {{note.user}}</em></p>
+    <div id="postinfo">
+        <h2>{{ ship.name }} - {{ note.location }} - {{ note.activity }}</h2>
+        <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} {{ note.assignment }} <em>played by {{note.user}}</em></p>
 
-</div>
+    </div>
 
-<article id="post">
-    {{ note.content|markdown }}
-</article>
+    <article id="post">
+        {{ note.content|markdown }}
+    </article>
 
-<ul class="buttons buttonsleft">
-    {% if previouscron is not null %}
-        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previouscron.id}) }}">Previous Note</a></li>
-    {% endif %}
-    {% if note.parent is not null %}
-        <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.parent.id}) }}">Parent</a></li>
-    {% endif %}
-    <li><a href="{{ url('webb_post_note_reply', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'parent_id': note.id}) }}">Reply</a></li>
-    <li><a href="{{ url('webb_post_note_create', {'fleet': ship.fleet.shortname, 'ship': ship.shortname}) }}">Post New Note</a></li>
-</ul>
+    <ul class="buttons buttonsleft">
+        {% if previouscron is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previouscron.id}) }}">Previous Note</a></li>
+        {% endif %}
+        {% if note.parent is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.parent.id}) }}">Parent</a></li>
+        {% endif %}
+        <li><a href="{{ url('webb_post_note_reply', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'parent_id': note.id}) }}">Reply</a></li>
+        <li><a href="{{ url('webb_post_note_create', {'fleet': ship.fleet.shortname, 'ship': ship.shortname}) }}">Post New Note</a></li>
+    </ul>
 
-<ul class="buttons buttonsright">
-    {% if nextcron is not null %}
-    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextcron.id}) }}">Next Note</a></li>
-    {% endif %}
-    {% if nextthread is not null %}
-    <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextthread.id}) }}">Next in Thread</a></li>
-    {% endif %}
-    <li><a href="">Next New Note</a></li>
-</ul>
+    <ul class="buttons buttonsright">
+        {% if nextcron is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextcron.id}) }}">Next Note</a></li>
+        {% endif %}
+        {% if nextthread is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextthread.id}) }}">Next in Thread</a></li>
+        {% endif %}
+        <li><a href="">Next New Note</a></li>
+        <li><a href="{{ url('webb_post_note_rss', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.id}) }}">RSS</a></li>
+    </ul>
 
-<br class="clear" />
+    <br class="clear" />
     {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note})) }}
 
 {% endblock body %}
