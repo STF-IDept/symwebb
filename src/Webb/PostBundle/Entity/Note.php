@@ -4,7 +4,7 @@ namespace Webb\PostBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Eko\FeedBundle\Item\Writer\ItemInterface;
+use Eko\FeedBundle\Item\Writer\RoutedItemInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
  * @ORM\Entity
  */
 
-class Note implements ItemInterface
+class Note implements RoutedItemInterface
 {
     /**
      * @var integer
@@ -464,11 +464,23 @@ class Note implements ItemInterface
         return $this->date;
     }
 
-    public function getFeedItemLink()
+    public function getFeedItemRouteName()
     {
-        //Use symfony class change needed
-        $url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        return $url;
+        return "webb_post_note_view";
     }
+
+    public function getFeedItemRouteParameters()
+    {
+        // @TODO: Need to work out how many DB hits this is doing.  Hopefully only two extra (one for the ship, one for the fleet).
+        return array("fleet" => $this->ship->getFleet()->getShortname(), "ship" => $this->ship->getShortname(), "id" => $this->id);
+    }
+
+    public function getFeedItemUrlAnchor()
+    {
+        return "";
+    }
+
+
+
 }
 
