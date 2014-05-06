@@ -378,9 +378,20 @@ class NoteController extends Controller
      * @return Response XML Feed
      */
 
-    public function feedAction()
+    public function feedAction($fleet, $ship, $format)
     {
+        // @TODO: Need to limit this to only the last week's posts, and on a ship
+
         $articles = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->findAll();
+
+        foreach($articles as $article) {
+          if($format == "raw") {
+            $article->setContent(nl2br($article->getContent()));
+          }
+          else {
+            $article->setContent($this->container->get('markdown.parser')->transformMarkdown($article->getContent()));
+          }
+        }
 
         $feed = $this->get('eko_feed.feed.manager')->get('article');
         $feed->addFromArray($articles);
