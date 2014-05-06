@@ -383,15 +383,15 @@ class NoteController extends Controller
         // @TODO: Need to limit this to only the last week's posts, and on a ship
 
         $articles = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->findAll();
+
+        foreach($articles as $article) {
+          $article->setContent($this->container->get('markdown.parser')->transformMarkdown($article->getContent()));
+        }
+
         $feed = $this->get('eko_feed.feed.manager')->get('article');
         $feed->addFromArray($articles);
 
         return new Response($feed->render('rss')); // or 'atom'
-        //$this->container->get('markdown.parser')->transformMarkdown($this->content);
     }
 
-    function __call($name, $arguments)
-    {
-        // TODO: Implement __call() method.
-    }
 }

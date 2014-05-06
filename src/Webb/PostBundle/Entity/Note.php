@@ -456,7 +456,7 @@ class Note implements RoutedItemInterface
 
     public function getFeedItemDescription()
     {
-        return "{$this->assignment} played by {$this->user}<br/><br/> {$this->content}";
+        return "<em>{$this->assignment} played by {$this->user}</em><br/><br/> {$this->content}";
     }
 
     public function getFeedItemPubDate()

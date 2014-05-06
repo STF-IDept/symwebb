@@ -39,7 +39,7 @@
             <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextthread.id}) }}">Next in Thread</a></li>
         {% endif %}
         <li><a href="">Next New Note</a></li>
-        <li><a href="{{ url('webb_post_note_rss', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.id}) }}">RSS</a></li>
+        <li><a href="{{ url('webb_post_note_rss', {'fleet': ship.fleet.shortname, 'ship': ship.shortname}) }}">RSS</a></li>
     </ul>
 
     <br class="clear" />
