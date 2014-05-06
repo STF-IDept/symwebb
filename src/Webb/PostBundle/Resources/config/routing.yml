@@ -15,5 +15,5 @@ webb_post_note_edit:
       defaults: { _controller: WebbPostBundle:Note:edit }
 
 webb_post_note_rss:
-      pattern:  /fleet{fleet}/{ship}/rss
-      defaults: { _controller: WebbPostBundle:Note:feed }
+      pattern:  /fleet{fleet}/{ship}/rss/{format}
+      defaults: { _controller: WebbPostBundle:Note:feed, format: raw }
