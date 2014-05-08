@@ -4,7 +4,7 @@ namespace Webb\CharacterBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Webb\CharacterBundle\Entity\Persona;
+
 /**
  * Assignment
  *

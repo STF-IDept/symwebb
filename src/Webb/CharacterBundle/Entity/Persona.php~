@@ -230,27 +230,4 @@ class Persona
         return $this;
     }
 
-
-    /**
-     * Set bio
-     *
-     * @param string $bio
-     * @return Persona
-     */
-    public function setBio($bio)
-    {
-        $this->bio = $bio;
-
-        return $this;
-    }
-
-    /**
-     * Get bio
-     *
-     * @return string 
-     */
-    public function getBio()
-    {
-        return $this->bio;
-    }
 }
