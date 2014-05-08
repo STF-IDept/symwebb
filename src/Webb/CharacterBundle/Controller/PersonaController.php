@@ -8,6 +8,7 @@ namespace Webb\CharacterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Webb\CharacterBundle\Form\Type\PersonaType;
+use Webb\CharacterBundle\Form\Type\AssignmentType;
 use Webb\CharacterBundle\Entity\Persona;
 use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\Security\Core\SecurityContext;

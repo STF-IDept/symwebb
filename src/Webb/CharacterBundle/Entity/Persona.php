@@ -75,6 +75,13 @@ class Persona
     protected $user;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="bio", type="string", length=255)
+     */
+    protected $bio;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -223,4 +230,27 @@ class Persona
         return $this;
     }
 
+
+    /**
+     * Set bio
+     *
+     * @param string $bio
+     * @return Persona
+     */
+    public function setBio($bio)
+    {
+        $this->bio = $bio;
+
+        return $this;
+    }
+
+    /**
+     * Get bio
+     *
+     * @return string 
+     */
+    public function getBio()
+    {
+        return $this->bio;
+    }
 }

@@ -20,6 +20,7 @@ class PersonaType extends AbstractType
         $builder->add('weight', null, array('label' => 'persona.weight', 'translation_domain' => 'WebbCharacterBundle'));
         $builder->add('height', null, array('label' => 'persona.height', 'translation_domain' => 'WebbCharacterBundle'));
         $builder->add('age', null, array('label' => 'persona.age', 'translation_domain' => 'WebbCharacterBundle'));
+        $builder->add('bio', null, array('label' => 'persona.bio', 'translation_domain' => 'WebbCharacterBundle'));
     }
 
     public function getName()
