@@ -77,9 +77,14 @@ class Persona
     /**
      * @var string
      *
-     * @ORM\Column(name="bio", type="string", length=255)
+     * @ORM\Column(name="bio", type="text")
      */
     protected $bio;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $image;
 
     /**
      * Get id

@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new Webb\MotdBundle\WebbMotdBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Eko\FeedBundle\EkoFeedBundle(),
+            new Webb\FileBundle\WebbFileBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -1,0 +1,6 @@
+persona:
+  user: "Played by"
+  species: "Species"
+  weight: "Weight"
+  height: "Height"
+  age: "Age"

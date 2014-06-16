@@ -12,7 +12,7 @@
 
     <div id="postinfo">
         <h2>{{ ship.name }} - {{ note.location }} - {{ note.activity }}</h2>
-        <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} {{ note.assignment }} <em>played by {{note.user}}</em></p>
+        <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} <a href="{{ url('webb_character_view', {'id': note.assignment.persona.id}) }}">{{ note.assignment }}</a> <em>played by {{note.user}}</em></p>
 
     </div>
 
