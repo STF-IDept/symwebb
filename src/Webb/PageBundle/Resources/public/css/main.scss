@@ -35,6 +35,17 @@ article {
   background: #181818;
   @include rounded_all(5px);
   padding: 1em;
+  margin-top: 1em;
+}
+
+#assignments {
+
+  width: 50%;
+
+  th {
+    text-align: left;
+  }
+
 }
 
 

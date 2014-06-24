@@ -30,14 +30,14 @@ class Assignment
     private $rostered;
 
     /**
-     * @ORM\OneToOne(targetEntity="Persona",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Persona",  cascade={"persist"}, inversedBy="assignment")
      * @ORM\JoinColumn(name="persona_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Persona")
      */
     protected $persona;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\ShipBundle\Entity\Position",  cascade={"persist"}, inversedBy="assignment")
+     * @ORM\ManyToOne(targetEntity="Webb\ShipBundle\Entity\Position",  cascade={"persist"}, inversedBy="assignment")
      * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\ShipBundle\Entity\Position")
      */

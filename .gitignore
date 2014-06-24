@@ -10,3 +10,6 @@
 /composer.phar
 /app/config/parameters.yml
 /.idea/*
+/web/css/
+/web/js/
+/web/uploads/

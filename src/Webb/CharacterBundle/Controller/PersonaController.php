@@ -21,7 +21,21 @@ class PersonaController extends Controller
         //$securityContext = new SecurityContext();
         //$persona = new Persona($id);
 
-        $persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
+        //$persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
+
+        $persona = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('c, a, p, s, r, i, u')
+            ->from('WebbCharacterBundle:Persona', 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->innerJoin('c.assignment', 'a')
+            ->innerJoin('a.position', 'p')
+            ->innerJoin('p.ship', 's')
+            ->innerJoin('c.rank', 'r')
+            ->innerJoin('c.image', 'i')
+            ->innerJoin('c.user', 'u')
+            ->orderBy('a.startdate', 'DESC')
+            ->getQuery()->getOneOrNullResult();
 
         if (!$persona) {
             throw $this->createNotFoundException(
@@ -43,6 +57,7 @@ class PersonaController extends Controller
 
             if ($form->isValid()) {
                 // perform some action, such as saving the task to the database
+                //$persona->getImage()->upload();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($persona);
                 $em->flush();
@@ -73,6 +88,7 @@ class PersonaController extends Controller
 
             if ($form->isValid()) {
                 // perform some action, such as saving the task to the database
+                //$persona->getImage()->upload();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($persona);
                 $em->flush();

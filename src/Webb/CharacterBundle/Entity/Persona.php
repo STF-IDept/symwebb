@@ -5,6 +5,7 @@ namespace Webb\CharacterBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Webb\UserBundle\Entity\User as User;
+use Webb\FileBundle\Entity\Image as Image;
 
 /**
  * Persona
@@ -60,7 +61,7 @@ class Persona
     private $age;
 
     /**
-     * @ORM\OneToOne(targetEntity="Rank",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Rank",  cascade={"persist"})
      * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Rank")
      * @Assert\NotBlank()
@@ -82,9 +83,15 @@ class Persona
     protected $bio;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToOne(cascade={"persist", "remove"}, targetEntity="Webb\FileBundle\Entity\Image")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="set null")
      */
-    public $image;
+    protected $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Webb\CharacterBundle\Entity\Assignment", mappedBy="persona")
+     */
+    protected $assignment;
 
     /**
      * Get id
@@ -257,5 +264,66 @@ class Persona
     public function getBio()
     {
         return $this->bio;
+    }
+
+    /**
+     * Set image
+     *
+     * @param Image $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * Get image
+     *
+     * @return Image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->assignment = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add assignment
+     *
+     * @param \Webb\CharacterBundle\Entity\Assignment $assignment
+     * @return Position
+     */
+    public function addAssignment(Assignment $assignment)
+    {
+        $this->assignment[] = $assignment;
+
+        return $this;
+    }
+
+    /**
+     * Remove assignment
+     *
+     * @param \Webb\CharacterBundle\Entity\Assignment $assignment
+     */
+    public function removeAssignment(Assignment $assignment)
+    {
+        $this->assignment->removeElement($assignment);
+    }
+
+    /**
+     * Get assignment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAssignment()
+    {
+        return $this->assignment;
     }
 }
