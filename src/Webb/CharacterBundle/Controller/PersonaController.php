@@ -24,7 +24,7 @@ class PersonaController extends Controller
         //$persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
 
         $persona = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('c, a, p, s, r, i, u')
+            ->select('c, i')
             ->from('WebbCharacterBundle:Persona', 'c')
             ->where('c.id = :id')
             ->setParameter('id', $id)
@@ -42,7 +42,7 @@ class PersonaController extends Controller
                 'No character found for id '.$id
             );
         }
-        //return $this->render('WebbCharacterBundle:Persona:index.html.twig', array('name' => $user));
+        //return $this->render('WebbCharacterBundle:Persona:show.html.twig', array('name' => $user));
         return $this->render('WebbCharacterBundle:Persona:show.html.twig', array('persona' => $persona));
     }
 
@@ -100,6 +100,7 @@ class PersonaController extends Controller
         return $this->render('WebbCharacterBundle:Persona:edit.html.twig', array(
             'form' => $form->createView(),
             'id' => $id,
+            'persona' => $persona,
         ));
     }
 }

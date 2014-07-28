@@ -64,7 +64,6 @@ class Persona
      * @ORM\ManyToOne(targetEntity="Rank",  cascade={"persist"})
      * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Rank")
-     * @Assert\NotBlank()
      */
     protected $rank;
 

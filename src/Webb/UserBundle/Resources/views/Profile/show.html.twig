@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div id="postinfo">
+        {#<div id="profileimage">
+            {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
+        </div>#}
+        <h2>{{ profile.firstname }} {{ profile.surname }}</h2>
+        {# <p><strong>{{ 'profile.firstname'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.user }}</p>
+        <p><strong>{{ 'persona.species'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.species }}</p>
+        <p><strong>{{ 'persona.weight'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.weight }}</p>
+        <p><strong>{{ 'persona.height'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.height }}</p>
+        <p><strong>{{ 'persona.age'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.age }}</p> #}
+
+    </div>
+    <br class="clear" />
+    {#
+    <article id="post">
+        {{ persona.bio|markdown }}
+    </article>
+    #}
+
+{% endblock %}

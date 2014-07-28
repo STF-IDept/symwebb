@@ -12,7 +12,7 @@
 
     <div id="postinfo">
         <div id="profileimage">
-            <img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>
+            {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
         </div>
         <h2>{{ persona.rank }} {{ persona.name }}</h2>
         <p><strong>{{ 'persona.user'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.user }}</p>

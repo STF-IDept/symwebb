@@ -1,6 +1,25 @@
-<form action="{{ path('webb_character_create') }}" {{ form_enctype(form) }} method="POST" class="persona_create">
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'persona.submit'|trans({}, 'WebbCharacterBundle') }}" />
+
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div id="postinfo">
+        <form action="{{ path('webb_character_create') }}" {{ form_enctype(form) }} method="POST" class="persona_create">
+            <h2>Create New Character</h2>
+            {{ form_widget(form) }}
+            <div>
+                <input type="submit" value="{{ 'persona.submit'|trans({}, 'WebbCharacterBundle') }}" />
+            </div>
+        </form>
     </div>
-</form>
+{% endblock %}
+
