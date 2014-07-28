@@ -33,7 +33,7 @@ class FrontController extends Controller
 
         $articles = $qb->getQuery()->getResult();
 
-        return $this->render('WebbPageBundle:Front:show.html.twig', array('ship' => 'asimov', 'articles' => $articles));
+        return $this->render('WebbPageBundle:Front:index.html.twig', array('ship' => 'asimov', 'articles' => $articles));
 
     }
 }

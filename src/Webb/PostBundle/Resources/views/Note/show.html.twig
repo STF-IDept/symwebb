@@ -1,5 +1,9 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}
+    {{ ship.name }} - {{ note.location }} - {{ note.activity }}
+{% endblock %}
+
 {% block stylesheets %}
 
     {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
