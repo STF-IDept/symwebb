@@ -1,3 +1,3 @@
 webb_user:
     pattern:  /user/{id}
-    defaults: { _controller: WebbUserBundle:Default:index }
+    defaults: { _controller: WebbUserBundle:Profile:show }

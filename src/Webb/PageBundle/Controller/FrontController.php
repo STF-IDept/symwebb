@@ -13,7 +13,7 @@ class FrontController extends Controller
         //var_dump($article);
         //$article = $repository->findByTags(1);
         //$articles = $this->getDoctrine()->getRepository('WebbNewsBundle:Article')->findByTags(array('Front Page'));
-        //return $this->render('WebbPageBundle:Front:index.html.twig', array('ship' => 'asimov', 'articles' => $article));
+        //return $this->render('WebbPageBundle:Front:show.html.twig', array('ship' => 'asimov', 'articles' => $article));
 
         /*$tags = array('Front Page');
         $tagids = array();

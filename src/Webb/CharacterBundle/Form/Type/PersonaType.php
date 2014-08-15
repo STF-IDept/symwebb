@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Webb\FileBundle\Form\Type\ImageType as ImageType;
 
 class PersonaType extends AbstractType
 {
@@ -20,6 +21,8 @@ class PersonaType extends AbstractType
         $builder->add('weight', null, array('label' => 'persona.weight', 'translation_domain' => 'WebbCharacterBundle'));
         $builder->add('height', null, array('label' => 'persona.height', 'translation_domain' => 'WebbCharacterBundle'));
         $builder->add('age', null, array('label' => 'persona.age', 'translation_domain' => 'WebbCharacterBundle'));
+        $builder->add('image', new ImageType, array('label' => 'persona.image', 'translation_domain' => 'WebbCharacterBundle'));
+        $builder->add('bio', null, array('label' => 'persona.bio', 'translation_domain' => 'WebbCharacterBundle'));
     }
 
     public function getName()

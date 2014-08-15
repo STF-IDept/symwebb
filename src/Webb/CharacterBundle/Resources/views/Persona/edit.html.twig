@@ -1,6 +1,27 @@
-<form action="{{ path('webb_character_edit', {'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="persona_edit">
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'persona.submit'|trans({}, 'WebbCharacterBundle') }}" />
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div id="postinfo">
+        <form action="{{ path('webb_character_edit', {'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="persona_edit">
+            <div id="profileimage">
+                {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
+            </div>
+            <h2>{{ persona.rank }} {{ persona.name }}</h2>
+            {{ form_widget(form) }}
+            <div>
+                <input type="submit" value="{{ 'persona.submit'|trans({}, 'WebbCharacterBundle') }}" />
+            </div>
+        </form>
     </div>
-</form>
+{% endblock %}
+

@@ -25,7 +25,7 @@ class FleetController extends Controller
                 'Fleet not found'
             );
         }
-        //return $this->render('WebbCharacterBundle:Persona:index.html.twig', array('name' => $user));
+        //return $this->render('WebbCharacterBundle:Persona:show.html.twig', array('name' => $user));
         return $this->render('WebbShipBundle:Fleet:show.html.twig', array('fleet' => $fleet));
     }
 

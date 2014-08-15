@@ -1,5 +1,9 @@
 {% extends '::base.html.twig' %}
 
+{% block title %}
+    {{ ship.name }} - {{ note.location }} - {{ note.activity }}
+{% endblock %}
+
 {% block stylesheets %}
 
     {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
@@ -12,11 +16,15 @@
 
     <div id="postinfo">
         <h2>{{ ship.name }} - {{ note.location }} - {{ note.activity }}</h2>
-        <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} {{ note.assignment }} <em>played by {{note.user}}</em></p>
+        <p>{{ 'note.assignment'|trans({}, 'WebbPostBundle') }} <a href="{{ url('webb_character_view', {'id': note.assignment.persona.id}) }}">{{ note.assignment }}</a> <em>played by {{note.user}}</em></p>
 
     </div>
 
     <article id="post">
+        <div id="sideouter"><div id="sideinner">
+            <h3>Options</h3>
+
+        </div></div>
         {{ note.content|markdown }}
     </article>
 

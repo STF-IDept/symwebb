@@ -1,0 +1,11 @@
+persona:
+  user: "Played by"
+  species: "Species"
+  weight: "Weight"
+  height: "Height"
+  age: "Age"
+  rank: "Rank"
+  name: "Name"
+  image: "Character Image"
+  bio: "Biography"
+  submit: "Save"

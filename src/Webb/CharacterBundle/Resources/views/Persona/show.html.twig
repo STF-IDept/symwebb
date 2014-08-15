@@ -1,8 +1,52 @@
-<div class="webb_character_show">
-    <p>{{ 'persona.rank'|trans({}, 'WebbCharacterBundle') }}: {{ persona.rank }}</p>
-    <p>{{ 'persona.name'|trans({}, 'WebbCharacterBundle') }}: {{ persona.name }}</p>
-    <p>{{ 'persona.species'|trans({}, 'WebbCharacterBundle') }}: {{ persona.species }}</p>
-    <p>{{ 'persona.weight'|trans({}, 'WebbCharacterBundle') }}: {{ persona.weight }}</p>
-    <p>{{ 'persona.height'|trans({}, 'WebbCharacterBundle') }}: {{ persona.height }}</p>
-    <p>{{ 'persona.age'|trans({}, 'WebbCharacterBundle') }}: {{ persona.age }}</p>
-</div>
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div id="postinfo">
+        <div id="profileimage">
+            {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
+        </div>
+        <h2>{{ persona.rank }} {{ persona.name }}</h2>
+        <p><strong>{{ 'persona.user'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.user }}</p>
+        <p><strong>{{ 'persona.species'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.species }}</p>
+        <p><strong>{{ 'persona.weight'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.weight }}</p>
+        <p><strong>{{ 'persona.height'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.height }}</p>
+        <p><strong>{{ 'persona.age'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.age }}</p>
+
+        <p><strong>Assignments:</strong></p>
+
+        <table id="assignments">
+            <tr>
+                <th>Ship</th>
+                <th>Position</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+            {% for assignment in persona.assignment %}
+                <tr>
+                    <td>{{ assignment.position.ship.name }}</td>
+                    <td>{{ assignment.position.longname }}</td>
+                    <td>{{ assignment.startdate|date('j M Y') }}</td>
+                    <td>{%  if not assignment.rostered %} {{ assignment.enddate|date('j M Y') }} {% else %} - {% endif %}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
+
+    </div>
+    <br class="clear" />
+    <article id="post">
+        {{ persona.bio|markdown }}
+    </article>
+
+
+{% endblock %}

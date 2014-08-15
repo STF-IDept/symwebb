@@ -143,9 +143,7 @@ textarea {
   top: 4em;
   bottom: 1em;
   background: #111;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  @include rounded_all(5px);
   width: -moz-calc(50% - 537px);
   width: calc(50% - 537px);
 }
@@ -164,7 +162,13 @@ label {
   width: 10em;
 }
 
-
 .checkbox {
   float: left;
+}
+
+#profileimage img {
+  max-height: 300px;
+  max-width: 600px;
+  float: right;
+  @include rounded_all(5px);
 }

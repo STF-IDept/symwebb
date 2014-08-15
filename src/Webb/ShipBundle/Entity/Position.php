@@ -52,7 +52,7 @@ class Position
     private $ship;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\CharacterBundle\Entity\Assignment", mappedBy="position")
+     * @ORM\OneToMany(targetEntity="Webb\CharacterBundle\Entity\Assignment", mappedBy="position")
      */
     protected $assignment;
 
