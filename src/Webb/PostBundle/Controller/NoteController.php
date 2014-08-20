@@ -47,24 +47,7 @@ class NoteController extends Controller
             );
         }
 
-        $shortname = $ship;
-        unset($ship);
-
-        $ship = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('s, f')
-            ->from('WebbShipBundle:Ship', 's')
-            ->where('s.shortname = :shortname')->setParameter('shortname', $shortname)
-            ->innerJoin('s.fleet', 'f')
-            ->getQuery()->getOneOrNullResult();
-
-        if (!$ship) {
-            throw $this->createNotFoundException(
-                'Ship not found'
-            );
-        }
-        /*elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
-        }*/
+        $ship = $this->getShipByShortName($ship);
 
         if($userid) {
             $new = true;
@@ -298,6 +281,10 @@ class NoteController extends Controller
             $userid = 0;
         }
 
+        if(!is_object($ship)) {
+            $ship = $this->getShipByShortName($ship);
+        }
+
         $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('note, location, persona, assignment, position, parent, rank, log, child, ship, fleet, log2')
             ->from('WebbPostBundle:Note', 'note')
@@ -397,6 +384,28 @@ class NoteController extends Controller
         $feed->addFromArray($articles);
 
         return new Response($feed->render('rss')); // or 'atom'
+    }
+
+    private function getShipByShortName($shortname) {
+
+        $ship = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('s, f')
+            ->from('WebbShipBundle:Ship', 's')
+            ->where('s.shortname = :shortname')->setParameter('shortname', $shortname)
+            ->innerJoin('s.fleet', 'f')
+            ->getQuery()->getOneOrNullResult();
+
+        if (!$ship) {
+            throw $this->createNotFoundException(
+                'Ship not found'
+            );
+        }
+
+        /*elseif ($ship->getFleet()->getId() != $fleet) {
+            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
+        }*/
+
+        return $ship;
     }
 
 }
