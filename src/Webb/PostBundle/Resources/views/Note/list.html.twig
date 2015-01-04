@@ -1,0 +1,39 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}
+    {{ ship.name }} - List of Notes
+{% endblock %}
+
+{% block stylesheets %}
+
+    {% stylesheets filter="compass" "bundles/webbpost/css/post.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+    <script>
+        $(function() {
+            $( "#form_start" ).datepicker();
+        });
+    </script>
+
+    <div id="postinfo">
+        <h2>{{ ship.name }} - List of Notes</h2>
+    </div>
+
+        <div id="sideouter"><div id="sideinner">
+                <h3>Options</h3>
+                {{  render(controller('WebbPostBundle:Note:dateSelect')) }}
+        </div></div>
+
+    <br class="clear" />
+    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note})) }}
+
+{% endblock body %}
+
+{% block javascripts %}
+
+{% endblock %}

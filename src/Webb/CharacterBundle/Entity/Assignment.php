@@ -30,6 +30,13 @@ class Assignment
     private $rostered;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="active", type="boolean")
+     */
+    private $active;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Persona",  cascade={"persist"}, inversedBy="assignment")
      * @ORM\JoinColumn(name="persona_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\CharacterBundle\Entity\Persona")
@@ -65,6 +72,11 @@ class Assignment
     public function getId()
     {
         return $this->id;
+    }
+
+
+    public function getTest() {
+        return "Test";
     }
 
     /**
@@ -165,5 +177,21 @@ class Assignment
         $this->enddate = $enddate;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param boolean $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 }

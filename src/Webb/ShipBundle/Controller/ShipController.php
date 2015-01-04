@@ -36,6 +36,7 @@ class ShipController extends Controller
             ->leftJoin('b.position', 'p')
             ->leftJoin('p.parent', 'q')
             ->leftJoin('p.assignment', 'a')
+            ->andWhere('a.active = 1 OR b.type != \'position\'')
 	    ->leftJoin('a.persona', 'r')
 	    ->leftJoin('r.rank', 's')
 	    ->leftJoin('r.user', 'u')

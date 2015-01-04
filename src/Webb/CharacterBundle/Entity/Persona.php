@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Webb\UserBundle\Entity\User as User;
 use Webb\FileBundle\Entity\Image as Image;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Persona
@@ -31,6 +32,14 @@ class Persona
      * @Assert\NotBlank()
      */
     private $name;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updated;
 
     /**
      * @var string
@@ -325,4 +334,13 @@ class Persona
     {
         return $this->assignment;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
 }

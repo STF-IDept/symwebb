@@ -112,6 +112,14 @@ class NoteController extends Controller
         return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread));
     }
 
+    public function listAction($ship)
+    {
+
+        $ship = $this->getShipByShortName($ship);
+
+        return $this->render('WebbPostBundle:Note:list.html.twig', array('note' => 0, 'ship' => $ship));
+    }
+
     public function createAction($fleet, $ship, $parent_id,  Request $request)
     {
         // Declare new note
@@ -148,7 +156,8 @@ class NoteController extends Controller
 
             if(!is_null($parent_id)) {
                 // Replace all new lines with > to indicate quoted text
-                $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n>\n";
+                $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n";
+                $content .= "> Posted on {$parent->getDate()->format('l j M Y')} at {$parent->getDate()->format('g:ia T')} \n>\n";
                 $content .= "> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n";
                 $note->setContent($content);
 
@@ -406,6 +415,23 @@ class NoteController extends Controller
         }*/
 
         return $ship;
+    }
+
+    public function dateSelectAction()
+    {
+
+        $default = array('start' => new DateTime("-1 week"));
+        $form = $this->createFormBuilder($default)
+            ->add('start', 'date', array(
+                'widget' => 'single_text',
+                'html5' => false,
+            ))
+            ->add('View', 'submit')
+            ->getForm();
+
+        return $this->render('WebbPostBundle:Note:date.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
 }
