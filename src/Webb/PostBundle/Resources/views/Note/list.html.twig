@@ -10,15 +10,14 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    {% stylesheets filter="compass" "bundles/webbpage/css/datepicker.scss" %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block body %}
 
-    <script>
-        $(function() {
-            $( "#form_start" ).datepicker();
-        });
-    </script>
+
 
     <div id="postinfo">
         <h2>{{ ship.name }} - List of Notes</h2>
@@ -26,14 +25,22 @@
 
         <div id="sideouter"><div id="sideinner">
                 <h3>Options</h3>
-                {{  render(controller('WebbPostBundle:Note:dateSelect')) }}
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
         </div></div>
 
     <br class="clear" />
-    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note})) }}
+    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note, 'start': start, 'end': end})) }}
 
 {% endblock body %}
 
 {% block javascripts %}
-
+    <script type="text/javascript" src="{{ asset('bundles/bmatznerjqueryui/js/minified/jquery-ui.min.js') }}"></script>
+    <script>
+        $(function() {
+            $( "#form_start" ).datepicker({dateFormat: 'd M yy'});
+            $( "#form_end" ).datepicker({dateFormat: 'd M yy'});
+        });
+    </script>
 {% endblock %}

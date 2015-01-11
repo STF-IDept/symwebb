@@ -31,7 +31,11 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Eko\FeedBundle\EkoFeedBundle(),
             new Webb\FileBundle\WebbFileBundle(),
+            // Needed for auto update date fields:
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            // jQuery in a bundle!
+            new Bmatzner\JQueryBundle\BmatznerJQueryBundle(),
+            new Bmatzner\JQueryUIBundle\BmatznerJQueryUIBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

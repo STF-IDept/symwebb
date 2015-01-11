@@ -22,7 +22,9 @@
         "knplabs/knp-markdown-bundle": "1.2.*@dev",
         "friendsofsymfony/jsrouting-bundle": "~1.1",
         "eko/feedbundle": "dev-master",
-        "stof/doctrine-extensions-bundle": "1.1"
+        "stof/doctrine-extensions-bundle": "1.1",
+        "bmatzner/jquery-bundle": "~1.9",
+        "bmatzner/jquery-ui-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [
