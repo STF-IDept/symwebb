@@ -1,5 +1,8 @@
 note:
   assignment: "Posted by"
+  date: "Posted on"
+  time: "at"
+  played: "played by"
   location: "Location"
   activity: "Activity"
   content: "Post Content"

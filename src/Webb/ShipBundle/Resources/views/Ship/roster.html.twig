@@ -20,23 +20,25 @@
     </tr>
 
 {% for position in positions %}
+{% for assignment in position.assignment|slice(0,1) %}
     <tr>
-        <td>{{ position.assignment.persona.rank.longname }}</td>
-	<td>{{ position.assignment.persona.name }}</td>
+        <td>{{ assignment.persona.rank.longname }}</td>
+	<td>{{ assignment.persona.name }}</td>
 	<td>{{ position.shortname }}</td>
-	<td>{{ position.assignment.persona.species }}</td>
-	<td>{{ position.assignment.persona.age }}</td>
-	<td>{{ position.assignment.persona.height }}</td>
-	<td>{{ position.assignment.persona.weight }}</td>
+	<td>{{ assignment.persona.species }}</td>
+	<td>{{ assignment.persona.age }}</td>
+	<td>{{ assignment.persona.height }}</td>
+	<td>{{ assignment.persona.weight }}</td>
 	<td>
 	    {% if is_granted("ROLE_USER") %}
-	        <a href="{{ path('webb_user', { 'id': position.assignment.persona.user.id }) }}">{{ position.assignment.persona.user }}</a>
+	        <a href="{{ path('webb_user', { 'id': assignment.persona.user.id }) }}">{{ assignment.persona.user }}</a>
 	    {% else %}
-	        {{ position.assignment.persona.user }}
+	        {{ assignment.persona.user }}
 	    {% endif %}
 	</td>
 
     </tr>
+	{% endfor %}
 {% endfor %}
 </table>
 </dd>

@@ -9,3 +9,5 @@ persona:
   image: "Character Image"
   bio: "Biography"
   submit: "Save"
+  date: "Last updated on"
+  time: "at"

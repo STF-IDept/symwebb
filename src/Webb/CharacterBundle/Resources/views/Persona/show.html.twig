@@ -15,6 +15,7 @@
             {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
         </div>
         <h2>{{ persona.rank }} {{ persona.name }}</h2>
+        <p>{{ 'persona.date'|trans({}, 'WebbCharacterBundle') }} {{ persona.updated|date('l j M Y') }} {{ 'persona.time'|trans({}, 'WebbCharacterBundle') }} {{ persona.updated|date('g:ia T') }}</p>
         <p><strong>{{ 'persona.user'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.user }}</p>
         <p><strong>{{ 'persona.species'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.species }}</p>
         <p><strong>{{ 'persona.weight'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.weight }}</p>
@@ -35,7 +36,7 @@
                     <td>{{ assignment.position.ship.name }}</td>
                     <td>{{ assignment.position.longname }}</td>
                     <td>{{ assignment.startdate|date('j M Y') }}</td>
-                    <td>{%  if not assignment.rostered %} {{ assignment.enddate|date('j M Y') }} {% else %} - {% endif %}</td>
+                    <td>{%  if not assignment.active %} {{ assignment.enddate|date('j M Y') }} {% else %} - {% endif %}</td>
                 </tr>
 
             {% endfor %}
@@ -43,6 +44,13 @@
 
 
     </div>
+    <div id="sideouter"><div id="sideinner">
+            <h3>Options</h3>
+            <ul>
+                <li><a href="{{ url('webb_character_edit', {'id': persona.id}) }}">Edit Character</a></li>
+            </ul>
+
+        </div></div>
     <br class="clear" />
     <article id="post">
         {{ persona.bio|markdown }}

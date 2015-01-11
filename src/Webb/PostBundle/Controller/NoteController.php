@@ -12,10 +12,12 @@ use Webb\PostBundle\Entity\Note;
 use Webb\PostBundle\Entity\Log;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
+use Zend\Http\Header\Date;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class NoteController extends Controller
 {
-    public function showAction($ship, $id)
+    public function showAction($ship, $id, Request $request)
     {
 
         $user = $this->getUser();
@@ -47,24 +49,7 @@ class NoteController extends Controller
             );
         }
 
-        $shortname = $ship;
-        unset($ship);
-
-        $ship = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('s, f')
-            ->from('WebbShipBundle:Ship', 's')
-            ->where('s.shortname = :shortname')->setParameter('shortname', $shortname)
-            ->innerJoin('s.fleet', 'f')
-            ->getQuery()->getOneOrNullResult();
-
-        if (!$ship) {
-            throw $this->createNotFoundException(
-                'Ship not found'
-            );
-        }
-        /*elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
-        }*/
+        $ship = $this->getShipByShortName($ship);
 
         if($userid) {
             $new = true;
@@ -126,7 +111,23 @@ class NoteController extends Controller
             ->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
 
-        return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread));
+        $form = $this->dateSelect($request);
+
+        $data = $form->getData();
+
+        return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
+    }
+
+    public function listAction($ship, Request $request)
+    {
+
+        $ship = $this->getShipByShortName($ship);
+
+        $form = $this->dateSelect($request);
+
+        $data = $form->getData();
+
+        return $this->render('WebbPostBundle:Note:list.html.twig', array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
     }
 
     public function createAction($fleet, $ship, $parent_id,  Request $request)
@@ -165,7 +166,8 @@ class NoteController extends Controller
 
             if(!is_null($parent_id)) {
                 // Replace all new lines with > to indicate quoted text
-                $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n>\n";
+                $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n";
+                $content .= "> Posted on {$parent->getDate()->format('l j M Y')} at {$parent->getDate()->format('g:ia T')} \n>\n";
                 $content .= "> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n";
                 $note->setContent($content);
 
@@ -287,7 +289,7 @@ class NoteController extends Controller
         ));
     }
 
-    public function recentPostsAction($ship, $note) {
+    public function recentPostsAction($ship, $note, $start, $end) {
 
         $user = $this->getUser();
 
@@ -298,11 +300,23 @@ class NoteController extends Controller
             $userid = 0;
         }
 
+        if(!is_object($ship)) {
+            $ship = $this->getShipByShortName($ship);
+        }
+
+        // Make sure the Start and End times are set to 00:00:00 and 23:59:59 respectively.
+        $start->setTime(0,0,0);
+        $end->setTime(23,59,59);
+
         $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('note, location, persona, assignment, position, parent, rank, log, child, ship, fleet, log2')
             ->from('WebbPostBundle:Note', 'note')
             ->where('note.ship = :ship_id')
+            ->andWhere('note.date >= :start')
+            ->andWhere('note.date <= :end')
             ->setParameter('ship_id', $ship->getId())
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->innerJoin('note.location', 'location')
             ->innerJoin('note.persona', 'persona')
             ->innerJoin('note.assignment', 'assignment')
@@ -314,17 +328,21 @@ class NoteController extends Controller
             ->leftJoin('note.log', 'log')
             ->leftJoin('note.child', 'child')
             ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
+            ->orderBy('note.date')
             ->getQuery()->execute();
 
         $temp = array();
         $arr = array();
         $ids = array();
 
+        // Pop all of the retrieved notes into an array
         foreach($notes as $item) {
             $temp[$item->getId()] = $item;
         }
 
+
         foreach($temp as &$item) {
+            // For each note, process the child posts, and pop into a new array
             $arr = array_merge($arr, $this->getChildPost($temp, $item));
             $ids[] = $item->getId();
         }
@@ -360,10 +378,16 @@ class NoteController extends Controller
     private function getChildPost(&$notes, $note, $indent = 0) {
 
         $arr = array();
+        // Store the note that is being processed at the top of the array
         $arr[] = array('note' => $note, 'id' => $note->getId(), 'indent' => $indent);
 
+        // And check for children
         foreach($note->getChild() as $child) {
-            $arr = array_merge($arr, $this->getChildPost($notes, $notes[$child->getId()], $indent + 1));
+            // $notes[$child->getId()] will give us the child note, which we will then put through this recusive function.
+            // But! We should also check that the note is in the list retreived from the DB
+            if(isset($notes[$child->getId()])) {
+                $arr = array_merge($arr, $this->getChildPost($notes, $notes[$child->getId()], $indent + 1));
+            }
         }
 
         unset($notes[$note->getId()]);
@@ -397,6 +421,59 @@ class NoteController extends Controller
         $feed->addFromArray($articles);
 
         return new Response($feed->render('rss')); // or 'atom'
+    }
+
+    private function getShipByShortName($shortname) {
+
+        $ship = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('s, f')
+            ->from('WebbShipBundle:Ship', 's')
+            ->where('s.shortname = :shortname')->setParameter('shortname', $shortname)
+            ->innerJoin('s.fleet', 'f')
+            ->getQuery()->getOneOrNullResult();
+
+        if (!$ship) {
+            throw $this->createNotFoundException(
+                'Ship not found'
+            );
+        }
+
+        /*elseif ($ship->getFleet()->getId() != $fleet) {
+            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
+        }*/
+
+        return $ship;
+    }
+
+    private function dateSelect(Request $request)
+    {
+        $session = $request->getSession();
+        $start = is_null($session->get('start')) ? new DateTime("-1 week") : $session->get('start');
+        $end = is_null($session->get('end')) ? new DateTime() : $session->get('end');
+
+        $default = array('start' => $start, 'end' => $end);
+        $form = $this->createFormBuilder($default)
+            ->add('start', 'date', array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'd MMM y'
+            ))
+            ->add('end', 'date', array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'd MMM y'
+            ))
+            ->add('View', 'submit')
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        $data = $form->getData();
+
+        $session->set('start', $data['start']);
+        $session->set('end', $data['end']);
+
+        return $form;
     }
 
 }
