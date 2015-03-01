@@ -244,4 +244,9 @@ class Position
     {
         return $this->box;
     }
+
+    public function __toString()
+    {
+        return $this->getLongName();
+    }
 }

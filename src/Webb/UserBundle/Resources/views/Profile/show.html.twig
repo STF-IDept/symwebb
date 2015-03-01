@@ -1,4 +1,5 @@
 {% extends '::base.html.twig' %}
+{% block title %}User Profile - {{ user.firstname }} {{ user.surname }}{% endblock %}
 
 {% block stylesheets %}
 
@@ -9,24 +10,49 @@
 {% endblock %}
 
 {% block body %}
-
     <div id="postinfo">
-        {#<div id="profileimage">
-            {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
-        </div>#}
-        <h2>{{ profile.firstname }} {{ profile.surname }}</h2>
-        {# <p><strong>{{ 'profile.firstname'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.user }}</p>
-        <p><strong>{{ 'persona.species'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.species }}</p>
-        <p><strong>{{ 'persona.weight'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.weight }}</p>
-        <p><strong>{{ 'persona.height'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.height }}</p>
-        <p><strong>{{ 'persona.age'|trans({}, 'WebbCharacterBundle') }}:</strong> {{ persona.age }}</p> #}
+        <div id="profileimage">
+            {% if user.image.path is not null %}<img src="/{{ user.image.webpath }}" alt="Profile Picture"/>{% endif %}
+        </div>
+        <h2>{{ user.rank }} {{ user.firstname }} {{ user.surname }}</h2>
+        <p>{{ 'user.date'|trans({}, 'WebbUserBundle') }} {{ user.updated|date('l j M Y') }} {{ 'user.time'|trans({}, 'WebbCharacterBundle') }} {{ user.updated|date('g:ia T') }}</p>
+        <p>{{ 'user.joined'|trans({}, 'WebbUserBundle') }} {{ user.joined|date('l j M Y') }} </p>
+
+        <p><strong>Characters:</strong></p>
+
+        <table id="assignments">
+            <tr>
+                <th>Character</th>
+                <th>Ship</th>
+                <th>Position</th>
+            </tr>
+            {% for persona in user.persona %}
+                <tr>
+                    <td><a href=" {{ path('webb_character_view', {'id': persona.id}) }}">{{ persona.rank }} {{ persona.name }}</a></td>
+                    <td><a href=" {{ path('webb_ship_ship_view', {'shortname': persona.assignment[0].position.ship.shortname, 'fleet': persona.assignment[0].position.ship.fleet.id}) }}">{{ persona.assignment[0].position.ship }}</a></td>
+                    <td>{{ persona.assignment[0].position }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
 
     </div>
-    <br class="clear" />
-    {#
-    <article id="post">
-        {{ persona.bio|markdown }}
-    </article>
-    #}
+    <div id="sideouter"><div id="sideinner">
+            <h3>Options</h3>
+            {% if app.user.id == user.id %}
+                <ul>
+                    <li><a href="{{ url('fos_user_profile_edit') }}">Edit Profile</a></li>
+                </ul>
+            {% elseif is_granted('ROLE_PROFILE_EDIT') %}
+                <ul>
+                    <li><a href="{{ url('webb_user_profile_edit_byid', {'id': user.id}) }}">Edit Profile</a></li>
+                </ul>
+            {% endif %}
 
+        </div></div>
+    <br class="clear" />
+    <article id="post">
+        {{ user.bio|markdown }}
+    </article>
 {% endblock %}

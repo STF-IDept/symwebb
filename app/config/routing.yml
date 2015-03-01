@@ -23,19 +23,15 @@ webb_ship:
     prefix:   /
 
 webb_character:
-    resource: "@WebbCharacterBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@WebbCharacterBundle/Controller/PersonaController.php"
+    type: annotation
 
-webb_user:
-    resource: "@WebbUserBundle/Resources/config/routing.yml"
-    prefix:   /
+fos_user_profile:
+    resource: "@WebbUserBundle/Controller/ProfileController.php"
+    type: annotation
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
-
-fos_user_profile:
-    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /profile
 
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
