@@ -24,7 +24,7 @@ use Doctrine\ORM\Query;
 class PersonaController extends Controller
 {
     /**
-     * @Route("/{id}", name="webb_character_create", requirements={"id" = "\d+"})
+     * @Route("/{id}", name="webb_character_view", requirements={"id" = "\d+"})
      * @Template("WebbCharacterBundle:Persona:show.html.twig")
      */
     public function showAction($id)
@@ -57,7 +57,7 @@ class PersonaController extends Controller
 
 
     /**
-     * @Route("/create", name="webb_character_edit")
+     * @Route("/create", name="webb_character_create")
      * @Template("WebbCharacterBundle:Persona:create.html.twig")
      */
     public function createAction(Request $request)
