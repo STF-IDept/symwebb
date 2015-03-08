@@ -23,7 +23,7 @@
 {% for assignment in position.assignment|slice(0,1) %}
     <tr>
 		<td>{{ assignment.persona.rank.longname }}</td>
-		<td>{{ assignment.persona.name }}</td>
+		<td><a href="{{ path('webb_character_view', { 'id': assignment.persona.id }) }}">{{ assignment.persona.name }}</a></td>
 		<td>{{ position.shortname }}</td>
 		<td>{{ assignment.persona.species }}</td>
 		<td>{{ assignment.persona.age }}</td>
