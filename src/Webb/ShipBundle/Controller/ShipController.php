@@ -1,8 +1,4 @@
 <?php
-/**
- * src/Webb/ShipBundle/Controller/ShipController.php
- */
-
 
 namespace Webb\ShipBundle\Controller;
 
@@ -10,9 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Webb\ShipBundle\Form\Type\ShipType;
 use Webb\ShipBundle\Entity\Ship;
 use Symfony\Component\HttpFoundation\Request;
+use Webb\MotdBundle\Entity\Box;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+// @todo: Add security entries for editing and creating a ship
+
+/**
+ * @Route("/")
+ */
 class ShipController extends Controller
 {
+    /**
+     * @Route("fleet{fleet}/{shortname}", name="webb_ship_ship_view", requirements={"fleet" = "\d+"})
+     * @Template("WebbShipBundle:Ship:show.html.twig")
+     */
     public function showAction($fleet, $shortname)
     {
 
@@ -44,9 +54,18 @@ class ShipController extends Controller
 
         $boxes = $query->getQuery()->execute();
 
-        return $this->render('WebbShipBundle:Ship:show.html.twig', array('ship' => $ship, 'boxes' => $boxes));
+        //array_walk($boxes, array($this, 'prepareBoxes'));
+
+        return array(
+            'ship' => $ship,
+            'boxes' => $boxes,
+        );
     }
 
+    /**
+     * @Route("ship/create", name="webb_ship_ship_create")
+     * @Template("WebbShipBundle:Ship:create.html.twig")
+     */
     public function createAction(Request $request)
     {
         $ship = new Ship();
@@ -65,12 +84,16 @@ class ShipController extends Controller
             }
         }
 
-        return $this->render('WebbShipBundle:Ship:create.html.twig', array(
+        return array(
             'form' => $form->createView(),
-        ));
+        );
 
     }
 
+    /**
+     * @Route("fleet{fleet}/{shortname}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "\d+"})
+     * @Template("WebbShipBundle:Ship:edit.html.twig")
+     */
     public function editAction($fleet, $shortname, Request $request)
     {
         $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
@@ -98,11 +121,11 @@ class ShipController extends Controller
             }
         }
 
-        return $this->render('WebbShipBundle:Ship:edit.html.twig', array(
+        return array(
             'form' => $form->createView(),
             'fleet' => $fleet,
             'shortname' => $shortname,
-        ));
+        );
     }
 
     function showRosterAction($ship) {
@@ -122,5 +145,12 @@ class ShipController extends Controller
 	
 	return $this->render('WebbShipBundle:Ship:roster.html.twig', array('positions' => $positions));
 
+    }
+
+    // Prepare the boxes for displaying
+    private function prepareBoxes(Box &$box, $key) {
+        if($box->getType() == "position") {
+            $box->getPosition()->truncateAssignment();
+        }
     }
 }

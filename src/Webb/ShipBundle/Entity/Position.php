@@ -213,6 +213,20 @@ class Position
     }
 
     /**
+     * Truncate assignment
+     *
+     * @return Position
+     */
+    public function truncateAssignment()
+    {
+        if(is_array($this->assignment)) {
+            $this->assignment = array_slice($this->assignment, 0, 1);
+        }
+
+        return $this;
+    }
+
+    /**
      * Add box
      *
      * @param \Webb\MotdBundle\Entity\Box $box
