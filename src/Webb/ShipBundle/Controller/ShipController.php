@@ -54,7 +54,7 @@ class ShipController extends Controller
 
         $boxes = $query->getQuery()->execute();
 
-        array_walk($boxes, array($this, 'prepareBoxes'));
+        array_walk($boxes, array($this, 'prepareResult'));
 
         return array(
             'ship' => $ship,
@@ -148,9 +148,10 @@ class ShipController extends Controller
     }
 
     // Prepare the boxes for displaying
-    private function prepareBoxes(Box &$box, $key) {
+    private function prepareResult(Box &$box, $key) {
         if($box->getType() == "position") {
             $box->getPosition()->truncateAssignment();
         }
     }
 }
+
