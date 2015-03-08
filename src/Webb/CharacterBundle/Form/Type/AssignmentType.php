@@ -1,7 +1,4 @@
 <?php
-/**
- * src/Webb/CharacterBundle/Form/Type/AssignmentType.php
- */
 
 namespace Webb\CharacterBundle\Form\Type;
 

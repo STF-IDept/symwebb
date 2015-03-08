@@ -1,18 +1,11 @@
 <?php
-/**
- * src/Webb/CharacterBundle/Controller/PersonaController.php
- */
-
 
 namespace Webb\CharacterBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Webb\CharacterBundle\Form\Type\PersonaType;
-use Webb\CharacterBundle\Form\Type\AssignmentType;
 use Webb\CharacterBundle\Entity\Persona;
 use Symfony\Component\HttpFoundation\Request;
-//use Symfony\Component\Security\Core\SecurityContext;
-//use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -80,9 +73,7 @@ class PersonaController extends Controller
             }
         }
 
-        return $this->render('WebbCharacterBundle:Persona:create.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        return array('form' => $form->createView());
 
     }
 
@@ -105,8 +96,6 @@ class PersonaController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
-                // perform some action, such as saving the task to the database
-                //$persona->getImage()->upload();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($persona);
                 $em->flush();
@@ -115,10 +104,6 @@ class PersonaController extends Controller
             }
         }
 
-        return $this->render('WebbCharacterBundle:Persona:edit.html.twig', array(
-            'form' => $form->createView(),
-            'id' => $id,
-            'persona' => $persona,
-        ));
+        return array('form' => $form->createView(), 'id' => $id, 'persona' => $persona);
     }
 }
