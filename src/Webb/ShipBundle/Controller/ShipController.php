@@ -54,7 +54,7 @@ class ShipController extends Controller
 
         $boxes = $query->getQuery()->execute();
 
-        //array_walk($boxes, array($this, 'prepareBoxes'));
+        array_walk($boxes, array($this, 'prepareBoxes'));
 
         return array(
             'ship' => $ship,
