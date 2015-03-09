@@ -2,6 +2,7 @@
 
 namespace Webb\ShipBundle\Controller;
 
+use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Webb\ShipBundle\Form\Type\ShipType;
 use Webb\ShipBundle\Entity\Ship;
@@ -38,19 +39,17 @@ class ShipController extends Controller
         }
 
         /* Join the positions, assignments and personae */
-
         $query = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('b, p, q, a, r, s, u')
             ->from('WebbMotdBundle:Box', 'b')
             ->where('b.ship = :ship_id')->setParameter('ship_id', $ship->getId())
             ->leftJoin('b.position', 'p')
             ->leftJoin('p.parent', 'q')
-            ->leftJoin('p.assignment', 'a')
-            ->andWhere('a.active = 1 OR b.type != \'position\'')
-	    ->leftJoin('a.persona', 'r')
-	    ->leftJoin('r.rank', 's')
-	    ->leftJoin('r.user', 'u')
-	    ->orderBy('b.boxorder', 'asc');
+            ->leftJoin('p.assignment', 'a', 'WITH', 'a.active = 1')
+	        ->leftJoin('a.persona', 'r')
+	        ->leftJoin('r.rank', 's')
+	        ->leftJoin('r.user', 'u')
+	        ->orderBy('b.boxorder', 'asc');
 
         $boxes = $query->getQuery()->execute();
 
@@ -150,7 +149,21 @@ class ShipController extends Controller
     // Prepare the boxes for displaying
     private function prepareResult(Box &$box, $key) {
         if($box->getType() == "position") {
+            // Ensure we're only getting one assignment in each box.
             $box->getPosition()->truncateAssignment();
+
+            // Some logic to get the correct values to be used in templates
+            if(count($box->getPosition()->getAssignment())){
+                $assignment = $box->getPosition()->getAssignment();
+                $box->temp->style = $assignment[0]->getPersona()->getRank()->getStyleName();
+                $box->temp->name = $assignment[0]->getPersona()->getName();
+                $box->temp->user = $assignment[0]->getPersona()->getUser();
+            }
+            else {
+                $box->temp->style = "vacant";
+                $box->temp->name = "Position Vacant";
+                $box->temp->user = "Position Vacant";
+            }
         }
     }
 }

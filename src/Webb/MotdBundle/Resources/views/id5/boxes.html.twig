@@ -6,12 +6,7 @@
     <dl class="motd-freetext"><dt class="blank">{{ box.title }}</dt><dd>{{ box.content }}</dd></dl>
 {%  elseif box.type == "position" %}
     <dl class="motd-position motd-color-{{ box.position.parent.branch }}">
-        {% if box.position.assignment|length > 0 %}
-            <dt class="motd-rank-{{ box.position.assignment[0].persona.rank.stylename }}">{{ box.position.shortname }}: {{ box.position.assignment[0].persona.name }}</dt>
-            <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.position.assignment[0].persona.user }}</dd>
-        {% else %}
-            <dt class="motd-rank-vacant">{{ box.position.shortname }}: Position Vacant</dt>
-            <dd>{{ box.content }}</dd>
-        {% endif %}
+        <dt class="motd-rank-{{ box.temp.style }}">{{ box.position.shortname }}: {{ box.temp.name }}</dt>
+        <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.temp.user }}</dd>
     </dl>
 {% endif %}
