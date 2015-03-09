@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\Query;
 
+// @todo: Add security entries for editing and creating a character
+
 /**
  * @Route("/character")
  */
