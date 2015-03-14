@@ -6,11 +6,11 @@
             <a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': item.id}) }}"
 		 class="{% if item.id == noteid %}current{% endif %}">
 
-            {% if item.indent %}
-                {% for i in 1..item.indent %}
+
+                {% for i in 0..item.indent %}
                     <div class="indent">
                 {% endfor %}
-            {% endif %}
+
 
             <dl>
 		        <dt>
@@ -27,11 +27,11 @@
 
             </dl>
 
-            {% if item.indent %}
-                {% for i in 1..item.indent %}
+
+                {% for i in 0..item.indent %}
                     </div>
                 {% endfor %}
-            {% endif %}
+
             </a>
         {%  endfor %}
 
