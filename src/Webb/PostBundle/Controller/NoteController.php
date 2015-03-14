@@ -9,14 +9,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Webb\PostBundle\Entity\Note;
-use Webb\PostBundle\Entity\Log;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
-use Zend\Http\Header\Date;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+/**
+ * @Route("/fleet{fleet}/{ship}/notes")
+ */
 class NoteController extends Controller
 {
+    /**
+     * @Route("/{id}", name="webb_post_note_view", requirements={"id" = "\d+"})
+     * @Template("WebbPostBundle:Note:show.html.twig")
+     */
     public function showAction($ship, $id, Request $request)
     {
 
@@ -115,9 +122,13 @@ class NoteController extends Controller
 
         $data = $form->getData();
 
-        return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
+        return array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
     }
 
+    /**
+     * @Route("/", name="webb_post_note_list")
+     * @Template("WebbPostBundle:Note:list.html.twig")
+     */
     public function listAction($ship, Request $request)
     {
 
@@ -127,9 +138,15 @@ class NoteController extends Controller
 
         $data = $form->getData();
 
-        return $this->render('WebbPostBundle:Note:list.html.twig', array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
+        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
     }
 
+    /**
+     * @Route("/create", name="webb_post_note_create", defaults={"parent_id" = "null"})
+     * @Route("/{parent_id}/reply", name="webb_post_note_reply", requirements={"parent_id" = "\d+"})
+     * @Security("has_role('ROLE_USER')")
+     * @Template("WebbPostBundle:Note:create.html.twig")
+     */
     public function createAction($fleet, $ship, $parent_id,  Request $request)
     {
         // Declare new note
@@ -242,7 +259,7 @@ class NoteController extends Controller
         }
 
         // If we didn't get redirected, time to display the posting form
-        return $this->render('WebbPostBundle:Note:create.html.twig', array(
+        return array(
             'fleet' => $fleet,
             'ship' => $note->getShip(),
             'form' => $form->createView(),
@@ -250,10 +267,15 @@ class NoteController extends Controller
             'method' => $method,
             'parent' => $parent,
             'id' => false,
-        ));
+        );
 
     }
 
+    /**
+     * @Route("{id}", name="webb_post_note_edit", requirements={"id" = "\d+"})
+     * @Security("has_role('ROLE_POST_EDIT')")
+     * @Template("WebbPostBundle:Post:edit.html.twig")
+     */
     public function editAction($fleet, $ship, $id, Request $request)
     {
         $note = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($id);
@@ -278,7 +300,7 @@ class NoteController extends Controller
             }
         }
 
-        return $this->render('WebbPostBundle:Note:create.html.twig', array(
+        return array(
             'form' => $form->createView(),
             'fleet' => $fleet,
             'ship' => $note->getShip(),
@@ -286,9 +308,12 @@ class NoteController extends Controller
             'method' => "webb_post_note_edit",
             'parent' => $note->getParent(),
             'id' => $note->getId(),
-        ));
+        );
     }
 
+    /**
+     * @Template("WebbPostBundle:Note:recentposts.html.twig")
+     */
     public function recentPostsAction($ship, $note, $start, $end) {
 
         $user = $this->getUser();
@@ -372,7 +397,9 @@ class NoteController extends Controller
             $history[$item->getNote()->getId()] = $item->getNote()->getId();
         }
 
-        return $this->render('WebbPostBundle:Note:recentposts.html.twig', array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history));
+        $note_id = $note ? $note->getId() : 0;
+
+        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history, 'noteid' => $note_id);
     }
 
     private function getChildPost(&$notes, $note, $indent = 0) {
@@ -397,11 +424,8 @@ class NoteController extends Controller
     }
 
     /**
-     * Generate the article feed
-     *
-     * @return Response XML Feed
+     * @Route("/list/rss/{format}", name="webb_post_note_rss", defaults={"format" = "raw"})
      */
-
     public function feedAction($fleet, $ship, $format)
     {
         // @TODO: Need to limit this to only the last week's posts, and on a ship
