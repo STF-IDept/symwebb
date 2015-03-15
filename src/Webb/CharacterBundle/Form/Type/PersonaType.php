@@ -1,7 +1,4 @@
 <?php
-/**
- * src/Webb/CharacterBundle/Form/Type/PersonaType.php
- */
 
 namespace Webb\CharacterBundle\Form\Type;
 

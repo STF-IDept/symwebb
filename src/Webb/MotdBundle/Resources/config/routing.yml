@@ -1,3 +1,0 @@
-webb_motd_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: WebbMotdBundle:User:index }

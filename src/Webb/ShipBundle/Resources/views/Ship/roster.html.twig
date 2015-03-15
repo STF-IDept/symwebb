@@ -22,20 +22,20 @@
 {% for position in positions %}
 {% for assignment in position.assignment|slice(0,1) %}
     <tr>
-        <td>{{ assignment.persona.rank.longname }}</td>
-	<td>{{ assignment.persona.name }}</td>
-	<td>{{ position.shortname }}</td>
-	<td>{{ assignment.persona.species }}</td>
-	<td>{{ assignment.persona.age }}</td>
-	<td>{{ assignment.persona.height }}</td>
-	<td>{{ assignment.persona.weight }}</td>
-	<td>
-	    {% if is_granted("ROLE_USER") %}
-	        <a href="{{ path('webb_user', { 'id': assignment.persona.user.id }) }}">{{ assignment.persona.user }}</a>
-	    {% else %}
-	        {{ assignment.persona.user }}
-	    {% endif %}
-	</td>
+		<td>{{ assignment.persona.rank.longname }}</td>
+		<td><a href="{{ path('webb_character_view', { 'id': assignment.persona.id }) }}">{{ assignment.persona.name }}</a></td>
+		<td>{{ position.shortname }}</td>
+		<td>{{ assignment.persona.species }}</td>
+		<td>{{ assignment.persona.age }}</td>
+		<td>{{ assignment.persona.height }}</td>
+		<td>{{ assignment.persona.weight }}</td>
+		<td>
+			{% if is_granted("ROLE_USER") %}
+				<a href="{{ path('webb_user_profile_show_byid', { 'id': assignment.persona.user.id }) }}">{{ assignment.persona.user }}</a>
+			{% else %}
+				{{ assignment.persona.user }}
+			{% endif %}
+		</td>
 
     </tr>
 	{% endfor %}

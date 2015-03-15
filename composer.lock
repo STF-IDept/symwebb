@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eb1f8c2304bfa25c654f3a7c6391751e",
+    "hash": "4236e06ff9617a9d5e566b09c351ba96",
     "packages": [
         {
             "name": "bmatzner/jquery-bundle",
@@ -1733,27 +1733,35 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v2.3.4",
+            "version": "v3.0.4",
             "target-dir": "Sensio/Bundle/FrameworkExtraBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "cce05719041d952bbec856789ca18646a1891d03"
+                "reference": "b3bc3e67c8b6b68b18d727012183520d35ee762a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/cce05719041d952bbec856789ca18646a1891d03",
-                "reference": "cce05719041d952bbec856789ca18646a1891d03",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/b3bc3e67c8b6b68b18d727012183520d35ee762a",
+                "reference": "b3bc3e67c8b6b68b18d727012183520d35ee762a",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.2",
-                "symfony/framework-bundle": "~2.2"
+                "symfony/framework-bundle": "~2.3"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~2.4",
+                "symfony/security-bundle": "~2.4"
+            },
+            "suggest": {
+                "symfony/expression-language": "",
+                "symfony/security-bundle": ""
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -1776,7 +1784,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2013-07-24 08:49:53"
+            "time": "2014-12-02 09:52:52"
         },
         {
             "name": "sensio/generator-bundle",

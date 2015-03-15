@@ -5,9 +5,10 @@
 
 namespace Webb\UserBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -38,6 +39,46 @@ class User extends BaseUser
     protected $surname;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Webb\CharacterBundle\Entity\Rank",  cascade={"persist"})
+     * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\CharacterBundle\Entity\Rank")
+     */
+    protected $rank;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
+
+    /**
+     * @var \DateTime $joined
+     *
+     * @ORM\Column(type="datetime")
+     */
+    protected $joined;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bio", type="text")
+     */
+    protected $bio;
+
+    /**
+     * @ORM\OneToOne(cascade={"persist", "remove"}, targetEntity="Webb\FileBundle\Entity\Image")
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id", onDelete="set null")
+     */
+    protected $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Webb\CharacterBundle\Entity\Persona", mappedBy="user")
+     */
+    protected $persona;
+
+    /**
      * @ORM\OneToOne(targetEntity="Application", cascade={"persist"}, mappedBy="user")
      */
     protected $application;
@@ -45,7 +86,7 @@ class User extends BaseUser
     /**
      * @ORM\OneToMany(targetEntity="Webb\PostBundle\Entity\History", mappedBy="user")
      */
-    private $history;
+    protected $history;
 
     public function __construct()
     {
@@ -144,5 +185,85 @@ class User extends BaseUser
     public function getHistory()
     {
         return $this->history;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBio()
+    {
+        return $this->bio;
+    }
+
+    /**
+     * @param string $bio
+     */
+    public function setBio($bio)
+    {
+        $this->bio = $bio;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getJoined()
+    {
+        return $this->joined;
+    }
+
+    /**
+     * @param \DateTime $joined
+     */
+    public function setJoined($joined)
+    {
+        $this->joined = $joined;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 }

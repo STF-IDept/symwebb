@@ -1,3 +1,0 @@
-webb_file_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: WebbFileBundle:User:index }

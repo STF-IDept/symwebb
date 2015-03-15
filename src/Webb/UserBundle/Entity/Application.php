@@ -4,6 +4,7 @@ namespace Webb\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Application
  *
@@ -92,8 +93,8 @@ class Application
     private $comments;
 
     /**
-     * @ORM\OneToOne(targetEntity="User", cascade={"persist"}, inversedBy="application")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="application")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      */
     protected $user;

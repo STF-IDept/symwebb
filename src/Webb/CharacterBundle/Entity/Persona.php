@@ -23,7 +23,7 @@ class Persona
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -31,7 +31,7 @@ class Persona
      * @ORM\Column(name="name", type="string", length=255)
      * @Assert\NotBlank()
      */
-    private $name;
+    protected $name;
 
     /**
      * @var \DateTime $updated
@@ -39,35 +39,35 @@ class Persona
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      */
-    private $updated;
+    protected $updated;
 
     /**
      * @var string
      *
      * @ORM\Column(name="species", type="string", length=50)
      */
-    private $species;
+    protected $species;
 
     /**
      * @var string
      *
      * @ORM\Column(name="weight", type="string", length=10)
      */
-    private $weight;
+    protected $weight;
 
     /**
      * @var string
      *
      * @ORM\Column(name="height", type="string", length=10)
      */
-    private $height;
+    protected $height;
 
     /**
      * @var string
      *
      * @ORM\Column(name="age", type="string", length=10)
      */
-    private $age;
+    protected $age;
 
     /**
      * @ORM\ManyToOne(targetEntity="Rank",  cascade={"persist"})
@@ -77,7 +77,7 @@ class Persona
     protected $rank;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\UserBundle\Entity\User",  cascade={"persist"}, inversedBy="persona")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\UserBundle\Entity\User")
      */

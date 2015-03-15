@@ -1,0 +1,12 @@
+{% if box.type == "colstart" %}
+    <div class="motd-cols{{ box.columns }}">
+{% elseif box.type == "colend" %}
+    </div>
+{% elseif box.type == "freetext" %}
+    <dl class="motd-freetext"><dt class="blank">{{ box.title }}</dt><dd>{{ box.content }}</dd></dl>
+{%  elseif box.type == "position" %}
+    <dl class="motd-position motd-color-{{ box.position.parent.branch }}">
+        <dt class="motd-rank-{{ box.temp.style }}">{{ box.position.shortname }}: {{ box.temp.name }}</dt>
+        <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ box.temp.user }}</dd>
+    </dl>
+{% endif %}
