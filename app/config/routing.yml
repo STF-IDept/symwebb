@@ -15,12 +15,16 @@ webb_page:
     prefix:   /
 
 webb_post:
-    resource: "@WebbPostBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@WebbPostBundle/Controller/NoteController.php"
+    type: annotation
 
-webb_ship:
+webb_ship_fleet:
     resource: "@WebbShipBundle/Resources/config/routing.yml"
     prefix:   /
+
+webb_ship_ship:
+    resource: "@WebbShipBundle/Controller/ShipController.php"
+    type: annotation
 
 webb_character:
     resource: "@WebbCharacterBundle/Controller/PersonaController.php"

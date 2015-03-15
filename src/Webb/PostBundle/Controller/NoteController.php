@@ -355,8 +355,6 @@ class NoteController extends Controller
         $arr = array();
         $ids = array();
 
-        //$note_id = $note ? $note->getId() : 0;
-
         // Pop all of the retrieved notes into an array
         foreach($notes as $item) {
             $temp[$item->getId()] = $item;
@@ -393,7 +391,7 @@ class NoteController extends Controller
             $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $note->getId(), $history));
         }
 
-        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history, 'noteid' => $note->getId());
+        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
     }
 
     private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history) {
