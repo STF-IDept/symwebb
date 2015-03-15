@@ -4,27 +4,7 @@
 
     {% for box in boxes %}
 
-        {% if box.type == "colstart" %}
-            <div class="motd-cols{{ box.columns }}">
-        {% elseif box.type == "colend" %}
-            </div>
-        {% elseif box.type == "freetext" %}
-            <dl class="motd-freetext"><dt class="blank">{{ box.title }}</dt><dd>{{ box.content }}</dd></dl>
-        {%  elseif box.type == "position" %}
-            <dl class="motd-position motd-color-{{ box.position.parent.branch }}">
-                {% if box.position.assignment|length > 0 %}
-                    {% for assignment in box.position.assignment|slice(0,1) %}
-                        <dt class="motd-rank-{{ assignment.persona.rank.stylename }}">{{ box.position.shortname }}: {{ assignment.persona.name }}</dt>
-                        <dd>{{ box.content }}<br/><br/><em>Played by: </em>{{ assignment.persona.user }}</dd>
-                    {% endfor %}
-                {% else %}
-                    <dt class="motd-rank-vacant">{{ box.position.shortname }}: Position Vacant</dt>
-                    <dd>{{ box.content }}</dd>
-                {% endif %}
-
-            </dl>
-
-        {% endif %}
+        {% include 'WebbMotdBundle:id5:boxes.html.twig' with {'box': box} %}
 
     {%  endfor %}
 

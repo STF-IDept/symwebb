@@ -9,14 +9,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Webb\PostBundle\Entity\Note;
-use Webb\PostBundle\Entity\Log;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
-use Zend\Http\Header\Date;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+/**
+ * @Route("/fleet{fleet}/{ship}/notes")
+ */
 class NoteController extends Controller
 {
+    /**
+     * @Route("/{id}", name="webb_post_note_view", requirements={"id" = "\d+"})
+     * @Template("WebbPostBundle:Note:show.html.twig")
+     */
     public function showAction($ship, $id, Request $request)
     {
 
@@ -115,9 +122,13 @@ class NoteController extends Controller
 
         $data = $form->getData();
 
-        return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
+        return array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
     }
 
+    /**
+     * @Route("/", name="webb_post_note_list")
+     * @Template("WebbPostBundle:Note:list.html.twig")
+     */
     public function listAction($ship, Request $request)
     {
 
@@ -127,9 +138,15 @@ class NoteController extends Controller
 
         $data = $form->getData();
 
-        return $this->render('WebbPostBundle:Note:list.html.twig', array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']));
+        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
     }
 
+    /**
+     * @Route("/create", name="webb_post_note_create", defaults={"parent_id" = "null"})
+     * @Route("/{parent_id}/reply", name="webb_post_note_reply", requirements={"parent_id" = "\d+"})
+     * @Security("has_role('ROLE_USER')")
+     * @Template("WebbPostBundle:Note:create.html.twig")
+     */
     public function createAction($fleet, $ship, $parent_id,  Request $request)
     {
         // Declare new note
@@ -242,7 +259,7 @@ class NoteController extends Controller
         }
 
         // If we didn't get redirected, time to display the posting form
-        return $this->render('WebbPostBundle:Note:create.html.twig', array(
+        return array(
             'fleet' => $fleet,
             'ship' => $note->getShip(),
             'form' => $form->createView(),
@@ -250,10 +267,15 @@ class NoteController extends Controller
             'method' => $method,
             'parent' => $parent,
             'id' => false,
-        ));
+        );
 
     }
 
+    /**
+     * @Route("{id}", name="webb_post_note_edit", requirements={"id" = "\d+"})
+     * @Security("has_role('ROLE_POST_EDIT')")
+     * @Template("WebbPostBundle:Post:edit.html.twig")
+     */
     public function editAction($fleet, $ship, $id, Request $request)
     {
         $note = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($id);
@@ -278,7 +300,7 @@ class NoteController extends Controller
             }
         }
 
-        return $this->render('WebbPostBundle:Note:create.html.twig', array(
+        return array(
             'form' => $form->createView(),
             'fleet' => $fleet,
             'ship' => $note->getShip(),
@@ -286,19 +308,17 @@ class NoteController extends Controller
             'method' => "webb_post_note_edit",
             'parent' => $note->getParent(),
             'id' => $note->getId(),
-        ));
+        );
     }
 
+    /**
+     * @Template("WebbPostBundle:Note:recentposts.html.twig")
+     */
     public function recentPostsAction($ship, $note, $start, $end) {
 
         $user = $this->getUser();
 
-        if($user) {
-            $userid = $user->getId();
-        }
-        else {
-            $userid = 0;
-        }
+        $userid = ($user) ? $user->getId() : 0;
 
         if(!is_object($ship)) {
             $ship = $this->getShipByShortName($ship);
@@ -327,7 +347,7 @@ class NoteController extends Controller
             ->innerJoin('ship.fleet', 'fleet')
             ->leftJoin('note.log', 'log')
             ->leftJoin('note.child', 'child')
-            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
+            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits. @Todo: See similar issue in user module with application being pulled through.
             ->orderBy('note.date')
             ->getQuery()->execute();
 
@@ -338,12 +358,6 @@ class NoteController extends Controller
         // Pop all of the retrieved notes into an array
         foreach($notes as $item) {
             $temp[$item->getId()] = $item;
-        }
-
-
-        foreach($temp as &$item) {
-            // For each note, process the child posts, and pop into a new array
-            $arr = array_merge($arr, $this->getChildPost($temp, $item));
             $ids[] = $item->getId();
         }
 
@@ -355,6 +369,7 @@ class NoteController extends Controller
 
         // End mass panic
 
+        // Get the history list
         if($userid) {
             $history_bld = $this->getDoctrine()->getManager()->createQueryBuilder()
                 ->select('h')
@@ -367,26 +382,50 @@ class NoteController extends Controller
         }
 
         $history = array();
-
         foreach($history_arr as $item) {
             $history[$item->getNote()->getId()] = $item->getNote()->getId();
         }
 
-        return $this->render('WebbPostBundle:Note:recentposts.html.twig', array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history));
+        // For each note, process the child posts, and pop into a new array to build our post tree
+        foreach($temp as &$item) {
+            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $note->getId(), $history));
+        }
+
+        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
     }
 
-    private function getChildPost(&$notes, $note, $indent = 0) {
+    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history) {
 
         $arr = array();
+
+        // Work out if there is any special styling for the note preview
+        $style = ($current_id == $note->getId()) ? "current" : "";
+
+        $tags = array();
+
+        // And any tags that there are, including the new tag. The order of the array is the order in which they display.
+        if(!isset($history[$note->getId()]) && $current_id != $note->getId()) {
+            $tags['new'] = "New";
+        }
+        if($note->getLog()->getLog()) {
+            $tags['log'] = $note->getAssignment()->getPosition()->getShortName()." Log";
+        }
+
         // Store the note that is being processed at the top of the array
-        $arr[] = array('note' => $note, 'id' => $note->getId(), 'indent' => $indent);
+        $arr[] = array(
+            'note' => $note,
+            'id' => $note->getId(),
+            'indent' => $indent,
+            'style' => $style,
+            'tags' => $tags,
+        );
 
         // And check for children
         foreach($note->getChild() as $child) {
             // $notes[$child->getId()] will give us the child note, which we will then put through this recusive function.
-            // But! We should also check that the note is in the list retreived from the DB
+            // But! We should also check that the note is in the list retreived from the DB @Todo: Is this a todo?
             if(isset($notes[$child->getId()])) {
-                $arr = array_merge($arr, $this->getChildPost($notes, $notes[$child->getId()], $indent + 1));
+                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history));
             }
         }
 
@@ -397,11 +436,8 @@ class NoteController extends Controller
     }
 
     /**
-     * Generate the article feed
-     *
-     * @return Response XML Feed
+     * @Route("/list/rss/{format}", name="webb_post_note_rss", defaults={"format" = "raw"})
      */
-
     public function feedAction($fleet, $ship, $format)
     {
         // @TODO: Need to limit this to only the last week's posts, and on a ship

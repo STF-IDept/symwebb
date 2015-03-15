@@ -17,13 +17,16 @@ framework:
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_proxies: ~
-    session:         ~
+    session:
+        handler_id:  ~
     fragments:       ~
 
 # Twig Configuration
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
+    globals:
+        fos_csrf_provider: "@form.csrf_provider"
 
 # Doctrine Configuration
 doctrine:
@@ -65,6 +68,9 @@ fos_user:
             type: webb_user_registration
         confirmation:
             enabled: true
+    profile:
+        form:
+            type: webb_user_profile
     from_email:
         address: personnel@star-fleet.com
         sender_name: STF Personnel Department

@@ -120,4 +120,9 @@ class Position
     {
         return $this->branch;
     }
+
+    public function __toString()
+    {
+        return $this->getLongName();
+    }
 }
