@@ -4,7 +4,7 @@
         {% for item in notes %}
 
             <a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': item.id}) }}"
-		 class="{% if item.id == noteid %}current{% endif %}">
+		 class="{{ item.style }}">
 
 
                 {% for i in 0..item.indent %}
@@ -14,8 +14,9 @@
 
             <dl>
 		        <dt>
-                    {% if (item.id != noteid) and (history[item.id] is not defined) %}<span class="tag new">New</span>{% endif %}
-                    {% if item.note.log|length %}{% if item.note.log.log %}<span class="tag log">{{ item.note.assignment.position.shortname }} Log</span>{% endif %}{% endif %}
+                    {% for style, tag in item.tags %}
+                        <span class="tag {{ style }}">{{ tag }}</span>
+                    {% endfor %}
 
                     {{ item.note.location }} - {{ item.note.activity }}
                 </dt>

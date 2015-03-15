@@ -318,12 +318,7 @@ class NoteController extends Controller
 
         $user = $this->getUser();
 
-        if($user) {
-            $userid = $user->getId();
-        }
-        else {
-            $userid = 0;
-        }
+        $userid = ($user) ? $user->getId() : 0;
 
         if(!is_object($ship)) {
             $ship = $this->getShipByShortName($ship);
@@ -352,7 +347,7 @@ class NoteController extends Controller
             ->innerJoin('ship.fleet', 'fleet')
             ->leftJoin('note.log', 'log')
             ->leftJoin('note.child', 'child')
-            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
+            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits. @Todo: See similar issue in user module with application being pulled through.
             ->orderBy('note.date')
             ->getQuery()->execute();
 
@@ -360,15 +355,11 @@ class NoteController extends Controller
         $arr = array();
         $ids = array();
 
+        //$note_id = $note ? $note->getId() : 0;
+
         // Pop all of the retrieved notes into an array
         foreach($notes as $item) {
             $temp[$item->getId()] = $item;
-        }
-
-
-        foreach($temp as &$item) {
-            // For each note, process the child posts, and pop into a new array
-            $arr = array_merge($arr, $this->getChildPost($temp, $item));
             $ids[] = $item->getId();
         }
 
@@ -380,6 +371,7 @@ class NoteController extends Controller
 
         // End mass panic
 
+        // Get the history list
         if($userid) {
             $history_bld = $this->getDoctrine()->getManager()->createQueryBuilder()
                 ->select('h')
@@ -392,28 +384,50 @@ class NoteController extends Controller
         }
 
         $history = array();
-
         foreach($history_arr as $item) {
             $history[$item->getNote()->getId()] = $item->getNote()->getId();
         }
 
-        $note_id = $note ? $note->getId() : 0;
+        // For each note, process the child posts, and pop into a new array to build our post tree
+        foreach($temp as &$item) {
+            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $note->getId(), $history));
+        }
 
-        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history, 'noteid' => $note_id);
+        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history, 'noteid' => $note->getId());
     }
 
-    private function getChildPost(&$notes, $note, $indent = 0) {
+    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history) {
 
         $arr = array();
+
+        // Work out if there is any special styling for the note preview
+        $style = ($current_id == $note->getId()) ? "current" : "";
+
+        $tags = array();
+
+        // And any tags that there are, including the new tag. The order of the array is the order in which they display.
+        if(!isset($history[$note->getId()]) && $current_id != $note->getId()) {
+            $tags['new'] = "New";
+        }
+        if($note->getLog()->getLog()) {
+            $tags['log'] = $note->getAssignment()->getPosition()->getShortName()." Log";
+        }
+
         // Store the note that is being processed at the top of the array
-        $arr[] = array('note' => $note, 'id' => $note->getId(), 'indent' => $indent);
+        $arr[] = array(
+            'note' => $note,
+            'id' => $note->getId(),
+            'indent' => $indent,
+            'style' => $style,
+            'tags' => $tags,
+        );
 
         // And check for children
         foreach($note->getChild() as $child) {
             // $notes[$child->getId()] will give us the child note, which we will then put through this recusive function.
-            // But! We should also check that the note is in the list retreived from the DB
+            // But! We should also check that the note is in the list retreived from the DB @Todo: Is this a todo?
             if(isset($notes[$child->getId()])) {
-                $arr = array_merge($arr, $this->getChildPost($notes, $notes[$child->getId()], $indent + 1));
+                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history));
             }
         }
 
