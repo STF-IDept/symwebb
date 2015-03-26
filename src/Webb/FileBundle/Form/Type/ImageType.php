@@ -11,7 +11,6 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('file');
-        //$builder->add('path');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
