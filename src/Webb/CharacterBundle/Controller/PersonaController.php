@@ -62,11 +62,12 @@ class PersonaController extends Controller
         $persona->setUser($this->getUser());
 
         if ($request->getMethod() == 'POST') {
+            $persona->getImage()->setName($persona->getName());
+            $persona->getImage()->setFolder('character');
+
             $form->bind($request);
 
             if ($form->isValid()) {
-                // perform some action, such as saving the task to the database
-                //$persona->getImage()->upload();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($persona);
                 $em->flush();
@@ -95,6 +96,9 @@ class PersonaController extends Controller
         }
 
         if ($request->getMethod() == 'POST') {
+            $persona->getImage()->setName($persona->getName());
+            $persona->getImage()->setFolder('character');
+
             $form->bind($request);
 
             if ($form->isValid()) {
@@ -108,4 +112,5 @@ class PersonaController extends Controller
 
         return array('form' => $form->createView(), 'id' => $id, 'persona' => $persona);
     }
+
 }

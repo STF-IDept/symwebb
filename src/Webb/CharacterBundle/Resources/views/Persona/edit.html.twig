@@ -16,7 +16,7 @@
     <div id="postinfo">
         <form action="{{ path('webb_character_edit', {'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="persona_edit">
             <div id="profileimage">
-                {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
+                {% if persona.image.path is not null %}<img src="{{ asset(persona.image.webpath)|imagine_filter('profile_image') }}" alt="{{ persona.image.name }}"/>{% endif %}
             </div>
             <h2>{{ persona.rank }} {{ persona.name }}</h2>
             {{ form_widget(form) }}
