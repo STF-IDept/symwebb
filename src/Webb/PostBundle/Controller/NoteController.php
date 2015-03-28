@@ -40,11 +40,7 @@ class NoteController extends Controller
             ->innerJoin('p.rank', 's')
             ->getQuery()->getOneOrNullResult();
 
-        if (!$note) {
-            throw $this->createNotFoundException(
-                'No note found for id '.$id
-            );
-        }
+        if (!$note) throw $this->createNotFoundException('No note found for id '.$id);
 
         $ship = $this->getShipByShortName($ship);
 
@@ -71,9 +67,7 @@ class NoteController extends Controller
 
         $form = $this->dateSelect($request);
 
-        $dates = $form->getData();
-
-        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $dates);
+        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $form->getData());
     }
 
     /**
