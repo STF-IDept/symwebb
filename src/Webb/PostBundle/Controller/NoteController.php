@@ -280,6 +280,7 @@ class NoteController extends Controller
             ->orderBy('note.date')
             ->getQuery()->execute();
 
+
         $temp = array();
         $arr = array();
         $ids = array();
@@ -290,6 +291,18 @@ class NoteController extends Controller
             $ids[] = $item->getId();
         }
 
+        $history = $this->getHistory($ids, $userid);
+
+        // For each note, process the child posts, and pop into a new array to build our post tree
+        $noteid = $note ? $note->getId() : 0;
+        foreach($temp as &$item) {
+            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $noteid, $history, $userid));
+        }
+
+        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
+    }
+
+    private function getHistory($ids, $userid) {
         // Get the history list
         $history_arr = array();
         if($userid) {
@@ -308,13 +321,8 @@ class NoteController extends Controller
             $history[$item->getNote()->getId()] = $item->getNote()->getId();
         }
 
-        // For each note, process the child posts, and pop into a new array to build our post tree
-        $noteid = $note ? $note->getId() : 0;
-        foreach($temp as &$item) {
-            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $noteid, $history, $userid));
-        }
+        return $history;
 
-        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
     }
 
     private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history, $userid) {
