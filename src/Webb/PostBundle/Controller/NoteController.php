@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Webb\PostBundle\Entity\Note;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
+use Webb\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -47,22 +48,7 @@ class NoteController extends Controller
         $ship = $this->getShipByShortName($ship);
 
         if($userid) {
-            $new = true;
-
-            foreach($note->getHistory() as $item) {
-                if($item->getUser()->getId()) {
-                    $new = false;
-                    break;
-                }
-            }
-
-            if($new) {
-                $history = new \Webb\PostBundle\Entity\History();
-                $history->setUser($user)->setNote($note);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($history);
-                $em->flush();
-            }
+            $this->saveHistory($note, $user);
         }
 
         $links = $this->getLinks($note, $ship->getId(), $userid);
@@ -492,6 +478,27 @@ class NoteController extends Controller
             ->getQuery()->getOneOrNullResult();
 
         return $result;
+    }
+
+    private function saveHistory(Note $note, User $user) {
+
+        $new = true;
+
+        foreach($note->getHistory() as $item) {
+            if($item->getUser()->getId()) {
+                $new = false;
+                break;
+            }
+        }
+
+        if($new) {
+            $history = new \Webb\PostBundle\Entity\History();
+            $history->setUser($user)->setNote($note);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($history);
+            $em->flush();
+        }
+
     }
 
 }
