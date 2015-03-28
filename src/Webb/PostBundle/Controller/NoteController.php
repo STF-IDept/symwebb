@@ -26,15 +26,7 @@ class NoteController extends Controller
      */
     public function showAction($ship, $id, Request $request)
     {
-
-        $user = $this->getUser();
-
-        if($user) {
-            $userid = $user->getId();
-        }
-        else {
-            $userid = 0;
-        }
+        $userid = ($user = $this->getUser()) ? $user->getId() : 0;
 
         $note = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('n, l, p, a, q, r, s')
@@ -347,7 +339,7 @@ class NoteController extends Controller
             ->innerJoin('ship.fleet', 'fleet')
             ->leftJoin('note.log', 'log')
             ->leftJoin('note.child', 'child')
-            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits. @Todo: See similar issue in user module with application being pulled through.
+            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
             ->orderBy('note.date')
             ->getQuery()->execute();
 
@@ -361,15 +353,8 @@ class NoteController extends Controller
             $ids[] = $item->getId();
         }
 
-        /**********
-         * @TODO: YOU MUST REMOVE ME!!!!!!
-         */
-
-        $userid = $userid ? $userid : 1;
-
-        // End mass panic
-
         // Get the history list
+        $history_arr = array();
         if($userid) {
             $history_bld = $this->getDoctrine()->getManager()->createQueryBuilder()
                 ->select('h')
@@ -387,14 +372,15 @@ class NoteController extends Controller
         }
 
         // For each note, process the child posts, and pop into a new array to build our post tree
+        $noteid = $note ? $note->getId() : 0;
         foreach($temp as &$item) {
-            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $note->getId(), $history));
+            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $noteid, $history, $userid));
         }
 
         return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
     }
 
-    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history) {
+    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history, $userid) {
 
         $arr = array();
 
@@ -404,7 +390,7 @@ class NoteController extends Controller
         $tags = array();
 
         // And any tags that there are, including the new tag. The order of the array is the order in which they display.
-        if(!isset($history[$note->getId()]) && $current_id != $note->getId()) {
+        if(!isset($history[$note->getId()]) && $current_id != $note->getId() && $userid) {
             $tags['new'] = "New";
         }
         if($note->getLog()->getLog()) {
@@ -423,9 +409,8 @@ class NoteController extends Controller
         // And check for children
         foreach($note->getChild() as $child) {
             // $notes[$child->getId()] will give us the child note, which we will then put through this recusive function.
-            // But! We should also check that the note is in the list retreived from the DB @Todo: Is this a todo?
             if(isset($notes[$child->getId()])) {
-                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history));
+                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history, $userid));
             }
         }
 
