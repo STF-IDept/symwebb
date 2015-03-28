@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8a3b013a99b45b6755ec6259a4e13083",
+    "hash": "693ddb4aba470ef1789da280e680c197",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -405,16 +405,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.4.2",
+            "version": "v2.5.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "5db6ab40e4c531f14dad4ca96a394dfce5d4255b"
+                "reference": "1348ca4bc50bc6959ac7197896daf1fc9059aa0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/5db6ab40e4c531f14dad4ca96a394dfce5d4255b",
-                "reference": "5db6ab40e4c531f14dad4ca96a394dfce5d4255b",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/1348ca4bc50bc6959ac7197896daf1fc9059aa0d",
+                "reference": "1348ca4bc50bc6959ac7197896daf1fc9059aa0d",
                 "shasum": ""
             },
             "require": {
@@ -431,7 +431,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -445,17 +445,6 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
@@ -464,10 +453,16 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
             "description": "Common Library for Doctrine projects",
@@ -479,7 +474,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2014-05-21 19:28:51"
+            "time": "2015-03-26 00:26:38"
         },
         {
             "name": "doctrine/dbal",
@@ -810,16 +805,16 @@
         },
         {
             "name": "eko/feedbundle",
-            "version": "dev-master",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eko/FeedBundle.git",
-                "reference": "d8036a31429c468118856711dc51a913bc01349d"
+                "reference": "9e4462af93cb2b600346b018628eddd46dd6b32b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eko/FeedBundle/zipball/d8036a31429c468118856711dc51a913bc01349d",
-                "reference": "d8036a31429c468118856711dc51a913bc01349d",
+                "url": "https://api.github.com/repos/eko/FeedBundle/zipball/9e4462af93cb2b600346b018628eddd46dd6b32b",
+                "reference": "9e4462af93cb2b600346b018628eddd46dd6b32b",
                 "shasum": ""
             },
             "require": {
@@ -864,7 +859,7 @@
                 "feed",
                 "rss"
             ],
-            "time": "2015-03-03 19:42:59"
+            "time": "2015-02-07 14:21:23"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1625,17 +1620,17 @@
         },
         {
             "name": "liip/imagine-bundle",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "target-dir": "Liip/ImagineBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipImagineBundle.git",
-                "reference": "a97b46f5bbbf8e2a2646871f4bea1a11b189cbb8"
+                "reference": "fb777bf6db7ed8cd6b9d72b9c1a25f71901c01c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/a97b46f5bbbf8e2a2646871f4bea1a11b189cbb8",
-                "reference": "a97b46f5bbbf8e2a2646871f4bea1a11b189cbb8",
+                "url": "https://api.github.com/repos/liip/LiipImagineBundle/zipball/fb777bf6db7ed8cd6b9d72b9c1a25f71901c01c1",
+                "reference": "fb777bf6db7ed8cd6b9d72b9c1a25f71901c01c1",
                 "shasum": ""
             },
             "require": {
@@ -1695,7 +1690,7 @@
                 "image",
                 "imagine"
             ],
-            "time": "2015-02-22 19:35:59"
+            "time": "2015-03-27 05:32:04"
         },
         {
             "name": "monolog/monolog",
@@ -1859,17 +1854,17 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v2.3.12",
+            "version": "v2.3.13",
             "target-dir": "Sensio/Bundle/DistributionBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "29e81800012a6e827bdea8d9d1ab2bacd85d25fa"
+                "reference": "c344892aa9f09f0005b395d79ad2531a7deaedc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/29e81800012a6e827bdea8d9d1ab2bacd85d25fa",
-                "reference": "29e81800012a6e827bdea8d9d1ab2bacd85d25fa",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/c344892aa9f09f0005b395d79ad2531a7deaedc9",
+                "reference": "c344892aa9f09f0005b395d79ad2531a7deaedc9",
                 "shasum": ""
             },
             "require": {
@@ -1901,7 +1896,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2015-03-25 08:57:52"
+            "time": "2015-03-26 11:09:17"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -2932,8 +2927,7 @@
     "aliases": [],
     "minimum-stability": "alpha",
     "stability-flags": {
-        "knplabs/knp-markdown-bundle": 20,
-        "eko/feedbundle": 20
+        "knplabs/knp-markdown-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
