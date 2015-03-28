@@ -466,17 +466,6 @@ class NoteController extends Controller
             ->setMaxResults(1)
             ->getQuery()->getOneOrNullResult();
 
-        $result['previousthread'] = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id < :note_id AND n.thread = :note_thread')
-            ->setParameter('ship_id', $shipid)
-            ->setParameter('note_id', $note->getId())
-            ->setParameter('note_thread', $note->getThread())
-            ->orderBy('n.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
         $result['nextcron'] = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('n')
             ->from('WebbPostBundle:Note', 'n')
