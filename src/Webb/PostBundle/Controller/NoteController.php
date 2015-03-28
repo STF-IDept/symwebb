@@ -31,8 +31,7 @@ class NoteController extends Controller
         $note = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('n, l, p, a, q, r, s')
             ->from('WebbPostBundle:Note', 'n')
-            ->where('n.id = :id')
-            ->setParameter('id', $id)
+            ->where('n.id = :id')->setParameter('id', $id)
             ->innerJoin('n.location', 'l')
             ->innerJoin('n.persona', 'p')
             ->innerJoin('n.assignment', 'a')
@@ -40,7 +39,6 @@ class NoteController extends Controller
             ->innerJoin('q.parent', 'r')
             ->innerJoin('p.rank', 's')
             ->getQuery()->getOneOrNullResult();
-
 
         if (!$note) {
             throw $this->createNotFoundException(
@@ -62,8 +60,7 @@ class NoteController extends Controller
 
             if($new) {
                 $history = new \Webb\PostBundle\Entity\History();
-                $history->setUser($user)
-                    ->setNote($note);
+                $history->setUser($user)->setNote($note);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($history);
                 $em->flush();
