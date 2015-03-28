@@ -70,51 +70,13 @@ class NoteController extends Controller
             }
         }
 
-        $previouscron = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id < :note_id')->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->orderBy('n.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
-        /*$previousthread = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id < :note_id AND n.thread = :note_thread')
-            ->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->setParameter('note_thread', $note->getThread())
-            ->orderBy('n.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();*/
-
-        $nextcron = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id > :note_id')->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
-        $nextthread = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id > :note_id AND n.thread = :note_thread')
-            ->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->setParameter('note_thread', $note->getThread())
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
+        $links = $this->getLinks($note, $ship->getId(), $userid);
 
         $form = $this->dateSelect($request);
 
         $data = $form->getData();
 
-        return array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
+        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
     }
 
     /**
@@ -143,8 +105,6 @@ class NoteController extends Controller
     {
         // Declare new note
         $note = new Note();
-        // Set $user as either the logged in user, or 0 - @todo: Remove when firewall is configured to force login
-        $user = ($this->getUser()) ? $this->getUser()->getId() : 0;
         // Look up ship based on shortname passed by routing
         $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship));
 
@@ -230,9 +190,7 @@ class NoteController extends Controller
 
             $form->bind($request);
 
-            // @todo: Do we need to assign the persona to the note, when it's associated with the assignment linked to the note?  Assignments are going to be unique to both ship and individual.
             $note->setPersona($note->getAssignment()->getPersona());
-
 
             // Set time for post
             $time = new DateTime;
@@ -495,6 +453,63 @@ class NoteController extends Controller
         $session->set('end', $data['end']);
 
         return $form;
+    }
+
+    private function getLinks(Note $note, $shipid, $userid) {
+
+        $result['previouscron'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id < :note_id')->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->orderBy('n.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['previousthread'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id < :note_id AND n.thread = :note_thread')
+            ->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->setParameter('note_thread', $note->getThread())
+            ->orderBy('n.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextcron'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id > :note_id')->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextnew'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n', 'h')
+            ->from('WebbPostBundle:Note', 'n')
+            ->innerJoin('n.history', 'h')
+            ->innerJOin('h.user', 'u')
+            ->where('n.ship = :ship_id')->setParameter('ship_id', $shipid)
+            ->andWhere('n.id > :note_id')->setParameter('note_id', $note->getId())
+            ->andWhere('u.id = :user_id')->setParameter('user_id', $userid)
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextthread'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id > :note_id AND n.thread = :note_thread')
+            ->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->setParameter('note_thread', $note->getThread())
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        return $result;
     }
 
 }
