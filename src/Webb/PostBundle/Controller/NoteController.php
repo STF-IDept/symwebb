@@ -245,9 +245,7 @@ class NoteController extends Controller
      */
     public function recentPostsAction($ship, $note, $dates) {
 
-        $user = $this->getUser();
-
-        $userid = ($user) ? $user->getId() : 0;
+        $userid = ($user = $this->getUser()) ? $user->getId() : 0;
 
         if(!is_object($ship)) {
             $ship = $this->getShipByShortName($ship);
