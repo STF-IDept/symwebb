@@ -150,7 +150,7 @@ class NoteController extends Controller
                     ->from('WebbPostBundle:Note', 'note')
                     ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')->andWhere('note.thread = :note_thread')
                     ->setParameter('ship_id', $ship->getId())
-                    ->setParameter('user_id', $user)
+                    ->setParameter('user_id', $this->getUser()->getID())
                     ->setParameter('note_thread', $parent->getThread())
                     ->orderBy('note.id', 'DESC')
                     ->setMaxResults(1)
