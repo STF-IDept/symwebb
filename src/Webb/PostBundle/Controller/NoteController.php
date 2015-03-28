@@ -74,9 +74,9 @@ class NoteController extends Controller
 
         $form = $this->dateSelect($request);
 
-        $data = $form->getData();
+        $dates = $form->getData();
 
-        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
+        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $dates);
     }
 
     /**
@@ -90,9 +90,9 @@ class NoteController extends Controller
 
         $form = $this->dateSelect($request);
 
-        $data = $form->getData();
+        $dates = $form->getData();
 
-        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
+        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'dates' => $dates);
     }
 
     /**
@@ -264,7 +264,7 @@ class NoteController extends Controller
     /**
      * @Template("WebbPostBundle:Note:recentposts.html.twig")
      */
-    public function recentPostsAction($ship, $note, $start, $end) {
+    public function recentPostsAction($ship, $note, $dates) {
 
         $user = $this->getUser();
 
@@ -275,8 +275,8 @@ class NoteController extends Controller
         }
 
         // Make sure the Start and End times are set to 00:00:00 and 23:59:59 respectively.
-        $start->setTime(0,0,0);
-        $end->setTime(23,59,59);
+        $dates['start']->setTime(0,0,0);
+        $dates['end']->setTime(23,59,59);
 
         $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('note, location, persona, assignment, position, parent, rank, log, child, ship, fleet, log2')
@@ -285,8 +285,8 @@ class NoteController extends Controller
             ->andWhere('note.date >= :start')
             ->andWhere('note.date <= :end')
             ->setParameter('ship_id', $ship->getId())
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
+            ->setParameter('start', $dates['start'])
+            ->setParameter('end', $dates['end'])
             ->innerJoin('note.location', 'location')
             ->innerJoin('note.persona', 'persona')
             ->innerJoin('note.assignment', 'assignment')
