@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Webb\PostBundle\Entity\Note;
 use Webb\PostBundle\Form\Type\NoteType;
 use \DateTime;
+use Webb\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,21 +27,12 @@ class NoteController extends Controller
      */
     public function showAction($ship, $id, Request $request)
     {
-
-        $user = $this->getUser();
-
-        if($user) {
-            $userid = $user->getId();
-        }
-        else {
-            $userid = 0;
-        }
+        $userid = ($user = $this->getUser()) ? $user->getId() : 0;
 
         $note = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('n, l, p, a, q, r, s')
             ->from('WebbPostBundle:Note', 'n')
-            ->where('n.id = :id')
-            ->setParameter('id', $id)
+            ->where('n.id = :id')->setParameter('id', $id)
             ->innerJoin('n.location', 'l')
             ->innerJoin('n.persona', 'p')
             ->innerJoin('n.assignment', 'a')
@@ -49,80 +41,21 @@ class NoteController extends Controller
             ->innerJoin('p.rank', 's')
             ->getQuery()->getOneOrNullResult();
 
-
         if (!$note) {
-            throw $this->createNotFoundException(
-                'No note found for id '.$id
-            );
+            throw $this->createNotFoundException('No note found for id '.$id);
         }
 
         $ship = $this->getShipByShortName($ship);
 
         if($userid) {
-            $new = true;
-
-            foreach($note->getHistory() as $item) {
-                if($item->getUser()->getId()) {
-                    $new = false;
-                    break;
-                }
-            }
-
-            if($new) {
-                $history = new \Webb\PostBundle\Entity\History();
-                $history->setUser($user)
-                    ->setNote($note);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($history);
-                $em->flush();
-            }
+            $this->saveHistory($note, $user);
         }
 
-        $previouscron = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id < :note_id')->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->orderBy('n.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
-        /*$previousthread = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id < :note_id AND n.thread = :note_thread')
-            ->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->setParameter('note_thread', $note->getThread())
-            ->orderBy('n.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();*/
-
-        $nextcron = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id > :note_id')->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
-
-        $nextthread = $this->getDoctrine()->getManager()->createQueryBuilder()
-            ->select('n')
-            ->from('WebbPostBundle:Note', 'n')
-            ->where('n.ship = :ship_id AND n.id > :note_id AND n.thread = :note_thread')
-            ->setParameter('ship_id', $ship->getId())
-            ->setParameter('note_id', $id)
-            ->setParameter('note_thread', $note->getThread())
-            ->orderBy('n.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()->getOneOrNullResult();
+        $links = $this->getLinks($note, $ship->getId(), $userid);
 
         $form = $this->dateSelect($request);
 
-        $data = $form->getData();
-
-        return array('note' => $note, 'ship' => $ship, 'previouscron' => $previouscron, 'nextcron' => $nextcron, 'nextthread' => $nextthread, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
+        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $form->getData());
     }
 
     /**
@@ -136,23 +69,21 @@ class NoteController extends Controller
 
         $form = $this->dateSelect($request);
 
-        $data = $form->getData();
+        $dates = $form->getData();
 
-        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'start' => $data['start'], 'end' => $data['end']);
+        return array('note' => 0, 'ship' => $ship, 'form' => $form->createView(), 'dates' => $dates);
     }
 
     /**
-     * @Route("/create", name="webb_post_note_create", defaults={"parent_id" = "null"})
+     * @Route("/create", name="webb_post_note_create", defaults={"parent_id" = 0})
      * @Route("/{parent_id}/reply", name="webb_post_note_reply", requirements={"parent_id" = "\d+"})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_POST_CREATE')")
      * @Template("WebbPostBundle:Note:create.html.twig")
      */
-    public function createAction($fleet, $ship, $parent_id,  Request $request)
+    public function createAction($fleet, $ship, $parent_id = 0,  Request $request)
     {
         // Declare new note
         $note = new Note();
-        // Set $user as either the logged in user, or 0 - @todo: Remove when firewall is configured to force login
-        $user = ($this->getUser()) ? $this->getUser()->getId() : 0;
         // Look up ship based on shortname passed by routing
         $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship));
 
@@ -161,86 +92,30 @@ class NoteController extends Controller
         $note->setShip($ship);
         $note->setPublished(true);
 
-        // If there is a parent id passed by the routing
-        if(!is_null($parent_id)) {
-
-            // Get the actual parent node
-            $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
-
-            // And specify parent and thread
-            $note->setParent($parent);
-            $note->setThread($parent->getThread());
-
-            $method = "webb_post_note_reply";
-        }
-        else {
-            $method = "webb_post_note_create";
-            $parent = false;
-        }
-
-        // Auto-generate some values for the user.
+        // Prepare the note, and return some variables for the template
         if($request->getMethod() != 'POST') {
-
-            if(!is_null($parent_id)) {
-                // Replace all new lines with > to indicate quoted text
-                $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n";
-                $content .= "> Posted on {$parent->getDate()->format('l j M Y')} at {$parent->getDate()->format('g:ia T')} \n>\n";
-                $content .= "> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n";
-                $note->setContent($content);
-
-                // Pick up the previous activity, and the location
-                $note->setActivity($parent->getActivity());
-                $note->setLocation($parent->getLocation());
-
-                // We know there were past posts.  Check to see if any of them were authored by the user.  If so, take the last one and use that character.
-                $assignment_query = $this->getDoctrine()->getManager()->createQueryBuilder()
-                    ->select('note')
-                    ->from('WebbPostBundle:Note', 'note')
-                    ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')->andWhere('note.thread = :note_thread')
-                    ->setParameter('ship_id', $ship->getId())
-                    ->setParameter('user_id', $user)
-                    ->setParameter('note_thread', $parent->getThread())
-                    ->orderBy('note.id', 'DESC')
-                    ->setMaxResults(1)
-                    ->getQuery()->getOneOrNullResult();
-
-                if(!is_null($assignment_query)) {
-                    $note->setAssignment($assignment_query->getAssignment());
-                }
-            }
-
-            // If the note assignment is still null, use the last one used by the user.
-            if(is_null($note->getAssignment())) {
-                $assignment_query = $this->getDoctrine()->getManager()->createQueryBuilder()
-                    ->select('note')
-                    ->from('WebbPostBundle:Note', 'note')
-                    ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')
-                    ->setParameter('ship_id', $ship->getId())
-                    ->setParameter('user_id', $user)
-                    ->orderBy('note.id', 'DESC')
-                    ->setMaxResults(1)
-                    ->getQuery()->getOneOrNullResult();
-
-                if(!is_null($assignment_query)) {
-                    $note->setAssignment($assignment_query->getAssignment());
-                }
-            }
-
-
+            $template_var = $this->prepareNote($note, $parent_id, $ship->getID());
         }
-
 
         // Generate the form
-        $form = $this->createForm(new NoteType(), $note, array('ship' => $ship->getId(), 'user' => $user));
+        $form = $this->createForm(new NoteType(), $note, array('ship' => $ship->getId(), 'user' => $this->getUser()));
 
         // Handle form submissions
         if ($request->getMethod() == 'POST') {
 
+            if($parent_id) {
+
+                // Get the  parent node
+                $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+
+                // And specify parent and thread
+                $note->setParent($parent);
+                $note->setThread($parent->getThread());
+            }
+
             $form->bind($request);
 
-            // @todo: Do we need to assign the persona to the note, when it's associated with the assignment linked to the note?  Assignments are going to be unique to both ship and individual.
             $note->setPersona($note->getAssignment()->getPersona());
-
 
             // Set time for post
             $time = new DateTime;
@@ -263,9 +138,7 @@ class NoteController extends Controller
             'fleet' => $fleet,
             'ship' => $note->getShip(),
             'form' => $form->createView(),
-            'selected' => $parent,
-            'method' => $method,
-            'parent' => $parent,
+            'meta' => $template_var,
             'id' => false,
         );
 
@@ -314,19 +187,17 @@ class NoteController extends Controller
     /**
      * @Template("WebbPostBundle:Note:recentposts.html.twig")
      */
-    public function recentPostsAction($ship, $note, $start, $end) {
+    public function recentPostsAction($ship, $noteid, $dates) {
 
-        $user = $this->getUser();
-
-        $userid = ($user) ? $user->getId() : 0;
+        $userid = ($user = $this->getUser()) ? $user->getId() : 0;
 
         if(!is_object($ship)) {
             $ship = $this->getShipByShortName($ship);
         }
 
         // Make sure the Start and End times are set to 00:00:00 and 23:59:59 respectively.
-        $start->setTime(0,0,0);
-        $end->setTime(23,59,59);
+        $dates['start']->setTime(0,0,0);
+        $dates['end']->setTime(23,59,59);
 
         $notes = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('note, location, persona, assignment, position, parent, rank, log, child, ship, fleet, log2')
@@ -335,8 +206,8 @@ class NoteController extends Controller
             ->andWhere('note.date >= :start')
             ->andWhere('note.date <= :end')
             ->setParameter('ship_id', $ship->getId())
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
+            ->setParameter('start', $dates['start'])
+            ->setParameter('end', $dates['end'])
             ->innerJoin('note.location', 'location')
             ->innerJoin('note.persona', 'persona')
             ->innerJoin('note.assignment', 'assignment')
@@ -347,9 +218,10 @@ class NoteController extends Controller
             ->innerJoin('ship.fleet', 'fleet')
             ->leftJoin('note.log', 'log')
             ->leftJoin('note.child', 'child')
-            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits. @Todo: See similar issue in user module with application being pulled through.
+            ->leftJoin('child.log', 'log2') //No idea why adding this drops the SQL hits.
             ->orderBy('note.date')
             ->getQuery()->execute();
+
 
         $temp = array();
         $arr = array();
@@ -361,15 +233,19 @@ class NoteController extends Controller
             $ids[] = $item->getId();
         }
 
-        /**********
-         * @TODO: YOU MUST REMOVE ME!!!!!!
-         */
+        $history = $this->getHistory($ids, $userid);
 
-        $userid = $userid ? $userid : 1;
+        // For each note, process the child posts, and pop into a new array to build our post tree
+        foreach($temp as &$item) {
+            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $noteid, $history, $userid));
+        }
 
-        // End mass panic
+        return array('notes' => $arr, 'ship' => $ship, 'history' => $history);
+    }
 
+    private function getHistory($ids, $userid) {
         // Get the history list
+        $history_arr = array();
         if($userid) {
             $history_bld = $this->getDoctrine()->getManager()->createQueryBuilder()
                 ->select('h')
@@ -386,15 +262,11 @@ class NoteController extends Controller
             $history[$item->getNote()->getId()] = $item->getNote()->getId();
         }
 
-        // For each note, process the child posts, and pop into a new array to build our post tree
-        foreach($temp as &$item) {
-            $arr = array_merge($arr, $this->prepareRecentPosts($temp, $item, null, $note->getId(), $history));
-        }
+        return $history;
 
-        return array('notes' => $arr, 'ship' => $ship, 'note' => $note, 'history' => $history);
     }
 
-    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history) {
+    private function prepareRecentPosts(&$notes, Note $note, $indent = 0, &$current_id = 0, &$history, $userid) {
 
         $arr = array();
 
@@ -404,7 +276,7 @@ class NoteController extends Controller
         $tags = array();
 
         // And any tags that there are, including the new tag. The order of the array is the order in which they display.
-        if(!isset($history[$note->getId()]) && $current_id != $note->getId()) {
+        if(!isset($history[$note->getId()]) && $current_id != $note->getId() && $userid) {
             $tags['new'] = "New";
         }
         if($note->getLog()->getLog()) {
@@ -423,9 +295,8 @@ class NoteController extends Controller
         // And check for children
         foreach($note->getChild() as $child) {
             // $notes[$child->getId()] will give us the child note, which we will then put through this recusive function.
-            // But! We should also check that the note is in the list retreived from the DB @Todo: Is this a todo?
             if(isset($notes[$child->getId()])) {
-                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history));
+                $arr = array_merge($arr, $this->prepareRecentPosts($notes, $notes[$child->getId()], $indent + 1, $current_id, $history, $userid));
             }
         }
 
@@ -438,11 +309,26 @@ class NoteController extends Controller
     /**
      * @Route("/list/rss/{format}", name="webb_post_note_rss", defaults={"format" = "raw"})
      */
-    public function feedAction($fleet, $ship, $format)
+    public function feedAction($ship, $format)
     {
-        // @TODO: Need to limit this to only the last week's posts, and on a ship
+        $ship = $this->getShipByShortName($ship);
 
-        $articles = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->findAll();
+        $articles = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('note, location, persona, assignment, position, rank, ship, fleet')
+            ->from('WebbPostBundle:Note', 'note')
+            ->where('note.ship = :ship_id')
+            ->setParameter('ship_id', $ship->getId())
+            ->andWhere('note.date >= :start')
+            ->setParameter('start', new DateTime('-1 week'))
+            ->innerJoin('note.location', 'location')
+            ->innerJoin('note.persona', 'persona')
+            ->innerJoin('note.assignment', 'assignment')
+            ->innerJoin('assignment.position', 'position')
+            ->innerJoin('persona.rank', 'rank')
+            ->innerJoin('note.ship', 'ship')
+            ->innerJoin('ship.fleet', 'fleet')
+            ->orderBy('note.date')
+            ->getQuery()->execute();
 
         foreach($articles as $article) {
           if($format == "raw") {
@@ -510,6 +396,138 @@ class NoteController extends Controller
         $session->set('end', $data['end']);
 
         return $form;
+    }
+
+    private function getLinks(Note $note, $shipid, $userid) {
+
+        $result['previouscron'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id < :note_id')->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->orderBy('n.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextcron'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id > :note_id')->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextnew'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n', 'h')
+            ->from('WebbPostBundle:Note', 'n')
+            ->innerJoin('n.history', 'h')
+            ->innerJOin('h.user', 'u')
+            ->where('n.ship = :ship_id')->setParameter('ship_id', $shipid)
+            ->andWhere('n.id > :note_id')->setParameter('note_id', $note->getId())
+            ->andWhere('u.id = :user_id')->setParameter('user_id', $userid)
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        $result['nextthread'] = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('n')
+            ->from('WebbPostBundle:Note', 'n')
+            ->where('n.ship = :ship_id AND n.id > :note_id AND n.thread = :note_thread')
+            ->setParameter('ship_id', $shipid)
+            ->setParameter('note_id', $note->getId())
+            ->setParameter('note_thread', $note->getThread())
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
+
+        return $result;
+    }
+
+    private function saveHistory(Note $note, User $user) {
+
+        $new = true;
+
+        foreach($note->getHistory() as $item) {
+            if($item->getUser()->getId()) {
+                $new = false;
+                break;
+            }
+        }
+
+        if($new) {
+            $history = new \Webb\PostBundle\Entity\History();
+            $history->setUser($user)->setNote($note);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($history);
+            $em->flush();
+        }
+
+    }
+
+    private function prepareNote(Note &$note, $parent_id, $ship_id) {
+
+        if($parent_id) {
+            // Get the actual parent node
+            $parent = $this->getDoctrine()->getRepository('WebbPostBundle:Note')->find($parent_id);
+
+            // Replace all new lines with > to indicate quoted text
+            $content = "> Posted by {$parent->getAssignment()} played by {$parent->getUser()}\n";
+            $content .= "> Posted on {$parent->getDate()->format('l j M Y')} at {$parent->getDate()->format('g:ia T')} \n>\n";
+            $content .= "> ".str_replace("\n", "\n> ", trim($parent->getContent()))."\n\n";
+            $note->setContent($content);
+
+            // Pick up the previous activity, and the location
+            $note->setActivity($parent->getActivity());
+            $note->setLocation($parent->getLocation());
+
+            // We know there were past posts.  Check to see if any of them were authored by the user.  If so, take the last one and use that character.
+            $assignment_query = $this->getDoctrine()->getManager()->createQueryBuilder()
+                ->select('note')
+                ->from('WebbPostBundle:Note', 'note')
+                ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')->andWhere('note.thread = :note_thread')
+                ->setParameter('ship_id', $ship_id)
+                ->setParameter('user_id', $this->getUser()->getID())
+                ->setParameter('note_thread', $parent->getThread())
+                ->orderBy('note.id', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
+
+            if(!is_null($assignment_query)) {
+                $note->setAssignment($assignment_query->getAssignment());
+            }
+
+            $return['method'] = "webb_post_note_reply";
+            $return['parent'] = $parent_id;
+            $return['parent_loc'] = $parent->getLocation();
+            $return['parent_act'] = $parent->getActivity();
+        }
+        else {
+            $return['method'] = "webb_post_note_create";
+            $return['parent'] = $parent_id;
+        }
+
+        // If the note assignment is still null, use the last one used by the user.
+        if(is_null($note->getAssignment())) {
+            $userid = ($user = $this->getUser()) ? $user->getId() : 0;
+
+            $assignment_query = $this->getDoctrine()->getManager()->createQueryBuilder()
+                ->select('note')
+                ->from('WebbPostBundle:Note', 'note')
+                ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')
+                ->setParameter('ship_id', $ship_id)
+                ->setParameter('user_id', $userid)
+                ->orderBy('note.id', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()->getOneOrNullResult();
+
+            if(!is_null($assignment_query)) {
+                $note->setAssignment($assignment_query->getAssignment());
+            }
+        }
+
+        return $return;
+
     }
 
 }

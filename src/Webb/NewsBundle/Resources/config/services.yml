@@ -1,7 +1,0 @@
-parameters:
-#    webb_news.example.class: Webb\NewsBundle\Example
-
-services:
-#    webb_news.example:
-#        class: %webb_news.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

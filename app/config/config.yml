@@ -19,6 +19,7 @@ framework:
     trusted_proxies: ~
     session:
         handler_id:  ~
+        name:        GENSESSID
     fragments:       ~
 
 # Twig Configuration
@@ -47,6 +48,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+
+
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -83,6 +86,7 @@ parameters:
     # Assetic
     assetic.filter.compass.images_dir: %kernel.root_dir%/../web/images
     assetic.filter.compass.http_path: /images
+    doctrine.orm.metadata.driver_chain.class: Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
 
 # Assetic Configuration
 assetic:
@@ -109,3 +113,9 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+liip_imagine:
+    filter_sets:
+        profile_image:
+            filters:
+                thumbnail: {size: [600, 300], mode: inset}

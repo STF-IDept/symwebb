@@ -1,7 +1,0 @@
-parameters:
-#    webb_ship.example.class: Webb\ShipBundle\Example
-
-services:
-#    webb_ship.example:
-#        class: %webb_ship.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

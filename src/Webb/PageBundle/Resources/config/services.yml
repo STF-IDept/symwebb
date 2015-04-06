@@ -1,7 +1,0 @@
-services:
-    webb.page.twig.url_extension:
-        class: Webb\PageBundle\Twig\UrlExtension
-        arguments: ['@service_container']
-        tags:
-            - { name: twig.extension }
-#        arguments: [@service_id, "plain_value", %parameter%]

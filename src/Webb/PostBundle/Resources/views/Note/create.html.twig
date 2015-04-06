@@ -1,9 +1,3 @@
-{% if parent is empty %}
-    {% set parentid = 0 %}
-{% else %}
-    {% set parentid = parent.id %}
-{% endif %}
-
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
@@ -18,15 +12,15 @@
 
     <h2>{{ ship.name }}</h2>
 
-{% if selected %}
+{% if meta.parent %}
 <div id="postinfo">
-    <h3>Reply to: {{ selected.location }} - {{ selected.activity }}</h3>
+    <h3>Reply to: {{ meta.parent_loc }} - {{ meta.parent_act }}</h3>
 </div>
 {% endif %}
 
 <article id="post">
 
-<form action="{{ path(method, {'fleet' : fleet, 'ship' : ship.shortname, 'parent_id' : parentid, 'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
+<form action="{{ path(meta.method, {'fleet' : fleet, 'ship' : ship.shortname, 'parent_id' : meta.parent, 'id' : id}) }}" {{ form_enctype(form) }} method="POST" class="post_note_create">
     <div id="sideouter"><div id="sideinner">
         <h3>Options</h3>
         <span class="checkbox">{{ form_row(form.log) }}</span>
@@ -41,7 +35,7 @@
 </article>
 
 <br class="clear" />
-{# {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': selected})) }} #}
+{# {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': meta.parent})) }} #}
 
 
 {% endblock %}

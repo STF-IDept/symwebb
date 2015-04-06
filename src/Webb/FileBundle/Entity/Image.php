@@ -28,24 +28,34 @@ class Image {
     private $path;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $folder;
+
+    /**
      * @Assert\File(maxSize="6000000")
      */
     private $file;
 
 
     public function getAbsolutePath() {
-        return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->id.'.'.$this->path;
+        return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
     }
 
     public function getWebPath() {
-        return null === $this->path ? null : $this->getUploadDir().'/'.$this->id.'.'.$this->path;
+        return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
     }
 
     protected function getUploadRootDir()
     {
-    // the absolute directory path where uploaded
-    // documents should be saved
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+        $reflClass = new \ReflectionClass($this);
+        return dirname($reflClass->getFileName()).'/../../../../web/'.$this->getUploadDir();
+
     }
 
     protected function getUploadDir()
@@ -62,7 +72,7 @@ class Image {
     public function preUpload()
     {
         if (null !== $this->getFile()) {
-            $this->path = $this->getFile()->guessExtension();
+            $this->path =  $this->folder.'/'.$this->id.'/'.preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $this->name))).'.'.$this->getFile()->guessExtension();
         }
     }
 
@@ -161,5 +171,37 @@ class Image {
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
+
+    /**
+     * @param mixed $folder
+     */
+    public function setFolder($folder)
+    {
+        $this->folder = $folder;
     }
 }

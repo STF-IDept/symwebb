@@ -1,3 +1,0 @@
-webb_page_homepage:
-    pattern:  /
-    defaults: { _controller: WebbPageBundle:Front:index }

@@ -3,11 +3,15 @@
 namespace Webb\MotdBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class DefaultController extends Controller
 {
+    /**
+     * @Template("WebbMotdBundle:User:show.html.twig")
+     */
     public function indexAction($name)
     {
-        return $this->render('WebbMotdBundle:User:show.html.twig', array('name' => $name));
+        return array('name' => $name);
     }
 }

@@ -13,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-// @todo: Add security entries for editing and creating a ship
 
 /**
  * @Route("/")
@@ -63,6 +62,7 @@ class ShipController extends Controller
 
     /**
      * @Route("ship/create", name="webb_ship_ship_create")
+     * @Security("has_role('ROLE_SHIP_CREATE')")
      * @Template("WebbShipBundle:Ship:create.html.twig")
      */
     public function createAction(Request $request)
@@ -91,6 +91,7 @@ class ShipController extends Controller
 
     /**
      * @Route("fleet{fleet}/{shortname}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "\d+"})
+     * @Security("has_role('ROLE_SHIP_EDIT')")
      * @Template("WebbShipBundle:Ship:edit.html.twig")
      */
     public function editAction($fleet, $shortname, Request $request)

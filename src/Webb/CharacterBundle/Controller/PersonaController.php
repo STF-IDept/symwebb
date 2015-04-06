@@ -10,8 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\Query;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-// @todo: Add security entries for editing and creating a character
 
 /**
  * @Route("/character")
@@ -53,6 +54,7 @@ class PersonaController extends Controller
 
     /**
      * @Route("/create", name="webb_character_create")
+     * @Security("has_role('ROLE_CHARACTER_CREATE')")
      * @Template("WebbCharacterBundle:Persona:create.html.twig")
      */
     public function createAction(Request $request)
@@ -62,11 +64,12 @@ class PersonaController extends Controller
         $persona->setUser($this->getUser());
 
         if ($request->getMethod() == 'POST') {
+            $persona->getImage()->setName($persona->getName());
+            $persona->getImage()->setFolder('character');
+
             $form->bind($request);
 
             if ($form->isValid()) {
-                // perform some action, such as saving the task to the database
-                //$persona->getImage()->upload();
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($persona);
                 $em->flush();
@@ -81,20 +84,30 @@ class PersonaController extends Controller
 
     /**
      * @Route("/{id}/edit", name="webb_character_edit", requirements={"id" = "\d+"})
+     * @Security("has_role('ROLE_CHARACTER_EDIT')")
      * @Template("WebbCharacterBundle:Persona:edit.html.twig")
      */
     public function editAction($id, Request $request)
     {
-        $persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
-        $form = $this->createForm(new PersonaType(), $persona);
-
-        if (!$persona) {
+        if (!$persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id)) {
             throw $this->createNotFoundException(
                 'No character found for id '.$id
             );
         }
 
+        $form = $this->createForm(new PersonaType(), $persona);
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        // Check to see if the user owns the content, or if they have permissions to edit all characters
+        if(($user->getId() != $persona->getUser()->getId()) && !$this->isGranted('ROLE_CHARACTER_EDIT_ALL')) {
+            throw new AccessDeniedException("You are not authorised to edit this characters.");
+        }
+
         if ($request->getMethod() == 'POST') {
+            $persona->getImage()->setName($persona->getName());
+            $persona->getImage()->setFolder('character');
+
             $form->bind($request);
 
             if ($form->isValid()) {
@@ -108,4 +121,5 @@ class PersonaController extends Controller
 
         return array('form' => $form->createView(), 'id' => $id, 'persona' => $persona);
     }
+
 }

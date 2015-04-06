@@ -14,7 +14,7 @@
 
     <div id="postinfo">
         <div id="profileimage">
-            {% if persona.image.path is not null %}<img src="/{{ persona.image.webpath }}" alt="Profile Picture"/>{% endif %}
+            {% if persona.image.path is not null %}<img src="{{ asset(persona.image.webpath)|imagine_filter('profile_image') }}" alt="{{ persona.image.name }}"/>{% endif %}
         </div>
         <h2>{{ persona.rank }} {{ persona.name }}</h2>
         <p>{{ 'persona.date'|trans({}, 'WebbCharacterBundle') }} {{ persona.updated|date('l j M Y') }} {{ 'persona.time'|trans({}, 'WebbCharacterBundle') }} {{ persona.updated|date('g:ia T') }}</p>

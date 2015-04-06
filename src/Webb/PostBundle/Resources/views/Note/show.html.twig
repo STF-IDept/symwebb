@@ -35,8 +35,8 @@
     </article>
 
     <ul class="buttons buttonsleft">
-        {% if previouscron is not null %}
-            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': previouscron.id}) }}">Previous Note</a></li>
+        {% if links['previouscron'] is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': links['previouscron'].id}) }}">Previous Note</a></li>
         {% endif %}
         {% if note.parent is not null %}
             <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': note.parent.id}) }}">Parent</a></li>
@@ -46,18 +46,20 @@
     </ul>
 
     <ul class="buttons buttonsright">
-        {% if nextcron is not null %}
-            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextcron.id}) }}">Next Note</a></li>
+        {% if links['nextcron'] is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': links['nextcron'].id}) }}">Next Note</a></li>
         {% endif %}
-        {% if nextthread is not null %}
-            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': nextthread.id}) }}">Next in Thread</a></li>
+        {% if links['nextthread'] is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': links['nextthread'].id}) }}">Next in Thread</a></li>
         {% endif %}
-        <li><a href="">Next New Note</a></li>
+        {% if links['nextnew'] is not null %}
+            <li><a href="{{ url('webb_post_note_view', {'fleet': ship.fleet.shortname, 'ship': ship.shortname, 'id': links['nextnew'].id}) }}">Next in Thread</a></li>
+        {% endif %}
         <li><a href="{{ url('webb_post_note_rss', {'fleet': ship.fleet.shortname, 'ship': ship.shortname}) }}">RSS</a></li>
     </ul>
 
     <br class="clear" />
-    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'note': note, 'start': start, 'end': end})) }}
+    {{ render(controller('WebbPostBundle:Note:recentPosts', {'ship': ship, 'noteid': note.id, 'dates': dates})) }}
 
 {% endblock body %}
 
