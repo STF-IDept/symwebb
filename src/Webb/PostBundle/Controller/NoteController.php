@@ -23,7 +23,6 @@ class NoteController extends Controller
 {
     /**
      * @Route("/{id}", name="webb_post_note_view", requirements={"id" = "\d+"})
-     * @Template("WebbPostBundle:Note:show.html.twig")
      */
     public function showAction($ship, $id, Request $request)
     {
@@ -55,7 +54,7 @@ class NoteController extends Controller
 
         $form = $this->dateSelect($request);
 
-        return array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $form->getData());
+        return $this->render('WebbPostBundle:Note:show.html.twig', array('note' => $note, 'ship' => $ship, 'links' => $links, 'form' => $form->createView(), 'dates' => $form->getData()));
     }
 
     /**
