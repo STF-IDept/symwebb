@@ -1,6 +1,6 @@
 webb_news:
-    resource: "@WebbNewsBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@WebbNewsBundle/Controller/ArticleController.php"
+    type: annotation
 
 webb_page:
     resource: "@WebbPageBundle/Controller/FrontController.php"

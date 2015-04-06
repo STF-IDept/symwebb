@@ -1,7 +1,0 @@
-#fos_user_profile_show:
-#    pattern:  /profile/{id}
-#    defaults: { _controller: WebbUserBundle:Profile:show, id: 0 }
-
-#fos_user_profile_edit:
-#    pattern:  /profile/edit/{id}
-#    defaults: { _controller: WebbUserBundle:Profile:edit, id: 0 }
