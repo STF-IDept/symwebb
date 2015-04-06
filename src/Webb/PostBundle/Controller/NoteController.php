@@ -241,7 +241,6 @@ class NoteController extends Controller
         }
 
         return array('notes' => $arr, 'ship' => $ship, 'history' => $history);
-        return array('notes' => $arr, 'ship' => $ship, 'history' => $history);
     }
 
     private function getHistory($ids, $userid) {
