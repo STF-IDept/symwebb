@@ -11,15 +11,14 @@
 {% block body %}
     <div class="container">
         <div class="news fixed-font"><div class="inner">
-            <!--<h2>Latest News</h2>-->
             {% for key, article in articles %}
             <h2>{{ article.title }}</h2>
-            <div class="ellipsis">
-                <div ><p>{{ article.content|markdown }}<i></i></p>
+                <div class="ellipsis">
+                    <div ><p>{{ article.content|markdown }}<i></i></p>
+                    </div>
                 </div>
-            </div>
 
-                <span class="float-left">Posted by <a href="{{ article.user|entityurl('webb_user_homepage') }}">{{ article.user }}</a> on {{ article.date | date("j M y") }}</span>
+                <span class="float-left">Posted by <a href="{{ article.user|entityurl('webb_user_profile_show_byid') }}">{{ article.user }}</a> on {{ article.date | date("j M y") }}</span>
                 <span class="float-right"><a href="{{ article|entityurl('webb_news_article_view') }}">Read More</a></span>
                 {% if key == 0 %}<hr class="clear"/>{% endif %}
             {% endfor %}

@@ -3,8 +3,8 @@ webb_news:
     prefix:   /
 
 webb_page:
-    resource: "@WebbPageBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@WebbPageBundle/Controller/FrontController.php"
+    type: annotation
 
 webb_post:
     resource: "@WebbPostBundle/Controller/NoteController.php"
