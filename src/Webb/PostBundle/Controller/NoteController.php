@@ -77,7 +77,7 @@ class NoteController extends Controller
     /**
      * @Route("/create", name="webb_post_note_create", defaults={"parent_id" = "null"})
      * @Route("/{parent_id}/reply", name="webb_post_note_reply", requirements={"parent_id" = "\d+"})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("has_role('ROLE_POST_CREATE')")
      * @Template("WebbPostBundle:Note:create.html.twig")
      */
     public function createAction($fleet, $ship, $parent_id,  Request $request)
@@ -142,12 +142,14 @@ class NoteController extends Controller
 
             // If the note assignment is still null, use the last one used by the user.
             if(is_null($note->getAssignment())) {
+                $userid = ($user = $this->getUser()) ? $user->getId() : 0;
+
                 $assignment_query = $this->getDoctrine()->getManager()->createQueryBuilder()
                     ->select('note')
                     ->from('WebbPostBundle:Note', 'note')
                     ->where('note.ship = :ship_id')->andWhere('note.user = :user_id')
                     ->setParameter('ship_id', $ship->getId())
-                    ->setParameter('user_id', $user)
+                    ->setParameter('user_id', $userid)
                     ->orderBy('note.id', 'DESC')
                     ->setMaxResults(1)
                     ->getQuery()->getOneOrNullResult();

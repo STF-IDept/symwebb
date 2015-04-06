@@ -471,7 +471,6 @@ class Note implements RoutedItemInterface
 
     public function getFeedItemRouteParameters()
     {
-        // @TODO: Need to work out how many DB hits this is doing.  Hopefully only two extra (one for the ship, one for the fleet).
         return array("fleet" => $this->ship->getFleet()->getShortname(), "ship" => $this->ship->getShortname(), "id" => $this->id);
     }
 

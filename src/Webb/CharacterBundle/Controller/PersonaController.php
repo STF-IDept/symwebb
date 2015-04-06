@@ -10,8 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\Query;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-// @todo: Add security entries for editing and creating a character
 
 /**
  * @Route("/character")
@@ -53,6 +54,7 @@ class PersonaController extends Controller
 
     /**
      * @Route("/create", name="webb_character_create")
+     * @Security("has_role('ROLE_CHARACTER_CREATE')")
      * @Template("WebbCharacterBundle:Persona:create.html.twig")
      */
     public function createAction(Request $request)
@@ -82,6 +84,7 @@ class PersonaController extends Controller
 
     /**
      * @Route("/{id}/edit", name="webb_character_edit", requirements={"id" = "\d+"})
+     * @Security("has_role('ROLE_CHARACTER_EDIT')")
      * @Template("WebbCharacterBundle:Persona:edit.html.twig")
      */
     public function editAction($id, Request $request)
@@ -93,6 +96,13 @@ class PersonaController extends Controller
             throw $this->createNotFoundException(
                 'No character found for id '.$id
             );
+        }
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        // Check to see if the user owns the content, or if they have permissions to edit all characters
+        if(($user->getId() != $persona->getUser()->getId()) && !$this->isGranted('ROLE_CHARACTER_EDIT_ALL')) {
+            throw new AccessDeniedException("You are not authorised to edit this characters.");
         }
 
         if ($request->getMethod() == 'POST') {

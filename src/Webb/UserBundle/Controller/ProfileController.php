@@ -17,14 +17,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 
 /**
- * @Security("has_role('ROLE_USER')")
- * @Route("/user")
+  * @Route("/user")
  */
 class ProfileController extends BaseController
 {
     /**
      * @Route("/", name="fos_user_profile_show", defaults={"id" = false})
      * @Route("/{id}", name="webb_user_profile_show_byid", requirements={"id" = "\d+"})
+     * @Security("has_role('ROLE_PROFILE_SHOW')")
      * @Template("FOSUserBundle:Profile:show.html.twig")
      */
     public function showAction($id)
@@ -61,7 +61,7 @@ class ProfileController extends BaseController
     /**
      * @Route("/edit/", name="fos_user_profile_edit", defaults={"id" = false})
      * @Route("/{id}/edit/", name="webb_user_profile_edit_byid", requirements={"id" = "\d+"})
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY') and has_role('ROLE_PROFILE_EDIT')")
      * @Template("FOSUserBundle:Profile:edit.html.twig")
      */
     public function editAction($id, Request $request)
@@ -70,7 +70,7 @@ class ProfileController extends BaseController
             $user = $this->container->get('security.context')->getToken()->getUser();
         }
         else {
-            if (false === $this->container->get('security.authorization_checker')->isGranted('ROLE_PROFILE_EDIT')) {
+            if (false === $this->container->get('security.authorization_checker')->isGranted('ROLE_PROFILE_EDIT_ALL')) {
                 throw new AccessDeniedException("You are not authorised to edit other users' profiles.");
             }
             $user = $this->container->get('doctrine')->getRepository('WebbUserBundle:User')->find($id);
