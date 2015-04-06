@@ -89,14 +89,13 @@ class PersonaController extends Controller
      */
     public function editAction($id, Request $request)
     {
-        $persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id);
-        $form = $this->createForm(new PersonaType(), $persona);
-
-        if (!$persona) {
+        if (!$persona = $this->getDoctrine()->getRepository('WebbCharacterBundle:Persona')->find($id)) {
             throw $this->createNotFoundException(
                 'No character found for id '.$id
             );
         }
+
+        $form = $this->createForm(new PersonaType(), $persona);
 
         $user = $this->container->get('security.context')->getToken()->getUser();
 
