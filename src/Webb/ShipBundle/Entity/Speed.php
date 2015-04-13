@@ -56,6 +56,11 @@ class Speed
      */
     private $joLimits;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Ship",  cascade={"persist"}, mappedBy="type")
+     */
+    private $ship;
+
 
     /**
      * Get id

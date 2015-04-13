@@ -2,7 +2,6 @@
 
 namespace Webb\ShipBundle\Controller;
 
-use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Webb\ShipBundle\Form\Type\ShipType;
 use Webb\ShipBundle\Entity\Ship;
@@ -20,21 +19,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ShipController extends Controller
 {
     /**
-     * @Route("fleet{fleet}/{shortname}", name="webb_ship_ship_view", requirements={"fleet" = "\d+"})
-     * @Template("WebbShipBundle:Ship:show.html.twig")
+     * @Route("{fleet}/{ship}", name="webb_ship_ship_view", requirements={"fleet" = "^stf\d+|^acad|^command"})
      */
-    public function showAction($fleet, $shortname)
+    public function showAction($fleet, $ship)
     {
 
-        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
+        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship));
+        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $fleet));
 
         if (!$ship) {
             throw $this->createNotFoundException(
                 'Ship not found'
             );
         }
-        elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
+        elseif (is_null($fleet) || $ship->getFleet()->getId() != $fleet->getId()) {
+            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'ship' => $ship->getShortname())));
         }
 
         /* Join the positions, assignments and personae */
@@ -54,10 +53,11 @@ class ShipController extends Controller
 
         array_walk($boxes, array($this, 'prepareShowResult'));
 
-        return array(
+        return $this->render('WebbMotdBundle:'.$ship->getStyle()->getShortname().':ship.html.twig', array(
             'ship' => $ship,
             'boxes' => $boxes,
-        );
+            'fleet' => $fleet,
+        ));
     }
 
     /**
@@ -79,7 +79,7 @@ class ShipController extends Controller
                 $em->persist($ship);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $ship->getShortname())));
+                return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'ship' => $ship->getShortname())));
             }
         }
 
@@ -90,13 +90,15 @@ class ShipController extends Controller
     }
 
     /**
-     * @Route("fleet{fleet}/{shortname}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "\d+"})
+     * @Route("{fleet}/{ship}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "^stf\d+|^acad|^command"})
      * @Security("has_role('ROLE_SHIP_EDIT')")
      * @Template("WebbShipBundle:Ship:edit.html.twig")
      */
-    public function editAction($fleet, $shortname, Request $request)
+    public function editAction($fleet, $ship, Request $request)
     {
-        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
+        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('ship' => $ship));
+        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $fleet));
+
         $form = $this->createForm(new ShipType(), $ship);
 
         if (!$ship) {
@@ -104,8 +106,8 @@ class ShipController extends Controller
                 'Ship not found'
             );
         }
-        elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_edit', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
+        elseif ($ship->getFleet()->getId() != $fleet->getId()) {
+            return $this->redirect($this->generateUrl('webb_ship_ship_edit', array('fleet' => $ship->getFleet()->getId(), 'ship' => $ship)));
         }
 
         if ($request->getMethod() == 'POST') {
@@ -124,7 +126,7 @@ class ShipController extends Controller
         return array(
             'form' => $form->createView(),
             'fleet' => $fleet,
-            'shortname' => $shortname,
+            'ship' => $ship,
         );
     }
 

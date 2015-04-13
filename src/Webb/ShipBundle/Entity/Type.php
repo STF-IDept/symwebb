@@ -35,6 +35,10 @@ class Type
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Ship",  cascade={"persist"}, mappedBy="type")
+     */
+    private $ship;
 
     /**
      * Get id
@@ -100,5 +104,21 @@ class Type
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShip()
+    {
+        return $this->ship;
+    }
+
+    /**
+     * @param mixed $ship
+     */
+    public function setShip($ship)
+    {
+        $this->ship = $ship;
     }
 }

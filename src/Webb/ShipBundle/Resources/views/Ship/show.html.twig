@@ -1,19 +1,30 @@
-{% extends 'WebbMotdBundle:id5:ship.html.twig' %}
-
-{% block boxes %}
-
-    {% for box in boxes %}
-
-        {% include 'WebbMotdBundle:id5:boxes.html.twig' with {'box': box} %}
-
-    {%  endfor %}
+{% extends '::base.html.twig' %}
 
 
-{% endblock boxes %}
+{% block title %}{{ ship.name }}{% endblock %}
+
+{% block body %}
+
+    {% block header %}
+
+    {% endblock %}
 
 
-{% block roster %}
+    {% block toplinks %}
+        <div id="motd-header-links">
+            {{ knp_menu_render('WebbShipBundle:Builder:mainMenu') }}
+        </div>
 
-{{ render(controller('WebbShipBundle:Ship:showRoster', {'ship': ship})) }}
+    {% endblock %}
 
-{% endblock roster %}
+    {% block boxes %}
+    {% endblock boxes %}
+
+
+    {% block roster %}
+
+        {{ render(controller('WebbShipBundle:Ship:showRoster', {'ship': ship})) }}
+
+    {% endblock roster %}
+
+{% endblock %}

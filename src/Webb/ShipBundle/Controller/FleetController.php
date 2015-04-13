@@ -11,14 +11,25 @@ use Webb\ShipBundle\Form\Type\FleetType;
 use Webb\ShipBundle\Entity\Fleet;
 use Symfony\Component\HttpFoundation\Request;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+/**
+ * @Route("/")
+ */
 class FleetController extends Controller
 {
-    public function showAction($shortname)
+    /**
+     * @Route("{fleet}", name="webb_ship_fleet_view", requirements={"fleet" = "^stf\d+|^acad|^command"})
+     * @Template("WebbShipBundle:Fleet:show.html.twig")
+     */
+    public function showAction($fleet)
     {
         //$securityContext = new SecurityContext();
         //$fleet = new Fleet();
 
-        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $shortname));
+        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $fleet));
 
         if (!$fleet) {
             throw $this->createNotFoundException(
@@ -29,6 +40,11 @@ class FleetController extends Controller
         return $this->render('WebbShipBundle:Fleet:show.html.twig', array('fleet' => $fleet));
     }
 
+    /**
+     * @Route("fleet/create", name="webb_ship_fleet_create")
+     * @Security("has_role('ROLE_FLEET_CREATE')")
+     * @Template("WebbShipBundle:Fleet:create.html.twig")
+     */
     public function createAction(Request $request)
     {
         $fleet = new Fleet();
@@ -53,9 +69,14 @@ class FleetController extends Controller
 
     }
 
-    public function editAction($shortname, Request $request)
+    /**
+     * @Route("{fleet}/edit", name="webb_ship_fleet_edit", requirements={"fleet" = "^stf\d+|^acad|^command"})
+     * @Security("has_role('ROLE_FLEET_EDIT')")
+     * @Template("WebbShipBundle:Fleet:edit.html.twig")
+     */
+    public function editAction($fleet, Request $request)
     {
-        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $shortname));
+        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $fleet));
         $form = $this->createForm(new FleetType(), $fleet);
 
         if (!$fleet) {
@@ -79,7 +100,7 @@ class FleetController extends Controller
 
         return $this->render('WebbShipBundle:Fleet:edit.html.twig', array(
             'form' => $form->createView(),
-            'shortname' => $shortname,
+            'shortname' => $fleet->getShortname(),
         ));
     }
 }
