@@ -13,11 +13,13 @@ class Builder extends ContainerAware
         $menu->setChildrenAttribute('class', 'motd-links');
 
         $menu->addChild('Read Notes', array(
-            'route' => 'webb_page_homepage'
+            'route' => 'webb_post_note_list',
+            'routeParameters' => array('ship' => $options['ship'], 'fleet' => 'stf1')
         ));
 
         $menu->addChild('Post Note', array(
-            'route' => 'webb_page_homepage'
+            'route' => 'webb_post_note_create',
+            'routeParameters' => array('ship' => $options['ship'], 'fleet' => 'stf1')
         ));
 
         $menu->addChild('Captain\'s Log', array(

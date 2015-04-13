@@ -12,7 +12,8 @@
 
     {% block toplinks %}
         <div id="motd-header-links">
-            {{ knp_menu_render('WebbShipBundle:Builder:mainMenu') }}
+            {% set main_menu = knp_menu_get( 'WebbShipBundle:Builder:mainMenu' , [], {'ship': ship.shortname, 'fleet': fleet.shortname}) %}
+            {{ knp_menu_render(main_menu) }}
         </div>
 
     {% endblock %}
