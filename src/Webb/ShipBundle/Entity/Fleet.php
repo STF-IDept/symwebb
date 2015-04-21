@@ -44,7 +44,7 @@ class Fleet
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Ship",  cascade={"persist"}, mappedBy="type")
+     * @ORM\OneToMany(targetEntity="Ship",  mappedBy="fleet")
      */
     private $ship;
 

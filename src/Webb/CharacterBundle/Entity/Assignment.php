@@ -51,6 +51,13 @@ class Assignment
     protected $position;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Rank",  cascade={"persist"})
+     * @ORM\JoinColumn(name="rank_id", referencedColumnName="id")
+     * @Assert\Type(type="Webb\CharacterBundle\Entity\Rank")
+     */
+    protected $rank;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="startdate", type="datetime")
@@ -126,18 +133,6 @@ class Assignment
         return $this;
     }
 
-    public function getShip()
-    {
-        return $this->ship;
-    }
-
-    public function setShip($ship)
-    {
-        $this->ship = $ship;
-
-        return $this;
-    }
-
     public function __toString()
     {
         return "{$this->persona->getRank()->getLongName()} {$this->persona->getName()} ({$this->position->getLongName()})";
@@ -193,5 +188,23 @@ class Assignment
     public function setActive($active)
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+
+        $this->persona->setRank($rank);
     }
 }

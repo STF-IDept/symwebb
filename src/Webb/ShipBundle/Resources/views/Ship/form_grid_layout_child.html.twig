@@ -1,0 +1,27 @@
+{%- block form_row -%}
+    {% if (form.parent.parent is not empty) and (form.children|length) %}
+        <tr>
+            {% block form_row_start %}{% endblock %}
+            {{- form_errors(form) -}}
+            {{- form_widget(form) -}}
+            {% block form_row_end %}{% endblock %}
+        </tr>
+    {% elseif form.children|length %}
+            {{- form_errors(form) -}}
+            {{- form_widget(form) -}}
+    {% else  %}
+        <td>
+            {{- form_errors(form) -}}
+            {{- form_widget(form) -}}
+        </td>
+    {%  endif %}
+
+
+{%- endblock form_row -%}
+
+{%- block form_widget_compound -%}
+
+    {{- block('form_rows') -}}
+    {{- form_rest(form) -}}
+
+{%- endblock form_widget_compound -%}

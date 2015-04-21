@@ -37,7 +37,7 @@ class Style
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Webb\ShipBundle\Entity\Ship",  cascade={"persist"}, mappedBy="type")
+     * @ORM\OneToMany(targetEntity="Webb\ShipBundle\Entity\Ship",  mappedBy="style")
      */
     private $ship;
 
