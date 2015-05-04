@@ -37,7 +37,7 @@ class Ship
     private $shortname;
 
     /**
-     * @ORM\OneToOne(targetEntity="Type",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Type",  cascade={"persist"}, inversedBy="ship")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\ShipBundle\Entity\Type")
      * @Assert\NotBlank()
@@ -45,7 +45,7 @@ class Ship
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity="Speed",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Speed",  cascade={"persist"}, inversedBy="ship")
      * @ORM\JoinColumn(name="speed_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\ShipBundle\Entity\Speed")
      * @Assert\NotBlank()
@@ -67,7 +67,7 @@ class Ship
     private $acceptsNew;
 
     /**
-     * @ORM\OneToOne(targetEntity="Fleet",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Fleet",  cascade={"persist"}, inversedBy="ship")
      * @ORM\JoinColumn(name="fleet_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\ShipBundle\Entity\Fleet")
      * @Assert\NotBlank()
@@ -75,7 +75,7 @@ class Ship
     private $fleet;
 
     /**
-     * @ORM\OneToOne(targetEntity="Webb\MotdBundle\Entity\Style",  cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Webb\MotdBundle\Entity\Style",  cascade={"persist"}, inversedBy="ship")
      * @ORM\JoinColumn(name="style_id", referencedColumnName="id")
      * @Assert\Type(type="Webb\MotdBundle\Entity\Style")
      * @Assert\NotBlank()

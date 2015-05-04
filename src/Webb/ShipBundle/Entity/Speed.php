@@ -56,6 +56,11 @@ class Speed
      */
     private $joLimits;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Ship",  mappedBy="speed")
+     */
+    private $ship;
+
 
     /**
      * Get id

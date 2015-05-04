@@ -1,0 +1,32 @@
+{% extends 'WebbShipBundle:Ship:show.html.twig' %}
+
+{% block stylesheets %}
+    {% stylesheets filter="compass"
+    "bundles/webbmotd/css/genesis/ship.scss"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block header %}
+    <div id="motd-stflogo"><a href="http://www.star-fleet.com/" class="nobackground"><img src="/images/logos/stf-logo-new.png" alt="Star-Fleet Home"/></a></div>
+
+    <div id="motd-shiplogo"><a href="{{ fleet|entityurl('webb_ship_fleet_view') }}" class="nobackground"><img src="/images/logos/{{ fleet.shortname }}-logo.png" alt="{{ fleet.name }}"/></a></div>
+
+    <div id="motd-header" class="motd-box"><img src="/images/asimov/asimov-banner.jpg" alt="USS Asimov" /></div>
+{% endblock  %}
+
+
+
+{% block boxes %}
+
+    {% for box in boxes %}
+
+        {% include 'WebbMotdBundle:genesis:boxes.html.twig' with {'box': box} %}
+
+    {%  endfor %}
+
+
+{% endblock boxes %}
+
+

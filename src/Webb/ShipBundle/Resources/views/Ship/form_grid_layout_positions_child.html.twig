@@ -1,0 +1,28 @@
+{% use "WebbShipBundle:Ship:form_grid_layout_child.html.twig" %}
+
+{% block form_row_start %}
+    <td>
+        {{ form.vars.value.parent }}
+    </td>
+{% endblock %}
+
+{% block form_row_end %}
+    <td>
+        {% if not form.vars.value.assignment|length %}
+            Position Vacant
+        {% endif %}
+        {%  for value in form.vars.value.assignment %}
+            {{ value.persona.name }} (played by <a href="{{ url('webb_user_profile_show_byid', {'id': value.persona.user.id}) }}">{{ value.persona.user }}</a>)<br/>
+        {% endfor %}
+    </td>
+    <td>
+        {% for value in form.vars.value.assignment %}
+            <a href="{{ url('webb_ship_assignment_end', {'ship': value.position.ship.shortname, 'fleet': value.position.ship.fleet.shortname, 'assignment': value.id }) }}">Remove from Position</a><br/>
+        {% endfor %}
+        {% if not form.vars.value.assignment|length %}
+            Add
+        {% elseif form.vars.value.assignment|length == 1 %}
+            Add Incoming Character
+        {% endif %}
+    </td>
+{% endblock %}

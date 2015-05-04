@@ -26,7 +26,8 @@
         "stof/doctrine-extensions-bundle": "1.1",
         "bmatzner/jquery-bundle": "~1.9",
         "bmatzner/jquery-ui-bundle": "*",
-        "liip/imagine-bundle": "~1.2"
+        "liip/imagine-bundle": "~1.2",
+        "knplabs/knp-menu-bundle": "~2"
     },
     "scripts": {
         "post-install-cmd": [

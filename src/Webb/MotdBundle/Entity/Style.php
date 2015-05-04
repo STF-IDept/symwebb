@@ -37,6 +37,12 @@ class Style
 
 
     /**
+     * @ORM\OneToMany(targetEntity="Webb\ShipBundle\Entity\Ship",  mappedBy="style")
+     */
+    private $ship;
+
+
+    /**
      * Get id
      *
      * @return integer 
@@ -90,5 +96,21 @@ class Style
     public function getLongname()
     {
         return $this->longname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShip()
+    {
+        return $this->ship;
+    }
+
+    /**
+     * @param mixed $ship
+     */
+    public function setShip($ship)
+    {
+        $this->ship = $ship;
     }
 }

@@ -11,8 +11,8 @@ webb_post:
     type: annotation
 
 webb_ship_fleet:
-    resource: "@WebbShipBundle/Resources/config/routing.yml"
-    prefix:   /
+    resource: "@WebbShipBundle/Controller/FleetController.php"
+    type: annotation
 
 webb_ship_ship:
     resource: "@WebbShipBundle/Controller/ShipController.php"

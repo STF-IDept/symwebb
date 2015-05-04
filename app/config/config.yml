@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: "@WebbFileBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -87,6 +88,8 @@ parameters:
     assetic.filter.compass.images_dir: %kernel.root_dir%/../web/images
     assetic.filter.compass.http_path: /images
     doctrine.orm.metadata.driver_chain.class: Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
+    webb_file.web_dir : web
+    webb_file.upload_dir : uploads
 
 # Assetic Configuration
 assetic:
@@ -107,7 +110,7 @@ eko_feed:
             description: 'A list of posts on a given on board'
             link:        'http://www.star-fleet.com/'
             encoding:    'utf-8'
-            author:      'I-dept' # Only required for Atom feeds
+            author:      'Star-Fleet.com' # Only required for Atom feeds
 
 stof_doctrine_extensions:
     orm:

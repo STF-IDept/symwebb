@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * @Route("/fleet{fleet}/{ship}/notes")
+ * @Route("/{fleet}/{ship}/notes", requirements={"fleet" = "^stf\d+|^acad|^command"})
  */
 class NoteController extends Controller
 {

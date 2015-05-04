@@ -1,0 +1,19 @@
+{% use "form_table_layout.html.twig" %}
+
+
+{%- block form_widget_compound -%}
+    {%- if form.parent is empty and errors|length > 0 -%}
+                {{- form_errors(form) -}}
+    {%- endif -%}
+    <table {{ block('widget_container_attributes') }}>
+        <tr>
+            {% block header_start %}{% endblock %}
+            {% for item in form.positions.children[0] %}
+                <th>{{ form_label(item)  }}</th>
+            {% endfor %}
+            {% block header_end %}{% endblock %}
+        </tr>
+        {{- block('form_rows') -}}
+        {{- form_rest(form) -}}
+    </table>
+{%- endblock form_widget_compound -%}

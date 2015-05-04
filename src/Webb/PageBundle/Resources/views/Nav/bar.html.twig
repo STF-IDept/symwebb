@@ -12,36 +12,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="navbar-container">
-            <ul class="nav">
-                <li class="active">
-                    <a class="brand" href="#"><img src="{{ asset('bundles/webbpage/img/stf-button.png') }}" /></a>
-                </li>
-                <li><a href="#">Home</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Fleets<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Fleet 1</a></li>
-                        <li><a href="#">Fleet 2</a></li>
-                        <li><a href="#">Fleet 3</a></li>
-                        <li><a href="#">Fleet 4</a></li>
-                        <li><a href="#">Fleet 5</a></li>
-                        <li><a href="#">Fleet 6</a></li>
-                        <li><a href="#">Starfleet Academy</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Government<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Starfleet Command</a></li>
-                        <li><a href="#">Engineering Department</a></li>
-                        <li><a href="#">Gamemaster Department</a></li>
-                        <li><a href="#">Internet Department</a></li>
-                        <li><a href="#">Personnel Department</a></li>
-                        <li><a href="#">About</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Resources</a></li>
-            </ul>
+            {{ knp_menu_render('WebbPageBundle:Builder:mainMenu', {'template': 'WebbPageBundle:Nav:knp_menu.html.twig'}) }}
 
             <ul class="nav pull-right">
                 <li class="dropdown">

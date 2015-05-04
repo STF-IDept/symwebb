@@ -24,6 +24,13 @@
         <div id="container">
         <div id="page">
         {% include "WebbPageBundle:Nav:bar.html.twig" %}
+        {% block flashbag %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="flash-error">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        {% endblock %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
         </div>

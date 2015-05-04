@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'WebbShipBundle:Ship:form_grid_layout_positions.html.twig' %}
+{% form_theme form.positions 'WebbShipBundle:Ship:form_grid_layout_positions_child.html.twig' %}
+
+{% block body %}
+
+
+
+        {{ form(form) }}
+
+
+
+{% endblock %}

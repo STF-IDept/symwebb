@@ -1,0 +1,18 @@
+parameters:
+#    webb_user.example.class: Webb\UserBundle\Example
+
+services:
+#    webb_user.example:
+#        class: %webb_user.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    webb_user.registration.form.type:
+        class: Webb\UserBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: webb_user_registration }
+
+    webb_user.profile.form.type:
+        class: Webb\UserBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: webb_user_profile }

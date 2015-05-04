@@ -2,13 +2,13 @@
 
 namespace Webb\ShipBundle\Controller;
 
-use MyProject\Proxies\__CG__\stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Webb\ShipBundle\Form\Type\PositionType;
 use Webb\ShipBundle\Form\Type\ShipType;
-use Webb\ShipBundle\Entity\Ship;
 use Symfony\Component\HttpFoundation\Request;
 use Webb\MotdBundle\Entity\Box;
-
+use Webb\ShipBundle\Entity\PositionCollection;
+use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,22 +20,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ShipController extends Controller
 {
     /**
-     * @Route("fleet{fleet}/{shortname}", name="webb_ship_ship_view", requirements={"fleet" = "\d+"})
-     * @Template("WebbShipBundle:Ship:show.html.twig")
+     * @Route("{fleet}/{ship}", name="webb_ship_ship_view", requirements={"fleet" = "^stf\d+|^acad|^command"})
      */
-    public function showAction($fleet, $shortname)
+    public function showAction($fleet, $ship)
     {
 
-        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
-
-        if (!$ship) {
-            throw $this->createNotFoundException(
-                'Ship not found'
-            );
-        }
-        elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
-        }
+        $this->loadShip($ship, $fleet);
 
         /* Join the positions, assignments and personae */
         $query = $this->getDoctrine()->getManager()->createQueryBuilder()
@@ -54,10 +44,11 @@ class ShipController extends Controller
 
         array_walk($boxes, array($this, 'prepareShowResult'));
 
-        return array(
+        return $this->render('WebbMotdBundle:'.$ship->getStyle()->getShortname().':ship.html.twig', array(
             'ship' => $ship,
             'boxes' => $boxes,
-        );
+            'fleet' => $fleet,
+        ));
     }
 
     /**
@@ -79,7 +70,7 @@ class ShipController extends Controller
                 $em->persist($ship);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $ship->getShortname())));
+                return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getId(), 'ship' => $ship->getShortname())));
             }
         }
 
@@ -90,23 +81,15 @@ class ShipController extends Controller
     }
 
     /**
-     * @Route("fleet{fleet}/{shortname}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "\d+"})
+     * @Route("{fleet}/{ship}/edit", name="webb_ship_ship_edit", requirements={"fleet" = "^stf\d+|^acad|^command"})
      * @Security("has_role('ROLE_SHIP_EDIT')")
      * @Template("WebbShipBundle:Ship:edit.html.twig")
      */
-    public function editAction($fleet, $shortname, Request $request)
+    public function editAction($fleet, $ship, Request $request)
     {
-        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $shortname));
-        $form = $this->createForm(new ShipType(), $ship);
+        $this->loadShip($ship, $fleet);
 
-        if (!$ship) {
-            throw $this->createNotFoundException(
-                'Ship not found'
-            );
-        }
-        elseif ($ship->getFleet()->getId() != $fleet) {
-            return $this->redirect($this->generateUrl('webb_ship_ship_edit', array('fleet' => $ship->getFleet()->getId(), 'shortname' => $shortname)));
-        }
+        $form = $this->createForm(new ShipType(), $ship);
 
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
@@ -124,26 +107,122 @@ class ShipController extends Controller
         return array(
             'form' => $form->createView(),
             'fleet' => $fleet,
-            'shortname' => $shortname,
+            'ship' => $ship,
         );
+    }
+
+    /**
+     * @Route("{fleet}/{ship}/positions", name="webb_ship_positions", requirements={"fleet" = "^stf\d+|^acad|^command"})
+     * @Template("WebbShipBundle:Ship:positions.html.twig")
+     */
+    public function positionsAction($fleet, $ship, Request $request)
+    {
+        $this->loadShip($ship, $fleet);
+
+        $positions = $this->getDoctrine()->getManager()->createQueryBuilder()
+            ->select('p, q, a, r, s, u, t, f')
+            ->from('WebbShipBundle:Position', 'p')
+            ->where('p.ship = :ship_id')->setParameter('ship_id', $ship->getId())
+            ->leftJoin('p.parent', 'q')
+            ->leftJoin('p.assignment', 'a', 'WITH', 'a.active = 1')
+            ->leftJoin('a.persona', 'r')
+            ->leftJoin('r.rank', 's')
+            ->leftJoin('r.user', 'u')
+            ->leftJoin('p.ship', 't')
+            ->leftJoin('t.fleet', 'f')
+            ->orderBy('s.order', 'asc')
+            ->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->execute();
+
+        $positionCollection = new PositionCollection;
+
+        foreach($positions as $position) {
+            $positionCollection->getPositions()->add($position);
+        }
+
+        $form = $this->createForm(new PositionType(), $positionCollection);
+
+        if ($request->getMethod() == 'POST') {
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                foreach ($positionCollection->getPositions() as $position) {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($position);
+                    $em->flush();
+                }
+                return $this->redirect($this->generateUrl('webb_ship_positions', array('fleet' => $ship->getFleet()->getShortname(), 'ship' => $ship->getShortname())));
+            }
+
+        }
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route("{fleet}/{ship}/positions/{assignment}", name="webb_ship_assignment_end", requirements={"fleet" = "^stf\d+|^acad|^command"})
+     */
+    public function assignmentEndAction($ship, $fleet, $assignment, Request $request)
+    {
+        $this->loadShip($ship, $fleet);
+
+        $assignment = $this->getDoctrine()->getRepository('WebbCharacterBundle:Assignment')->findOneBy(array('id' => $assignment));
+
+        if(!$assignment || $assignment->getPosition()->getShip()->getId() != $ship->getId()) {
+            throw $this->createNotFoundException(
+                'Assignment not found'
+            );
+        }
+
+        $date = new \DateTime();
+
+        $assignment->setActive('false');
+        $assignment->setEnddate($date);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($assignment);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('webb_ship_ship_view', array('fleet' => $ship->getFleet()->getShortname(), 'ship' => $ship->getShortname())));
+
     }
 
     function showRosterAction($ship) {
 
-	$positions = $this->getDoctrine()->getManager()->createQueryBuilder()
+	    $positions = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('p, a, r, q, s, u')
             ->from('WebbShipBundle:Position', 'p')
             ->where('p.ship = :ship_id')
             ->setParameter('ship_id', $ship->getId())
-	    ->innerJoin('p.assignment', 'a')
+	        ->innerJoin('p.assignment', 'a')
             ->innerJoin('a.persona', 'r')
             ->innerJoin('p.parent', 'q')
             ->innerJoin('r.rank', 's')
-	    ->innerJoin('r.user', 'u')
-	    ->orderBy('s.order', 'ASC')
-	    ->getQuery()->execute();
-	
-	return $this->render('WebbShipBundle:Ship:roster.html.twig', array('positions' => $positions));
+            ->innerJoin('r.user', 'u')
+            ->orderBy('s.order', 'ASC')
+            ->getQuery()->execute();
+
+        return $this->render('WebbShipBundle:Ship:roster.html.twig', array('positions' => $positions));
+
+    }
+
+    private function loadShip(&$ship, &$fleet) {
+
+        $ship = $this->getDoctrine()->getRepository('WebbShipBundle:Ship')->findOneBy(array('shortname' => $ship));
+        $fleet = $this->getDoctrine()->getRepository('WebbShipBundle:Fleet')->findOneBy(array('shortname' => $fleet));
+
+        if (!$ship) {
+            throw $this->createNotFoundException(
+                'Ship not found'
+            );
+        }
+        elseif ($ship->getFleet()->getId() != $fleet->getId()) {
+            return $this->redirect($this->generateUrl('webb_ship_ship_edit', array('fleet' => $ship->getFleet()->getId(), 'ship' => $ship)));
+        }
 
     }
 

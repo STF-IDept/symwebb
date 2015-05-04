@@ -3,13 +3,13 @@ webb_ship_fleet_create:
     defaults: { _controller: WebbShipBundle:Fleet:create }
 
 webb_ship_fleet_view:
-    pattern:  /fleet{shortname}
+    pattern:  /{fleet}
     defaults: { _controller: WebbShipBundle:Fleet:show }
     requirements:
-        shortname:  \d+
+        shortname:  ^fleet\d+|^acad|^command
 
 webb_ship_fleet_edit:
-      pattern:  /fleet{shortname}/edit
+      pattern:  /{shortname}/edit
       defaults: { _controller: WebbShipBundle:Fleet:edit }
       requirements:
           shortname:  \d+

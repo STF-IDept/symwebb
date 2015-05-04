@@ -48,6 +48,11 @@ class PersonaController extends Controller
             );
         }
 
+        // Get the location of the image directories
+        $location = $this->container->get('webb_file_location');
+        $persona->getImage()->setWebRoot($location->getWebRoot());
+        $persona->getImage()->setUploadDir($location->getDir('images'));
+
         return array('persona' => $persona);
     }
 
@@ -105,10 +110,15 @@ class PersonaController extends Controller
         }
 
         if ($request->getMethod() == 'POST') {
-            $persona->getImage()->setName($persona->getName());
-            $persona->getImage()->setFolder('character');
 
             $form->bind($request);
+
+            // get the location of the image directories and set some variables
+            $location = $this->container->get('webb_file_location');
+            $user->getImage()->setName($persona->getName());
+            $user->getImage()->setFolder('character');
+            $user->getImage()->setWebRoot($location->getWebRoot());
+            $user->getImage()->setUploadDir($location->getDir('images'));
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();

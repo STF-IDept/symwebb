@@ -1,0 +1,7 @@
+services:
+    webb_file_location:
+        class:    Webb\FileBundle\Location
+        arguments:
+            - '%kernel.root_dir%'
+            - '%webb_file.web_dir%'
+            - '%webb_file.upload_dir%'

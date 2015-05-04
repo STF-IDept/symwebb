@@ -44,6 +44,12 @@ class Fleet
 
 
     /**
+     * @ORM\OneToMany(targetEntity="Ship",  mappedBy="fleet")
+     */
+    private $ship;
+
+
+    /**
      * Get id
      *
      * @return integer 
@@ -132,4 +138,26 @@ class Fleet
         return $this->name;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getShip()
+    {
+        return $this->ship;
+    }
+
+    /**
+     * @param mixed $ship
+     */
+    public function setShip($ship)
+    {
+        $this->ship = $ship;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFleet(){
+        return $this->shortname;
+    }
 }

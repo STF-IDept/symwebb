@@ -266,4 +266,12 @@ class User extends BaseUser
     {
         return $this->updated;
     }
+
+    /*
+     * @return string
+     */
+
+    public function getName() {
+        return "$this->first_name $this->surname";
+    }
 }
