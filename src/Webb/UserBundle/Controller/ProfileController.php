@@ -55,6 +55,11 @@ class ProfileController extends BaseController
             );
         }
 
+        // Get the location of the image directories
+        $location = $this->container->get('webb_file_location');
+        $profile->getImage()->setWebRoot($location->getWebRoot());
+        $profile->getImage()->setUploadDir($location->getDir('images'));
+
         return array('user' => $profile);
     }
 
@@ -99,7 +104,15 @@ class ProfileController extends BaseController
         $form->setData($user);
 
         if ('POST' === $request->getMethod()) {
+
             $form->bind($request);
+
+            // get the location of the image directories and set some variables
+            $location = $this->container->get('webb_file_location');
+            $user->getImage()->setName($user->getName());
+            $user->getImage()->setFolder('user');
+            $user->getImage()->setWebRoot($location->getWebRoot());
+            $user->getImage()->setUploadDir($location->getDir('images'));
 
             if ($form->isValid()) {
                 /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */

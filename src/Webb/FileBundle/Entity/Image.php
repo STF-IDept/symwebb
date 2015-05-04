@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 */
 class Image {
 
-    private $temp;
-
     /**
     * @ORM\Id
     * @ORM\Column(type="integer")
@@ -42,27 +40,54 @@ class Image {
      */
     private $file;
 
+    //Temporary Variables
+    private $old_path;
+    private $web_root;
+    private $upload_dir;
+    private $file_name;
+
+    /**
+     * @return mixed
+     */
+    public function getWebRoot()
+    {
+        return $this->web_root;
+    }
+
+    /**
+     * @param mixed $base_path
+     */
+    public function setWebRoot($web_root)
+    {
+        $this->web_root = $web_root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUploadDir()
+    {
+        return $this->upload_dir;
+    }
+
+    /**
+     * @param mixed $upload_dir
+     */
+    public function setUploadDir($upload_dir)
+    {
+        $this->upload_dir = $upload_dir;
+    }
 
     public function getAbsolutePath() {
-        return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
+        return null === $this->path ? null : $this->web_root.'/'.$this->getWebPath();
     }
 
     public function getWebPath() {
-        return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
+        return null === $this->path ? null : $this->upload_dir.'/'.$this->folder.'/'.$this->id.'/'.$this->path;
     }
 
-    protected function getUploadRootDir()
-    {
-        $reflClass = new \ReflectionClass($this);
-        return dirname($reflClass->getFileName()).'/../../../../web/'.$this->getUploadDir();
-
-    }
-
-    protected function getUploadDir()
-    {
-    // get rid of the __DIR__ so it doesn't screw up
-    // when displaying uploaded doc/image in the view.
-        return 'uploads/images';
+    public function getDir() {
+        return $this->web_root.'/'.$this->upload_dir.'/'.$this->folder.'/'.$this->id;
     }
 
     /**
@@ -72,7 +97,7 @@ class Image {
     public function preUpload()
     {
         if (null !== $this->getFile()) {
-            $this->path =  $this->folder.'/'.$this->id.'/'.preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $this->name))).'.'.$this->getFile()->guessExtension();
+            $this->path =  preg_replace('/^-+|-+$/', '', strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $this->name))).'.'.$this->getFile()->guessExtension();
         }
     }
 
@@ -87,19 +112,16 @@ class Image {
         }
 
         // check if we have an old image
-        if (isset($this->temp)) {
+        if (isset($this->old_path)) {
             // delete the old image
-            unlink($this->temp);
-            // clear the temp image path
-            $this->temp = null;
+            unlink($this->old_path);
+            // clear the old image path
+            $this->old_path = null;
         }
 
-        // you must throw an exception here if the file cannot be moved
-        // so that the entity is not persisted to the database
-        // which the UploadedFile move() method does
         $this->getFile()->move(
-            $this->getUploadRootDir(),
-            $this->id.'.'.$this->getFile()->guessExtension()
+            $this->getDir(),
+            $this->path
         );
 
         $this->setFile(null);
@@ -156,7 +178,7 @@ class Image {
         // check if we have an old image path
         if (isset($this->path)) {
             // store the old name to delete after the update
-            $this->temp = $this->path;
+            $this->old_path = $this->path;
             $this->path = null;
         } else {
             $this->path = 'initial';
@@ -204,4 +226,6 @@ class Image {
     {
         $this->folder = $folder;
     }
+
+
 }

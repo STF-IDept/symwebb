@@ -12,7 +12,7 @@
 {% block body %}
     <div id="postinfo">
         <div id="profileimage">
-            {% if user.image.path is not null %}<img src="/{{ user.image.webpath }}" alt="Profile Picture"/>{% endif %}
+            {% if user.image.path is not null %}<img src="{{ asset(user.image.webpath)|imagine_filter('profile_image') }}" alt="{{ user.image.name }}"/>{% endif %}
         </div>
         <h2>{{ user.rank }} {{ user.firstname }} {{ user.surname }}</h2>
         <p>{{ 'user.date'|trans({}, 'WebbUserBundle') }} {{ user.updated|date('l j M Y') }} {{ 'user.time'|trans({}, 'WebbCharacterBundle') }} {{ user.updated|date('g:ia T') }}</p>
@@ -29,7 +29,7 @@
             {% for persona in user.persona %}
                 <tr>
                     <td><a href=" {{ path('webb_character_view', {'id': persona.id}) }}">{{ persona.rank }} {{ persona.name }}</a></td>
-                    <td><a href=" {{ path('webb_ship_ship_view', {'shortname': persona.assignment[0].position.ship.shortname, 'fleet': persona.assignment[0].position.ship.fleet.id}) }}">{{ persona.assignment[0].position.ship }}</a></td>
+                    <td><a href=" {{ path('webb_ship_ship_view', {'ship': persona.assignment[0].position.ship.shortname, 'fleet': persona.assignment[0].position.ship.fleet.shortname}) }}">{{ persona.assignment[0].position.ship }}</a></td>
                     <td>{{ persona.assignment[0].position }}</td>
                 </tr>
 
