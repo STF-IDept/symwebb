@@ -47,27 +47,11 @@ class Image {
     private $file_name;
 
     /**
-     * @return mixed
-     */
-    public function getWebRoot()
-    {
-        return $this->web_root;
-    }
-
-    /**
-     * @param mixed $base_path
+     * @param mixed $web_root
      */
     public function setWebRoot($web_root)
     {
         $this->web_root = $web_root;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUploadDir()
-    {
-        return $this->upload_dir;
     }
 
     /**
@@ -78,7 +62,7 @@ class Image {
         $this->upload_dir = $upload_dir;
     }
 
-    public function getAbsolutePath() {
+    private function getAbsolutePath() {
         return null === $this->path ? null : $this->web_root.'/'.$this->getWebPath();
     }
 
@@ -86,7 +70,7 @@ class Image {
         return null === $this->path ? null : $this->upload_dir.'/'.$this->folder.'/'.$this->id.'/'.$this->path;
     }
 
-    public function getDir() {
+    private function getDir() {
         return $this->web_root.'/'.$this->upload_dir.'/'.$this->folder.'/'.$this->id;
     }
 
@@ -148,31 +132,11 @@ class Image {
     }
 
     /**
-     * Set path
-     *
-     * @param UploadedFile $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * Get path
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
      * Sets file.
      *
      * @param UploadedFile $file
      */
-    public function setFile(UploadedFile $file = null)
+    private function setFile(UploadedFile $file = null)
     {
         $this->file = $file;
         // check if we have an old image path
@@ -196,27 +160,11 @@ class Image {
     }
 
     /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * @param mixed $name
      */
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFolder()
-    {
-        return $this->folder;
     }
 
     /**
