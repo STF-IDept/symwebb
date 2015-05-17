@@ -12,7 +12,7 @@
 {% block body %}
     <div id="postinfo">
         <div id="profileimage">
-            {% if user.image.path is not null %}<img src="{{ asset(user.image.webpath)|imagine_filter('profile_image') }}" alt="{{ user.image.name }}"/>{% endif %}
+            {% if user.image.webpath is not null %}<img src="{{ asset(user.image.webpath)|imagine_filter('profile_image') }}" alt="{{ user.image.name }}"/>{% endif %}
         </div>
         <h2>{{ user.rank }} {{ user.firstname }} {{ user.surname }}</h2>
         <p>{{ 'user.date'|trans({}, 'WebbUserBundle') }} {{ user.updated|date('l j M Y') }} {{ 'user.time'|trans({}, 'WebbCharacterBundle') }} {{ user.updated|date('g:ia T') }}</p>

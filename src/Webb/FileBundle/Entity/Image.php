@@ -175,5 +175,13 @@ class Image {
         $this->folder = $folder;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
 
 }
